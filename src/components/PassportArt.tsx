@@ -181,7 +181,7 @@ const lace = (y: number, c: string) => (
 const THEMES: Theme[] = [
   {
     name: "Litoral", tint: "var(--mar)",
-    l: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{turtle(34, 66, "var(--mar)")}</>,
+    l: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{turtle(62, 88, "var(--mar)")}</>,
     r: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{lighthouse(70, 100, "var(--marinho)")}</>,
   },
   {
