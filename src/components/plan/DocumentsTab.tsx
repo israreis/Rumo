@@ -25,7 +25,7 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
     <div className="space-y-8">
       <section>
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="flex items-center gap-3 text-2xl font-semibold"><PassportMark className="size-10" /> Documentos</h2>
+          <h2 className="flex items-center gap-3 text-xl sm:text-2xl font-semibold"><PassportMark className="size-10" /> Documentos</h2>
           <Button onClick={() => de.open({ kind: "passport", traveler_id: travelers[0]?.id ?? null })} disabled={!travelers.length}><Plus /> Documento</Button>
         </div>
         {!travelers.length ? (
@@ -68,7 +68,7 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
 
       <section>
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="text-2xl font-semibold">Contatos de emergência</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold">Contatos de emergência</h2>
           <Button variant="outline" onClick={() => ce.open({ kind: "embassy" })}><Plus /> Contato</Button>
         </div>
         {!contacts.length ? (

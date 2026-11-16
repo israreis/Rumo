@@ -27,7 +27,7 @@ export function NotesTab({ trip }: { trip: Trip }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-2xl font-semibold">Notas</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold">Notas</h2>
         <Button onClick={() => ed.open({ day: "none", title: "", content: "" })}><Plus /> Nota</Button>
       </div>
       {!notes.length && <EmptyState icon={StickyNote} title="Nenhuma nota ainda" text="Guarde frases úteis no idioma local, dicas de amigos ou a senha do Wi-Fi da hospedagem — da viagem toda ou de um dia específico." />}

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { Dial } from "@/components/Dial";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,18 +34,19 @@ export function ChecklistTab({ trip }: { trip: Trip }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="text-2xl font-semibold">Checklist</h2>
+      <div className="flex items-center gap-4">
+        <Dial value={pct} label="Checklist concluída" sub="pronto" className="size-20 sm:size-24" />
+        <div className="min-w-0">
+          <h2 className="text-xl sm:text-2xl font-semibold">Checklist</h2>
           <p className="text-sm text-muted-foreground">{items.filter((i) => i.done).length} de {items.length} concluídos</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(TEMPLATES).map(([k, t]) => (
-            <Button key={k} size="sm" variant="outline" onClick={() => setTpl(k)}><LayoutTemplate /> {t.label}</Button>
-          ))}
-        </div>
       </div>
-      <div className="flex items-center gap-4"><Dial value={pct} label="Checklist concluída" sub="pronto" className="size-24" /><Progress value={pct} className="h-2.5" /></div>
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mr-1 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Modelos prontos</span>
+        {Object.entries(TEMPLATES).map(([k, t]) => (
+          <Button key={k} size="sm" variant="outline" onClick={() => setTpl(k)}><LayoutTemplate /> {t.label}</Button>
+        ))}
+      </div>
       <div className="grid gap-6 lg:grid-cols-2">
         {Object.entries(CHECKLIST_LISTS).map(([list, label]) => (
           <ListCard key={list} trip={trip} list={list} label={label} items={items.filter((i) => i.list === list)} onUpdate={upd} onChange={refresh} />

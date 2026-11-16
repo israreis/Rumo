@@ -26,7 +26,7 @@ export function TransportTab({ trip }: { trip: Trip }) {
     <div>
       <datalist id="tz-list">{allTimezones().map((z) => <option key={z} value={z} />)}</datalist>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Transporte</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold">Transporte</h2>
         <Button onClick={() => openRow()}><Plus /> Adicionar trecho</Button>
       </div>
       {!data.length ? (

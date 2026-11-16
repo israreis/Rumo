@@ -172,7 +172,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
       onDragCancel={() => { dragging.current = false; setActiveId(null); setItems(buildItems()); }}>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Roteiro dia a dia</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold">Roteiro dia a dia</h2>
           {days.map((day, i) => {
             const dest = destinationForDay(day, dests);
             const tz = dayTimezone(day, dests);
@@ -293,7 +293,7 @@ function Row({ icon: Icon, time, endTime, title, sub, cost, badge, conflict, ton
         {Icon && <Icon className="size-4" />}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-medium">{title}</p>
+        <p className="line-clamp-2 font-medium leading-snug">{title}</p>
         <p className="flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
           {badge && <span>{badge}</span>}{sub && <span className="truncate">{sub}</span>}{cost && <span className="font-medium text-foreground">{cost}</span>}
           {conflict && <span className="font-semibold text-destructive">Conflito</span>}

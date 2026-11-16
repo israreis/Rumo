@@ -90,9 +90,9 @@ function TripPage() {
         <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
           <StatusBadge status={status} />
           <h1 className="mt-2 text-4xl font-medium text-on-photo sm:text-5xl">{trip.name}</h1>
-          <p className="mt-2 font-num text-sm text-on-photo/90">
-            {formatDate(trip.start_date)} – {formatDate(trip.end_date)}
-            {days != null && status !== "completed" && <> · faltam <strong>{days} {days === 1 ? "dia" : "dias"}</strong></>}
+          <p className="mt-2 flex flex-wrap gap-x-2 font-num text-sm text-on-photo/90">
+            <span className="whitespace-nowrap">{formatDate(trip.start_date)} – {formatDate(trip.end_date)}</span>
+            {days != null && status !== "completed" && <span className="whitespace-nowrap">· faltam <strong>{days} {days === 1 ? "dia" : "dias"}</strong></span>}
           </p>
         </div>
       </div>
@@ -102,8 +102,12 @@ function TripPage() {
           <Eye className="size-4 text-mar" /> Você foi convidado para acompanhar esta viagem. Seu acesso é somente leitura.
         </p>
       )}
-      <Tabs defaultValue="overview" className="mt-6">
-        <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+      <Tabs
+        defaultValue="overview"
+        className="mt-6 pb-24 md:pb-20"
+        onValueChange={() => requestAnimationFrame(() => document.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }))}
+      >
+        <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_calc(100%-2rem),transparent)] sm:mx-0 sm:px-0 lg:[mask-image:none]">
           <TabsList className="h-auto w-max gap-x-1.5 gap-y-2.5 bg-transparent p-0 lg:w-full lg:flex-wrap lg:justify-start">
             {TABS.map((t) => (
               <TabsTrigger key={t.id} value={t.id} className="gap-1.5 rounded-full border px-3.5 py-1.5 bg-card data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">

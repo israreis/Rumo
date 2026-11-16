@@ -25,6 +25,7 @@ export function BudgetTab({ trip }: { trip: Trip }) {
   const total = sum(lines.map(val));
   const paid = sum(lines.filter((l) => l.paid).map(val));
   const goal = trip.budget ?? 0;
+  const over = Math.round(total * 100) - Math.round(goal * 100); // compara em centavos
   const byCat = Object.keys(BUDGET_CATEGORIES).map((c) => ({ c, v: sum(lines.filter((l) => l.category === c).map(val)), ls: lines.filter((l) => l.category === c) })).filter((x) => x.ls.length);
 
   // Due calendar: installments by month, otherwise due date for items still to pay
@@ -40,18 +41,18 @@ export function BudgetTab({ trip }: { trip: Trip }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Orçamento</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold">Orçamento</h2>
         <Button onClick={openNew}><Plus /> Item</Button>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border bg-card p-4 shadow-card sm:col-span-2">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="col-span-2 rounded-2xl border bg-card p-4 shadow-card">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Planejado</p>
           <p className="mt-1 font-display text-3xl font-semibold">{formatMoney(total, cur)}</p>
           {goal > 0 && <>
-            <Progress value={Math.min(100, (total / goal) * 100)} className={cn("mt-3", total > goal && "[&>div]:bg-destructive")} />
-            <p className={cn("mt-2 text-sm", total > goal ? "text-destructive" : "text-muted-foreground")}>
-              {total > goal ? `${formatMoney(total - goal, cur)} acima` : `${formatMoney(goal - total, cur)} livres`} do orçamento de {formatMoney(goal, cur)}
+            <Progress value={Math.min(100, (total / goal) * 100)} className={cn("mt-3", over > 0 && "[&>div]:bg-destructive")} />
+            <p className={cn("mt-2 text-sm", over > 0 ? "text-destructive" : "text-muted-foreground")}>
+              {over > 0 ? `${formatMoney(over / 100, cur)} acima do orçamento de ${formatMoney(goal, cur)}` : over === 0 ? `Exatamente no orçamento de ${formatMoney(goal, cur)}` : `${formatMoney(-over / 100, cur)} livres do orçamento de ${formatMoney(goal, cur)}`}
             </p>
           </>}
         </div>
@@ -76,12 +77,16 @@ export function BudgetTab({ trip }: { trip: Trip }) {
                 <ul className="divide-y">
                   {ls.map((l) => (
                     <li key={l.key}>
-                      <button disabled={l.auto} onClick={() => ed.open(l.row)} className="flex w-full items-center gap-2 py-2 text-left text-sm enabled:hover:text-primary">
-                        <span className="min-w-0 flex-1 truncate">{l.label}</span>
-                        {l.auto && <Pill><Sparkles className="size-3" /> auto</Pill>}
-                        {l.daily && <Pill tone="primary">diária</Pill>}
-                        {l.installments > 1 && <Pill>{l.installments}×</Pill>}
-                        <Pill tone={l.paid ? "success" : "warning"}>{l.paid ? "Pago" : "A pagar"}</Pill>
+                      <button disabled={l.auto} onClick={() => ed.open(l.row)} className="flex w-full items-start gap-3 py-2.5 text-left text-sm enabled:hover:text-primary">
+                        <span className="min-w-0 flex-1">
+                          <span className="line-clamp-2 leading-snug">{l.label}</span>
+                          <span className="mt-1 flex flex-wrap gap-1">
+                            {l.auto && <Pill><Sparkles className="size-3" /> auto</Pill>}
+                            {l.daily && <Pill tone="primary">diária</Pill>}
+                            {l.installments > 1 && <Pill>{l.installments}×</Pill>}
+                            <Pill tone={l.paid ? "success" : "warning"}>{l.paid ? "Pago" : "A pagar"}</Pill>
+                          </span>
+                        </span>
                         <Money className="shrink-0 text-right font-medium" amount={l.amount} currency={l.currency} converted={l.converted} trip={cur} />
                       </button>
                     </li>
@@ -139,9 +144,9 @@ export function BudgetTab({ trip }: { trip: Trip }) {
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: "success" | "warning" }) {
   return (
-    <div className="rounded-2xl border bg-card p-4 shadow-card">
+    <div className="min-w-0 rounded-2xl border bg-card p-4 shadow-card">
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className={cn("mt-1 font-display text-xl font-semibold", tone === "success" && "text-success")}>{value}</p>
+      <p className={cn("mt-1 whitespace-nowrap font-display text-lg font-semibold sm:text-xl", tone === "success" && "text-success")}>{value}</p>
     </div>
   );
 }

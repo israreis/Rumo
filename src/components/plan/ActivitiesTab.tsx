@@ -79,7 +79,7 @@ export function ActivitiesTab({ trip }: { trip: Trip }) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Atividades e ingressos</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold">Atividades e ingressos</h2>
         <Button onClick={() => openNew()}><Plus /> Adicionar</Button>
       </div>
       {!data.length ? (

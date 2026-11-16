@@ -35,15 +35,15 @@ function Passport() {
   return (
     <div className="space-y-10">
       <header className="flex flex-wrap items-center gap-5">
-        <PassportMark className="size-24" title="Passaporte Rumo" />
-        <div className="flex-1">
+        <PassportMark className="size-16 self-start sm:size-24 sm:self-center" title="Passaporte Rumo" />
+        <div className="min-w-0 flex-1">
           <p className="font-hand text-2xl text-primary">Carimbe cada chegada</p>
-          <h1 className="text-4xl">Meu passaporte</h1>
+          <h1 className="text-3xl sm:text-4xl">Meu passaporte</h1>
           <p className="mt-1 max-w-lg text-sm text-muted-foreground">
             Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada cidade vira um carimbo no dia em que você chega, e cada viagem concluída ganha o seu.
           </p>
         </div>
-        <dl className="grid grid-cols-3 gap-3 text-center">
+        <dl className="grid w-full grid-cols-3 gap-3 text-center sm:w-auto">
           <Count n={col.earned.length} label="carimbos" />
           <Count n={col.cities} label="cidades" />
           <Count n={col.countries} label={col.countries === 1 ? "país" : "países"} />

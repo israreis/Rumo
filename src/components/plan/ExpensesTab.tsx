@@ -30,7 +30,8 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
   const todaySpent = spent(expenses.filter((e) => e.date === today));
   const s = toDate(trip.start_date), en = toDate(trip.end_date);
   const daysLeft = !s || !en ? 0 : today < trip.start_date! ? days.length : differenceInCalendarDays(en, new Date()) + 1;
-  const allowance = dailyAllowance(goal - prepaid - before, todaySpent, daysLeft);
+  const allowance = Math.round(dailyAllowance(goal - prepaid - before, todaySpent, daysLeft) * 100) / 100; // em centavos, sem "-0,00"
+  const notStarted = !!trip.start_date && today < trip.start_date;
 
   const cats = Object.keys(BUDGET_CATEGORIES).map((c) => {
     const p = sum(lines.filter((l) => l.category === c).map((l) => l.converted ?? 0));
@@ -46,7 +47,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
 
   return (
     <div className="space-y-6 pb-20">
-      <h2 className="text-2xl font-semibold">Gastos</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold">Gastos</h2>
       {pending.length > 0 && (
         <div className="rounded-xl border border-dashed border-warning/50 bg-warning/5 p-4">
           <p className="flex items-center gap-2 text-sm font-semibold text-warning"><CloudOff className="size-4" /> {pending.length === 1 ? "1 gasto aguardando internet" : `${pending.length} gastos aguardando internet`}</p>
@@ -63,9 +64,12 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
       )}
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-hero p-5 text-on-photo shadow-lift sm:col-span-2">
-          <p className="flex items-center gap-2 text-sm opacity-90"><Wallet className="size-4" /> Saldo de hoje</p>
+          <p className="flex items-center gap-2 text-sm opacity-90"><Wallet className="size-4" /> {notStarted ? "Por dia de viagem" : "Saldo de hoje"}</p>
           {daysLeft > 0 ? <>
-            <p className="mt-2 font-display text-3xl font-semibold">{allowance >= 0 ? `Você ainda pode gastar ${formatMoney(allowance, cur)} hoje` : `Você passou ${formatMoney(-allowance, cur)} do limite de hoje`}</p>
+            <p className="mt-2 font-display text-3xl font-semibold">{allowance > 0
+                ? notStarted ? `Você poderá gastar ${formatMoney(allowance, cur)} por dia` : `Você ainda pode gastar ${formatMoney(allowance, cur)} hoje`
+                : allowance === 0 ? "Orçamento todo reservado"
+                : notStarted ? `O planejado passa ${formatMoney(-allowance, cur)} por dia do orçamento` : `Você passou ${formatMoney(-allowance, cur)} do limite de hoje`}</p>
             <p className="mt-1 text-sm opacity-80">Orçamento restante dividido por {daysLeft} {daysLeft === 1 ? "dia" : "dias"}, descontando o que já foi reservado.</p>
           </> : <p className="mt-2 font-display text-2xl">Viagem encerrada</p>}
         </div>

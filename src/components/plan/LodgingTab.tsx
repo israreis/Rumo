@@ -3,7 +3,7 @@ import { differenceInCalendarDays } from "date-fns";
 import { AlertTriangle, BedDouble, CalendarClock, MapPin, Phone, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/EmptyState";
-import { geocode, LODGING_TYPES, planQuery, type Lodging } from "@/lib/plan-api";
+import { geocode, LODGING_TYPES, planQuery, type Lodging, type Transport } from "@/lib/plan-api";
 import { nightsWithoutLodging } from "@/lib/itinerary";
 import { formatDate, formatMoney, toDate } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
@@ -21,13 +21,14 @@ export function lodgingTotal(l: Pick<Lodging, "nightly_rate" | "total" | "touris
 export function LodgingTab({ trip }: { trip: Trip }) {
   const { data = [] } = useQuery(planQuery<Lodging>("lodgings", trip.id));
   const ed = useEditor();
-  const gaps = nightsWithoutLodging(trip.start_date, trip.end_date, data);
+  const { data: transports = [] } = useQuery(planQuery<Transport>("transports", trip.id));
+  const gaps = nightsWithoutLodging(trip.start_date, trip.end_date, data, transports);
   const openNew = () => ed.open({ type: "hotel", currency: trip.currency, check_in_time: "15:00", check_out_time: "11:00" });
 
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Hospedagem</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold">Hospedagem</h2>
         <Button onClick={openNew}><Plus /> Adicionar</Button>
       </div>
       {gaps.length > 0 && data.length > 0 && (
