@@ -14,7 +14,7 @@ A identidade vem de uma mesa de viajante fotografada de cima: câmera analógica
 
 O símbolo junta duas ideias:
 
-- **Fotografia:** uma lente de câmera, com anel serrilhado, anel de foco em latão, íris de diafragma e reflexo no vidro.
+- **Fotografia:** uma lente de câmera, com corpo em marrom-metal (`#3d3026`) e anel serrilhado, aro externo e anel de foco em latão, íris de diafragma e reflexo no vidro. O aro externo de latão garante que a borda apareça também sobre fundos escuros; o símbolo é o mesmo nos temas claro e escuro.
 - **Viagem:** dentro da lente há uma bússola, com mostrador graduado e ponteiro norte em couro.
 
 A frase que guia tudo é **"enquadrar o caminho"**. O app deve parecer um objeto de viagem bem cuidado, e não um painel corporativo.
