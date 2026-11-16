@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Luggage, LogOut, Plus, Stamp as StampIcon, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo, Splash } from "@/components/Logo";
+import { PageBackdrop } from "@/components/PageBackdrop";
 import { OfflineIndicator } from "@/components/OfflineSync";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -60,6 +61,7 @@ function AppLayout() {
 
   return (
     <div className="min-h-dvh">
+      <PageBackdrop />
       <header className="no-print pt-safe sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Logo to="/trips" />

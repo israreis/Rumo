@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { PageBackdrop } from "@/components/PageBackdrop";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ function AcceptInvite() {
 
   return (
     <div className="grid min-h-dvh place-items-center px-4">
+      <PageBackdrop />
       <div className="max-w-sm text-center">
         <PassportMark className="mx-auto size-20" />
         <h1 className="mt-6 text-3xl">Convite de viagem</h1>

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { PageBackdrop } from "@/components/PageBackdrop";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -74,6 +75,7 @@ function PublicItinerary() {
   const { trip, destinations } = data;
   return (
     <div className="min-h-dvh">
+      <PageBackdrop />
       <header className="mx-auto flex max-w-3xl items-center justify-between px-4 pb-4 pt-[max(1.75rem,env(safe-area-inset-top))]">
         <Logo />
         <span className="rounded-full border px-3 py-1 text-xs font-semibold text-muted-foreground">Somente leitura</span>
