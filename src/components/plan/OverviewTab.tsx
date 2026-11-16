@@ -101,11 +101,11 @@ export function OverviewTab({ trip }: { trip: Trip }) {
         </div>
         <Kpi label="Total previsto" value={formatMoney(goal, cur)} sub={trip.budget ? `planejado ${formatMoney(planned, cur)}` : "soma do planejado"} />
         <Kpi label="Gasto até agora" value={formatMoney(spent, cur)} sub={`${formatMoney(paidPlan, cur)} pago antes + ${formatMoney(spentExp, cur)} na viagem`} />
-        <div className="flex items-center gap-4 rounded-2xl border bg-card p-4 shadow-card">
-          <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-24" />
-          <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-3 rounded-2xl border bg-card p-4 shadow-card">
+          <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-20 xl:size-24" />
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Saldo</p>
-            <p className={cn("mt-1 font-num text-xl font-medium", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>
+            <p className={cn("mt-1 break-words font-num text-lg font-medium leading-tight xl:text-xl", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>
           </div>
         </div>
       </div>
@@ -218,9 +218,9 @@ export function OverviewTab({ trip }: { trip: Trip }) {
 
 function Kpi({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: "success" | "destructive" }) {
   return (
-    <div className="rounded-2xl border bg-card p-5 shadow-card">
+    <div className="min-w-0 rounded-2xl border bg-card p-5 shadow-card">
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className={cn("mt-2 font-display text-2xl font-semibold", tone === "destructive" && "text-destructive", tone === "success" && "text-success")}>{value}</p>
+      <p className={cn("mt-2 break-words font-display text-2xl font-semibold leading-tight", tone === "destructive" && "text-destructive", tone === "success" && "text-success")}>{value}</p>
       {sub && <p className="mt-1 text-xs text-muted-foreground">{sub}</p>}
     </div>
   );
