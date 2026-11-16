@@ -35,4 +35,19 @@ describe("stamps", () => {
     expect(c.countries).toBe(2);
     expect(collection([trip], "2027-10-01").earned).toHaveLength(0);
   });
+
+  it("a finished trip stamps all its cities, even with arrival dates left in the future", () => {
+    const done = {
+      id: "t2", name: "Lisboa e Porto", end_date: "2025-12-26",
+      trip_destinations: [
+        { city: "Lisboa", country: "Portugal", arrival_date: "2026-12-16" },
+        { city: "Porto", country: "Portugal", arrival_date: null },
+      ],
+    };
+    const c = collection([done], "2026-11-16");
+    expect(c.earned).toHaveLength(3);
+    expect(c.cities).toBe(2);
+    expect(c.countries).toBe(1);
+    expect(c.earned.find((x) => x.main === "Lisboa")!.bottom).toBe("26 DEZ 2025");
+  });
 });

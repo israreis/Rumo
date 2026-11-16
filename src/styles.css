@@ -290,3 +290,11 @@
   -ms-overflow-style: none;
   &::-webkit-scrollbar { display: none; }
 }
+
+/* Papel de passaporte: fundo de segurança em linhas finas (guilloché simplificado) */
+.passport-paper {
+  background-color: var(--papel);
+  background-image:
+    repeating-radial-gradient(circle at 50% 115%, transparent 0 11px, color-mix(in oklab, var(--latao) 11%, transparent) 11px 12px),
+    repeating-linear-gradient(118deg, transparent 0 16px, color-mix(in oklab, var(--salvia) 9%, transparent) 16px 17px);
+}

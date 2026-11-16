@@ -48,6 +48,7 @@ export function stampDate(d: string | null) {
 export function tripStamps(trip: TripLike, today: string): StampItem[] {
   const seen = new Set<string>();
   const out: StampItem[] = [];
+  const ended = !!trip.end_date && trip.end_date < today;
   const dests = [...trip.trip_destinations].sort((a, b) => (a.arrival_date ?? "9").localeCompare(b.arrival_date ?? "9"));
   for (const d of dests) {
     const city = d.city.trim();
@@ -55,6 +56,8 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
     if (!city || seen.has(id)) continue;
     seen.add(id);
     const h = hash(`${trip.id}:${id}`);
+    // Chegada fora do período (ou sem data) numa viagem encerrada: vale a data de volta.
+    const date = d.arrival_date && (!trip.end_date || d.arrival_date <= trip.end_date) ? d.arrival_date : trip.end_date;
     out.push({
       key: `${trip.id}:${id}`,
       tripId: trip.id,
@@ -62,9 +65,10 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       kind: "city",
       top: d.country?.trim() || "Chegada",
       main: city.replace(/\s*\(.*\)\s*$/, ""),
-      bottom: stampDate(d.arrival_date),
-      date: d.arrival_date,
-      earned: !!d.arrival_date && d.arrival_date <= today,
+      bottom: stampDate(date),
+      date,
+      // Carimbado no dia da chegada, ou de qualquer forma quando a viagem já terminou.
+      earned: (!!date && date <= today) || ended,
       tone: TONES[hash(d.country?.trim().toLowerCase() || id) % TONES.length]!,
       shape: h % 2 === 0 ? "round" : "rect",
       tilt: (h % 15) - 7,
@@ -83,7 +87,7 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       date: trip.end_date,
       earned: trip.end_date < today,
       tone: "oliva",
-      shape: "dashed",
+      shape: "rect",
       tilt: (hash(trip.id) % 9) - 4,
       country: null,
     });

@@ -28,7 +28,7 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Latão e caramelo no tema claro só em ícones, linhas e texto ≥24px (contraste 3:1).
 - Nome do app: **Rumo** (R maiúsculo); use `<Wordmark />`.
 - Logo: `src/components/Logo.tsx`. `LogoMark` é animado por padrão em todo o app (cabeçalho, login, carregamentos via `<Splash />`); só o PDF usa `animated={false}`. `PassportMark` em Passaporte, Documentos e convites.
-- Carimbos: `src/components/Stamp.tsx` + regras puras em `src/lib/stamps.ts` (um por cidade no dia da chegada, mais "Viagem concluída"); coleção em `/passaporte`. Derivados das viagens, sem tabela própria.
+- Carimbos: `src/components/Stamp.tsx` + regras puras em `src/lib/stamps.ts` (um por cidade no dia da chegada, mais "Viagem concluída"); coleção em `/passaporte`, exibida como livreto (`src/components/PassportBook.tsx`: página de identificação + páginas de vistos com 4 carimbos, folha que gira em 3D). Derivados das viagens, sem tabela própria; viagem encerrada carimba todas as suas cidades.
 - Mostrador (`src/components/Dial.tsx`) para progresso circular; botão secundário é a variante `oliva`.
 
 ## Commits

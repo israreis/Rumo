@@ -21,7 +21,7 @@ export function TripCard({ trip }: { trip: Trip }) {
           <StatusBadge status={status} className="absolute left-3 top-3" />
           {status === "completed" && (
             <div className="absolute right-2 top-2 rounded-full bg-papel/85 p-0.5 backdrop-blur">
-              <Stamp top="Viagem" main="Concluída" bottom={stampDate(trip.end_date)} tone="oliva" shape="dashed" tilt={-6} className="size-20" />
+              <Stamp top="Viagem" main="Concluída" bottom={stampDate(trip.end_date)} tone="oliva" shape="rect" tilt={-6} className="size-20" />
             </div>
           )}
           {days != null && status !== "completed" && (
