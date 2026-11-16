@@ -23,13 +23,29 @@ export function dayTimezone(day: string, dests: Destination[]) {
   return destinationForDay(day, dests)?.timezone || BROWSER_TZ;
 }
 
-/** Nights (date of the evening) between start and end not covered by any lodging. */
+type OvernightLeg = { departure_at: string | null; departure_tz: string | null; arrival_at: string | null; arrival_tz: string | null };
+
+/**
+ * Nights (date of the evening) between start and end not covered by any lodging.
+ * A night spent travelling (a leg that departs that evening and lands on a later local date,
+ * e.g. an overnight flight) does not need a bed, so it is not reported.
+ */
 export function nightsWithoutLodging(
   start: string | null, end: string | null,
   lodgings: { check_in_date: string | null; check_out_date: string | null }[],
+  transports: OvernightLeg[] = [],
 ): string[] {
   const days = tripDays(start, end).slice(0, -1);
-  return days.filter((n) => !lodgings.some((l) => l.check_in_date && l.check_out_date && l.check_in_date <= n && n < l.check_out_date));
+  const onTheMove = new Set(
+    transports
+      .filter((t) => t.departure_at && t.arrival_at)
+      .map((t) => ({ d: zonedDate(t.departure_at!, t.departure_tz || "UTC"), a: zonedDate(t.arrival_at!, t.arrival_tz || "UTC") }))
+      .filter((x) => x.a > x.d)
+      .map((x) => x.d),
+  );
+  return days.filter(
+    (n) => !onTheMove.has(n) && !lodgings.some((l) => l.check_in_date && l.check_out_date && l.check_in_date <= n && n < l.check_out_date),
+  );
 }
 
 export type Slot = { id: string; start: string | null; end: string | null };

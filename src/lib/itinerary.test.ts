@@ -27,3 +27,12 @@ describe("itinerary", () => {
     expect([...ids].sort()).toEqual(["a", "b"]);
   });
 });
+
+describe("nightsWithoutLodging with overnight legs", () => {
+  it("does not ask for a bed on a night spent on an overnight flight", () => {
+    const flight = { departure_at: "2027-10-15T23:45:00.000Z", departure_tz: "America/Sao_Paulo", arrival_at: "2027-10-16T09:35:00.000Z", arrival_tz: "Europe/Lisbon" };
+    const lodging = [{ check_in_date: "2027-10-16", check_out_date: "2027-10-18" }];
+    expect(nightsWithoutLodging("2027-10-15", "2027-10-19", lodging, [flight])).toEqual(["2027-10-18"]);
+    expect(nightsWithoutLodging("2027-10-15", "2027-10-19", lodging)).toEqual(["2027-10-15", "2027-10-18"]);
+  });
+});

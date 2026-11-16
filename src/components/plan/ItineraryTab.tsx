@@ -79,7 +79,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
     return m;
   }, [transports, lodgings]);
 
-  const gaps = useMemo(() => new Set(nightsWithoutLodging(trip.start_date, trip.end_date, lodgings)), [trip, lodgings]);
+  const gaps = useMemo(() => new Set(nightsWithoutLodging(trip.start_date, trip.end_date, lodgings, transports)), [trip, lodgings, transports]);
   const [selected, setSelected] = useState<string | null>(null);
   const selDay = selected ?? days[0];
   const [editEv, setEditEv] = useState<Form | null>(null);
@@ -191,10 +191,12 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
                   </div>
                 </header>
                 <div className="space-y-2">
-                  {fixed.map((f) => <FixedItem key={f.key} f={f} conflict={conflicts.has(f.key)} />)}
                   <DayList id={day}>
                     <SortableContext items={dragIds} strategy={verticalListSortingStrategy}>
-                      {dragIds.map((id) => renderDraggable(id, conflicts, tz))}
+                      {interleave(fixed, dragIds, (id) => actById[id]?.time?.slice(0, 5) ?? evById[id]?.start_time?.slice(0, 5) ?? null).map((it) =>
+                        it.kind === "fixed"
+                          ? <FixedItem key={it.f.key} f={it.f} conflict={conflicts.has(it.f.key)} />
+                          : renderDraggable(it.id, conflicts, tz))}
                     </SortableContext>
                   </DayList>
                   {!fixed.length && !dragIds.length && <p className="px-1 text-sm text-muted-foreground">Dia livre. Adicione um evento ou arraste algo da lista de desejos.</p>}
@@ -249,6 +251,22 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
       )}
     </DndContext>
   );
+}
+
+/**
+ * One timeline per day: automatic items (flights, check-ins) slot in by time between the
+ * user's own items, which keep their manual order. Untimed own items never pull a fixed one forward.
+ */
+function interleave(fixed: Fixed[], ids: string[], timeOf: (id: string) => string | null) {
+  const out: ({ kind: "fixed"; f: Fixed } | { kind: "drag"; id: string })[] = [];
+  let i = 0;
+  for (const id of ids) {
+    const t = timeOf(id);
+    if (t) while (i < fixed.length && (fixed[i]!.time ?? "") <= t) out.push({ kind: "fixed", f: fixed[i++]! });
+    out.push({ kind: "drag", id });
+  }
+  while (i < fixed.length) out.push({ kind: "fixed", f: fixed[i++]! });
+  return out;
 }
 
 function DayList({ id, children }: { id: string; children: React.ReactNode }) {

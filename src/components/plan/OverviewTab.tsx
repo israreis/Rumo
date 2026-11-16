@@ -61,7 +61,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
   });
   freeCancelSoon(lodgings, now).forEach((l) =>
     alerts.push({ tone: "warning", icon: BedDouble, text: `Cancelamento grátis de ${l.name} termina ${l.daysLeft === 0 ? "hoje" : `em ${l.daysLeft} dia(s)`} (${formatDate(l.free_cancel_until)}).` }));
-  const gaps = nightsWithoutLodging(trip.start_date, trip.end_date, lodgings);
+  const gaps = nightsWithoutLodging(trip.start_date, trip.end_date, lodgings, transports);
   if (gaps.length) alerts.push({ tone: "warning", icon: BedDouble, text: `${gaps.length} noite(s) sem hospedagem: ${gaps.slice(0, 4).map(formatDate).join(", ")}${gaps.length > 4 ? "…" : ""}` });
   const days = tripDays(trip.start_date, trip.end_date);
   days.forEach((d) => {

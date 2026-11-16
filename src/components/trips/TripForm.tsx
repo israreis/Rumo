@@ -132,7 +132,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
             <Input aria-label="Cidade" placeholder="Cidade" value={d.city} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, city: e.target.value } : x)))} />
             <Input aria-label="País" placeholder="País" value={d.country ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, country: e.target.value } : x)))} />
             <Button type="button" variant="ghost" size="icon" aria-label="Remover destino" className="hidden sm:inline-flex" onClick={() => set("destinations", v.destinations.filter((_, j) => j !== i))}><Trash2 /></Button>
-            <div className="grid grid-cols-2 gap-3 sm:col-span-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:col-span-2 lg:grid-cols-4">
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Chegada</Label>
                 <Input type="date" value={d.arrival_date ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, arrival_date: e.target.value } : x)))} /></div>
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Saída</Label>

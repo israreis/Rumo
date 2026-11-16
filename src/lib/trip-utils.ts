@@ -9,7 +9,11 @@ export const STATUS_LABEL: Record<TripStatus, string> = {
   completed: "Concluída",
 };
 
-export const CURRENCIES = ["BRL", "USD", "EUR", "GBP", "ARS", "CLP", "JPY"] as const;
+/** Common travel currencies. Frankfurter (ECB) quotes all of them except ARS, CLP, COP, PEN and UYU, which take a manual rate. */
+export const CURRENCIES = [
+  "BRL", "USD", "EUR", "GBP", "ISK", "CHF", "CAD", "AUD", "NZD", "JPY", "CNY", "MXN", "ARS", "CLP", "COP", "PEN", "UYU",
+  "DKK", "NOK", "SEK", "CZK", "HUF", "PLN", "TRY", "ZAR", "THB", "SGD", "HKD", "KRW", "INR",
+] as const;
 
 /** Parse a yyyy-mm-dd string as a local calendar date. */
 export function toDate(d: string | null | undefined): Date | null {
