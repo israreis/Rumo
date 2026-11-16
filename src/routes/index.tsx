@@ -30,7 +30,7 @@ const FEATURES = [
 function Index() {
   return (
     <div className="min-h-dvh">
-      <header className="pt-safe mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-5 pb-4 pt-[max(1.75rem,env(safe-area-inset-top))]">
         <Logo />
         <div className="flex items-center gap-1">
           <ThemeToggle />
@@ -39,7 +39,7 @@ function Index() {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 pb-20">
-        <section className="grid items-center gap-10 pt-6 md:grid-cols-[1.1fr_1fr] md:pt-14">
+        <section className="grid items-center gap-10 pt-8 md:grid-cols-[1.1fr_1fr] md:pt-16">
           <div>
             <p className="font-hand text-3xl text-primary">Dia 1: chegamos!</p>
             <h1 className="mt-2 text-5xl leading-[1.02] md:text-7xl">Enquadre o caminho antes de partir.</h1>

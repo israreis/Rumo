@@ -95,7 +95,7 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-dvh md:grid-cols-2">
-      <div className="pt-safe flex flex-col px-6 py-6 sm:px-12">
+      <div className="flex flex-col px-6 pb-6 pt-[max(1.75rem,env(safe-area-inset-top))] sm:px-12 sm:pt-8">
         <Logo />
         <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-10">
           <p className="font-hand text-2xl text-primary">{mode === "signup" ? "Primeira página do diário" : "Bom te ver por aqui"}</p>

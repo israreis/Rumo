@@ -74,7 +74,7 @@ function PublicItinerary() {
   const { trip, destinations } = data;
   return (
     <div className="min-h-dvh">
-      <header className="pt-safe mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
+      <header className="mx-auto flex max-w-3xl items-center justify-between px-4 pb-4 pt-[max(1.75rem,env(safe-area-inset-top))]">
         <Logo />
         <span className="rounded-full border px-3 py-1 text-xs font-semibold text-muted-foreground">Somente leitura</span>
       </header>
