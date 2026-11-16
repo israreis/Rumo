@@ -34,20 +34,22 @@ function Passport() {
 
   return (
     <div className="space-y-10">
-      <header className="flex flex-wrap items-center gap-5">
-        <PassportMark className="size-16 self-start sm:size-24 sm:self-center" title="Passaporte Rumo" />
-        <div className="min-w-0 flex-1">
-          <p className="font-hand text-2xl text-primary">Carimbe cada chegada</p>
-          <h1 className="text-3xl sm:text-4xl">Meu passaporte</h1>
-          <p className="mt-1 max-w-lg text-sm text-muted-foreground">
-            Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada cidade vira um carimbo no dia em que você chega, e cada viagem concluída ganha o seu.
-          </p>
+      <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <PassportMark className="size-16 shrink-0 sm:size-24" title="Passaporte Rumo" />
+          <div className="min-w-0">
+            <p className="font-hand text-xl text-primary sm:text-2xl">Carimbe cada chegada</p>
+            <h1 className="text-3xl sm:text-4xl">Meu passaporte</h1>
+          </div>
         </div>
-        <dl className="grid w-full grid-cols-3 gap-3 text-center sm:w-auto">
+        <dl className="order-last grid grid-cols-3 gap-3 text-center lg:order-none lg:row-span-2">
           <Count n={col.earned.length} label="carimbos" />
           <Count n={col.cities} label="cidades" />
           <Count n={col.countries} label={col.countries === 1 ? "país" : "países"} />
         </dl>
+        <p className="max-w-2xl text-sm text-muted-foreground lg:-mt-2">
+          Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada cidade vira um carimbo no dia em que você chega, e cada viagem concluída ganha o seu.
+        </p>
       </header>
 
       {col.earned.length === 0 ? (
