@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root,[data-theme="light"]{--linho:#f3eee4;--papel:#fbf8f2;--areia:#e6dccb;--borda:#d8cdb9;--tinta:#2a211a;--tinta-suave:#6b5d4f;--couro:#8a4f2a;--couro-hover:#6e3d1f;--sobre-couro:#fbf8f2;--oliva:#5f6446;--salvia:#d9dbc6;--latao:#a88449;--caramelo:#b9783f;--mar:#3f6d66;--marinho:#23324a;--sucesso:#4a6b35;--alerta:#94600f;--erro:#9e3426;--borda-forte:#a39380;--sombra:0 1px 2px rgba(42,33,26,.06),0 4px 12px rgba(42,33,26,.06);--sombra-alta:0 8px 24px rgba(42,33,26,.16)}
-[data-theme="dark"]{--linho:#1c1814;--papel:#26211b;--areia:#332c24;--borda:#3d352c;--tinta:#f1eadf;--tinta-suave:#b8ac9c;--couro:#d39468;--couro-hover:#e3ab83;--sobre-couro:#1c1814;--oliva:#aeb28c;--salvia:#3a3d2c;--latao:#c9a66b;--caramelo:#d69a62;--mar:#8fbab2;--marinho:#9fb2cc;--sucesso:#9cc483;--alerta:#e0b25a;--erro:#e88b7c;--borda-forte:#6e6254;--sombra:0 1px 2px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.3);--sombra-alta:0 8px 24px rgba(0,0,0,.5)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--linho);color:var(--tinta);font:16px/1.6 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
@@ -109,7 +108,6 @@ footer{color:var(--tinta-suave);font-size:13px;padding-top:32px}
   <a class="lk" href="#conceito">Conceito</a><a class="lk" href="#logo">Logo</a><a class="lk" href="#cores">Cores</a>
   <a class="lk" href="#tipografia">Tipografia</a><a class="lk" href="#espaco">Espaço e forma</a><a class="lk" href="#componentes">Componentes</a>
   <a class="lk" href="#icones">Ícones e fotografia</a><a class="lk" href="#voz">Voz e tom</a>
-  <button class="theme" id="theme" type="button" aria-pressed="false">◐ Tema escuro</button>
 </nav>
 <main>
 
@@ -166,7 +164,7 @@ footer{color:var(--tinta-suave);font-size:13px;padding-top:32px}
 <section id="cores">
   <p class="eyebrow">03 · Cores</p>
   <h2>A mesa do viajante</h2>
-  <p class="lead">Couro da capa da câmera, linho do caderno, latão das ferragens, oliva da mochila, azul do passaporte e o verde-água dos mapas. Use o botão de tema para ver os valores do modo escuro.</p>
+  <p class="lead">Couro da capa da câmera, linho do caderno, latão das ferragens, oliva da mochila, azul do passaporte e o verde-água dos mapas. Cada amostra mostra o valor do tema claro e, abaixo, o do tema escuro do app.</p>
   <div class="ratio" aria-label="Proporção 60/30/10">
     <div style="flex:60;background:var(--linho);color:var(--tinta);border:1px solid var(--borda)">60% linho / papel</div>
     <div style="flex:30;background:var(--tinta);color:var(--linho)">30% tinta</div>
@@ -300,21 +298,10 @@ footer{color:var(--tinta-suave);font-size:13px;padding-top:32px}
 </main>
 </div>
 <script>
-(function () {
-  var root = document.documentElement, btn = document.getElementById('theme');
-  function apply(t) {
-    root.setAttribute('data-theme', t);
-    btn.setAttribute('aria-pressed', String(t === 'dark'));
-    btn.textContent = t === 'dark' ? '◑ Tema claro' : '◐ Tema escuro';
-    document.querySelectorAll('.hex').forEach(function (el) { el.textContent = el.getAttribute('data-' + t); });
-  }
-  var saved = null; try { saved = localStorage.getItem('rumo-ds-theme'); } catch (e) {}
-  apply(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-  btn.addEventListener('click', function () {
-    var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    apply(t); try { localStorage.setItem('rumo-ds-theme', t); } catch (e) {}
-  });
-})();
+/* A página fica sempre no tema claro; cada amostra mostra também o valor do tema escuro do app. */
+document.querySelectorAll('.hex').forEach(function (el) {
+  el.innerHTML = el.getAttribute('data-light') + '<br><small style="opacity:.7">escuro ' + el.getAttribute('data-dark') + '</small>';
+});
 </script>
 </body>
 </html>
