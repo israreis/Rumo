@@ -82,9 +82,9 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
     return m;
   }, [transports, lodgings]);
 
-  // Arrival days already lived get the city stamp in the day header (virtual passport).
+  // Day of entry into each country already lived gets the country stamp in the day header (virtual passport).
   const todayIso = format(new Date(), "yyyy-MM-dd");
-  const stampByDay = useMemo(() => new Map(tripStamps(trip, todayIso).filter((s) => s.kind === "city" && s.earned && s.date).map((s) => [s.date!, s])), [trip, todayIso]);
+  const stampByDay = useMemo(() => new Map(tripStamps(trip, todayIso).filter((s) => s.kind === "country" && s.earned && s.date).map((s) => [s.date!, s])), [trip, todayIso]);
   const gaps = useMemo(() => new Set(nightsWithoutLodging(trip.start_date, trip.end_date, lodgings, transports)), [trip, lodgings, transports]);
   const [selected, setSelected] = useState<string | null>(null);
   const selDay = selected ?? days[0];

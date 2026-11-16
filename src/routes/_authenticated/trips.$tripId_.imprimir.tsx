@@ -181,7 +181,7 @@ function PrintTrip() {
         <section className="print-avoid mt-8">
           <h2 className="text-xl font-medium">Carimbos da viagem</h2>
           <ul className="mt-3 flex flex-wrap gap-4">
-            {tripStamps(trip, "9999-12-31").filter((s) => s.kind === "city").map((s) => (
+            {tripStamps(trip, "9999-12-31").filter((s) => s.kind === "country").map((s) => (
               <li key={s.key}><Stamp top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt} className="size-24" /></li>
             ))}
           </ul>

@@ -19,24 +19,31 @@ describe("stamps", () => {
     expect(stampDate("2027-10-21")).toBe("21 OUT 2027");
   });
 
-  it("makes one stamp per city, collected on arrival, plus the finished-trip stamp", () => {
+  it("makes one stamp per country, entered through the first city, plus the finished-trip stamp", () => {
     const s = tripStamps(trip, "2027-10-24");
-    expect(s.map((x) => x.main)).toEqual(["Londres", "Edimburgo", "Ilha de Skye", "Reykjavík", "Concluída"]);
-    expect(s.filter((x) => x.earned).map((x) => x.main)).toEqual(["Londres", "Edimburgo", "Ilha de Skye"]);
-    expect(s[1]!.bottom).toBe("20 OUT 2027");
+    expect(s.map((x) => x.main)).toEqual(["Reino Unido", "Islândia", "Concluída"]);
+    expect(s[0]!.top).toBe("Londres");
+    expect(s[0]!.bottom).toBe("16 OUT 2027");
+    expect(s.filter((x) => x.earned).map((x) => x.main)).toEqual(["Reino Unido"]);
     expect(Math.abs(s[0]!.tilt)).toBeLessThanOrEqual(7);
   });
 
   it("counts cities and countries of the collected stamps only", () => {
     const c = collection([trip], "2027-11-01");
-    expect(c.earned).toHaveLength(5);
+    expect(c.earned).toHaveLength(3);
     expect(c.pending).toHaveLength(0);
     expect(c.cities).toBe(4);
     expect(c.countries).toBe(2);
     expect(collection([trip], "2027-10-01").earned).toHaveLength(0);
   });
 
-  it("a finished trip stamps all its cities, even with arrival dates left in the future", () => {
+  it("lists each country (and the finished-trip stamp) only once in 'para carimbar'", () => {
+    const again = { ...trip, id: "t3", end_date: "2028-05-10", trip_destinations: [{ city: "Manchester", country: "Reino Unido", arrival_date: "2028-05-01" }] };
+    const c = collection([trip, again], "2027-10-01");
+    expect(c.pending.map((x) => x.main)).toEqual(["Reino Unido", "Islândia", "Concluída"]);
+  });
+
+  it("a finished trip stamps all its countries, even with arrival dates left in the future", () => {
     const done = {
       id: "t2", name: "Lisboa e Porto", end_date: "2025-12-26",
       trip_destinations: [
@@ -45,9 +52,9 @@ describe("stamps", () => {
       ],
     };
     const c = collection([done], "2026-11-16");
-    expect(c.earned).toHaveLength(3);
+    expect(c.earned).toHaveLength(2);
     expect(c.cities).toBe(2);
     expect(c.countries).toBe(1);
-    expect(c.earned.find((x) => x.main === "Lisboa")!.bottom).toBe("26 DEZ 2025");
+    expect(c.earned.find((x) => x.main === "Portugal")!.bottom).toBe("26 DEZ 2025");
   });
 });

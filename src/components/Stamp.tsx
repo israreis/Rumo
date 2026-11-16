@@ -17,6 +17,7 @@ export function Stamp({
   const id = useId().replace(/:/g, "");
   const ink = pending ? "var(--tinta-suave)" : `var(--${tone})`;
   const mainSize = main.length > 11 ? 15 : main.length > 8 ? 18 : 22;
+  const topSize = top.length > 18 ? 7.5 : top.length > 13 ? 8.5 : 10;
   return (
     <svg
       viewBox="0 0 160 160"
@@ -41,7 +42,7 @@ export function Stamp({
           <>
             <rect x="10" y="30" width="140" height="100" rx="10" fill="none" strokeWidth="3" strokeDasharray={pending ? "6 5" : undefined} />
             <rect x="18" y="38" width="124" height="84" rx="6" fill="none" strokeWidth="1.2" strokeDasharray="3 3" />
-            <text stroke="none" x="80" y="62" textAnchor="middle" className="font-sans" fontWeight="600" fontSize="10" letterSpacing="1.4">{top.toUpperCase()}</text>
+            <text stroke="none" x="80" y="62" textAnchor="middle" className="font-sans" fontWeight="600" fontSize={topSize} letterSpacing="1.4">{top.toUpperCase()}</text>
             <text stroke="none" x="80" y="92" textAnchor="middle" className="font-display" fontWeight="600" fontSize={mainSize + 1}>{main}</text>
             {bottom && <text stroke="none" x="80" y="112" textAnchor="middle" className="font-sans" fontWeight="600" fontSize="10" letterSpacing="1.4">{bottom.toUpperCase()}</text>}
           </>
@@ -49,7 +50,7 @@ export function Stamp({
         {shape === "dashed" && (
           <>
             <circle cx="80" cy="80" r="70" fill="none" strokeWidth="3" strokeDasharray="6 4" />
-            <text stroke="none" x="80" y="68" textAnchor="middle" className="font-sans" fontWeight="600" fontSize="11" letterSpacing="1.6">{top.toUpperCase()}</text>
+            <text stroke="none" x="80" y="68" textAnchor="middle" className="font-sans" fontWeight="600" fontSize={topSize + 1} letterSpacing="1.6">{top.toUpperCase()}</text>
             <text stroke="none" x="80" y="96" textAnchor="middle" className="font-display" fontWeight="600" fontSize={mainSize + 2}>{main}</text>
             {bottom && <text stroke="none" x="80" y="116" textAnchor="middle" className="font-sans" fontWeight="600" fontSize="10" letterSpacing="1.4">{bottom.toUpperCase()}</text>}
           </>

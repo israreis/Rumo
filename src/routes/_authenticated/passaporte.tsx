@@ -53,7 +53,7 @@ function Passport() {
           <Count n={col.countries} label={col.countries === 1 ? "país" : "países"} />
         </dl>
         <p className="max-w-2xl text-sm text-muted-foreground lg:-mt-2">
-          Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada cidade vira um carimbo no dia em que você chega, e cada viagem concluída ganha o seu.
+          Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada país ganha um carimbo no dia em que você entra nele, como na imigração do aeroporto, e cada viagem concluída ganha o seu.
         </p>
       </header>
 

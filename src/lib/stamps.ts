@@ -2,14 +2,15 @@ import type { StampShape, StampTone } from "@/components/Stamp";
 
 /**
  * Virtual passport stamps. Passports are hardly stamped any more, so Rumo keeps the
- * ritual: every city of a trip is a stamp, collected on its arrival day; a finished trip
- * adds a "Viagem concluída" stamp. Derived from the trips themselves, so nothing to sync.
+ * ritual like airport immigration: one stamp per country entered on a trip, dated by the
+ * first arrival there and naming the city of entry; a finished trip adds a "Viagem concluída"
+ * stamp. Derived from the trips themselves, so nothing to sync.
  */
 export type StampItem = {
   key: string;
   tripId: string;
   tripName: string;
-  kind: "city" | "trip";
+  kind: "country" | "trip";
   top: string;
   main: string;
   bottom: string;
@@ -19,6 +20,8 @@ export type StampItem = {
   shape: StampShape;
   tilt: number;
   country: string | null;
+  /** Cidades da viagem dentro desse país (para contar cidades visitadas). */
+  cities: string[];
 };
 
 type TripLike = {
@@ -44,35 +47,44 @@ export function stampDate(d: string | null) {
   return `${day} ${MONTHS[Number(m) - 1] ?? ""} ${y}`;
 }
 
-/** Same city twice in one trip (e.g. back to Edimburgo) is one stamp, dated by the first arrival. */
+const clean = (city: string) => city.trim().replace(/\s*\(.*\)\s*$/, "");
+
+/** One stamp per country per trip (Londres, York e Edimburgo → um carimbo "Reino Unido"). */
 export function tripStamps(trip: TripLike, today: string): StampItem[] {
-  const seen = new Set<string>();
   const out: StampItem[] = [];
   const ended = !!trip.end_date && trip.end_date < today;
-  const dests = [...trip.trip_destinations].sort((a, b) => (a.arrival_date ?? "9").localeCompare(b.arrival_date ?? "9"));
+  const dests = [...trip.trip_destinations]
+    .filter((d) => d.city.trim())
+    .sort((a, b) => (a.arrival_date ?? "9").localeCompare(b.arrival_date ?? "9"));
+  const byCountry = new Map<string, typeof dests>();
   for (const d of dests) {
-    const city = d.city.trim();
-    const id = city.toLowerCase();
-    if (!city || seen.has(id)) continue;
-    seen.add(id);
-    const h = hash(`${trip.id}:${id}`);
+    // Sem país informado, a própria cidade faz as vezes de país.
+    const id = (d.country?.trim() || clean(d.city)).toLowerCase();
+    (byCountry.get(id) ?? byCountry.set(id, []).get(id)!).push(d);
+  }
+  for (const [id, ds] of byCountry) {
+    const entry = ds[0]!;
+    const country = entry.country?.trim() || clean(entry.city);
     // Chegada fora do período (ou sem data) numa viagem encerrada: vale a data de volta.
-    const date = d.arrival_date && (!trip.end_date || d.arrival_date <= trip.end_date) ? d.arrival_date : trip.end_date;
+    const date = entry.arrival_date && (!trip.end_date || entry.arrival_date <= trip.end_date) ? entry.arrival_date : trip.end_date;
+    const h = hash(id);
     out.push({
       key: `${trip.id}:${id}`,
       tripId: trip.id,
       tripName: trip.name,
-      kind: "city",
-      top: d.country?.trim() || "Chegada",
-      main: city.replace(/\s*\(.*\)\s*$/, ""),
+      kind: "country",
+      top: clean(entry.city), // porto de entrada, como nos carimbos de aeroporto
+      main: country,
       bottom: stampDate(date),
       date,
       // Carimbado no dia da chegada, ou de qualquer forma quando a viagem já terminou.
       earned: (!!date && date <= today) || ended,
-      tone: TONES[hash(d.country?.trim().toLowerCase() || id) % TONES.length]!,
-      shape: h % 2 === 0 ? "round" : "rect",
-      tilt: (h % 15) - 7,
-      country: d.country?.trim() || null,
+      // Cor e formato fixos por país, como cada imigração tem o seu carimbo.
+      tone: TONES[h % TONES.length]!,
+      shape: (h >> 3) % 2 === 0 ? "round" : "rect",
+      tilt: (hash(`${trip.id}:${id}`) % 15) - 7,
+      country,
+      cities: [...new Set(ds.map((d) => clean(d.city).toLowerCase()))],
     });
   }
   if (trip.end_date) {
@@ -90,6 +102,7 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       shape: "rect",
       tilt: (hash(trip.id) % 9) - 4,
       country: null,
+      cities: [],
     });
   }
   return out;
@@ -98,8 +111,18 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
 export function collection(trips: TripLike[], today: string) {
   const all = trips.flatMap((t) => tripStamps(t, today));
   const earned = all.filter((s) => s.earned).sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
-  const pending = all.filter((s) => !s.earned).sort((a, b) => (a.date ?? "9").localeCompare(b.date ?? "9"));
-  const cities = new Set(earned.filter((s) => s.kind === "city").map((s) => s.main.toLowerCase()));
+  // "Para carimbar" sem repetidos: só a próxima chegada de cada país (e o próximo "concluída").
+  const pendingSeen = new Set<string>();
+  const pending = all
+    .filter((s) => !s.earned)
+    .sort((a, b) => (a.date ?? "9").localeCompare(b.date ?? "9"))
+    .filter((s) => {
+      const id = s.kind === "trip" ? "trip" : s.main.toLowerCase();
+      if (pendingSeen.has(id)) return false;
+      pendingSeen.add(id);
+      return true;
+    });
+  const cities = new Set(earned.flatMap((s) => s.cities.map((c) => `${s.main.toLowerCase()}|${c}`)));
   const countries = new Set(earned.filter((s) => s.country).map((s) => s.country!.toLowerCase()));
   return { earned, pending, cities: cities.size, countries: countries.size };
 }
