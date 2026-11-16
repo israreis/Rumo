@@ -203,7 +203,7 @@ function Sheet({ side, number, children, lifting }: {
       />
       {number >= 0 && children && <PageArt page={number} />}
       {number >= 0 && children && (
-        <Perforated n={number + 1} className={cn("absolute top-3 h-3", side === "left" ? "right-7" : "right-3.5")} />
+        <Perforated n={number + 1} className={cn("absolute top-3 h-4", side === "left" ? "right-7" : "right-3.5")} />
       )}
       <div className="relative h-full">{children}</div>
     </div>

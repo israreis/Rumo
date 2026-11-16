@@ -7,7 +7,7 @@ import { memo, type ReactNode } from "react";
  * Também o número da página perfurado, em matriz de furos, no canto externo.
  */
 
-type Theme = { name: string; a: string; b: string; tint: string; art: ReactNode };
+type Theme = { name: string; tint: string; l: ReactNode; r: ReactNode };
 
 /* ---------- formas ---------- */
 const waves = (y: number, n: number, amp: number, gap: number, color: string, w = 0.5) =>
@@ -180,32 +180,39 @@ const lace = (y: number, c: string) => (
 /* ---------- temas por região (pares de páginas) ---------- */
 const THEMES: Theme[] = [
   {
-    name: "Litoral", a: "var(--marinho)", b: "var(--mar)", tint: "var(--mar)",
-    art: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{lighthouse(80, 100, "var(--marinho)")}{turtle(28, 70, "var(--mar)")}</>,
+    name: "Litoral", tint: "var(--mar)",
+    l: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{turtle(34, 66, "var(--mar)")}</>,
+    r: <>{waves(108, 7, 1.6, 3.2, "var(--mar)")}{lighthouse(70, 100, "var(--marinho)")}</>,
   },
   {
-    name: "Cerrado", a: "var(--caramelo)", b: "var(--oliva)", tint: "var(--caramelo)",
-    art: <>{tiles(4, 4, 6, 2, 15.3, "var(--caramelo)")}{owl(72, 108, "var(--oliva)")}{flower(26, 102, 4, "var(--caramelo)", "f1")}{flower(36, 116, 3, "var(--oliva)", "f2")}</>,
+    name: "Cerrado", tint: "var(--caramelo)",
+    l: <>{tiles(4, 4, 6, 2, 15.3, "var(--caramelo)")}{flower(30, 100, 5, "var(--caramelo)", "f1")}{flower(44, 116, 3.5, "var(--oliva)", "f2")}</>,
+    r: <>{tiles(4, 4, 6, 2, 15.3, "var(--caramelo)")}{owl(56, 106, "var(--oliva)")}</>,
   },
   {
-    name: "Mata Atlântica", a: "var(--oliva)", b: "var(--couro)", tint: "var(--salvia)",
-    art: <>{calcadao(118, "var(--tinta-suave)")}{kite(22, 30, 6, "var(--couro)", "k1")}{kite(78, 22, 4, "var(--mar)", "k2")}{toucan(64, 80, "var(--tinta)", "var(--caramelo)")}</>,
+    name: "Mata Atlântica", tint: "var(--salvia)",
+    l: <>{calcadao(118, "var(--tinta-suave)")}{kite(30, 34, 7, "var(--couro)", "k1")}{kite(68, 22, 4, "var(--mar)", "k2")}</>,
+    r: <>{calcadao(118, "var(--tinta-suave)")}{toucan(44, 78, "var(--tinta)", "var(--caramelo)")}</>,
   },
   {
-    name: "Caatinga", a: "var(--couro)", b: "var(--caramelo)", tint: "var(--caramelo)",
-    art: <>{sun(78, 26, 9, "var(--caramelo)")}{cactus(24, 124, 34, "var(--oliva)", "c1")}{cactus(70, 126, 22, "var(--oliva)", "c2")}{star8(30, 34, 7, "var(--couro)", "s1")}{star8(50, 52, 4, "var(--couro)", "s2")}</>,
+    name: "Caatinga", tint: "var(--caramelo)",
+    l: <>{star8(30, 34, 8, "var(--couro)", "s1")}{star8(54, 56, 4, "var(--couro)", "s2")}{cactus(30, 126, 34, "var(--oliva)", "c1")}</>,
+    r: <>{sun(66, 30, 9, "var(--caramelo)")}{cactus(40, 126, 24, "var(--oliva)", "c2")}</>,
   },
   {
-    name: "Amazônia", a: "var(--oliva)", b: "var(--mar)", tint: "var(--oliva)",
-    art: <>{meander(10, "var(--couro)")}{meander(16, "var(--couro)")}{waves(96, 4, 1, 4, "var(--mar)", 0.4)}{lilyPad(30, 112, 14, "var(--oliva)", "l1")}{lilyPad(70, 124, 10, "var(--oliva)", "l2")}{flower(52, 108, 3.5, "var(--couro)", "vr")}</>,
+    name: "Amazônia", tint: "var(--oliva)",
+    l: <>{meander(10, "var(--couro)")}{meander(16, "var(--couro)")}{waves(96, 4, 1, 4, "var(--mar)", 0.4)}{lilyPad(36, 114, 14, "var(--oliva)", "l1")}</>,
+    r: <>{meander(10, "var(--couro)")}{meander(16, "var(--couro)")}{waves(96, 4, 1, 4, "var(--mar)", 0.4)}{lilyPad(62, 122, 10, "var(--oliva)", "l2")}{flower(40, 108, 4, "var(--couro)", "vr")}</>,
   },
   {
-    name: "Pantanal", a: "var(--mar)", b: "var(--oliva)", tint: "var(--salvia)",
-    art: <>{waves(118, 5, 0.8, 3, "var(--mar)", 0.4)}{grass(116, "var(--oliva)")}{stork(66, 92, "var(--tinta)")}{stork(30, 80, "var(--tinta-suave)")}</>,
+    name: "Pantanal", tint: "var(--salvia)",
+    l: <>{waves(118, 5, 0.8, 3, "var(--mar)", 0.4)}{grass(116, "var(--oliva)")}{stork(36, 86, "var(--tinta-suave)")}</>,
+    r: <>{waves(118, 5, 0.8, 3, "var(--mar)", 0.4)}{grass(116, "var(--oliva)")}{stork(56, 92, "var(--tinta)")}</>,
   },
   {
-    name: "Sul", a: "var(--marinho)", b: "var(--oliva)", tint: "var(--marinho)",
-    art: <>{lace(10, "var(--marinho)")}{araucaria(22, 128, 34, "var(--oliva)", "a1")}{araucaria(52, 128, 26, "var(--oliva)", "a2")}{araucaria(80, 128, 38, "var(--oliva)", "a3")}</>,
+    name: "Sul", tint: "var(--marinho)",
+    l: <>{lace(10, "var(--marinho)")}{araucaria(26, 128, 34, "var(--oliva)", "a1")}{araucaria(62, 128, 24, "var(--oliva)", "a2")}</>,
+    r: <>{lace(10, "var(--marinho)")}{araucaria(48, 128, 38, "var(--oliva)", "a3")}</>,
   },
 ];
 
@@ -214,13 +221,13 @@ export const themeFor = (page: number) => THEMES[Math.floor(Math.max(0, page) / 
 /** Ilustração de fundo, desfocada e clara. O par de páginas (0–1, 2–3…) compartilha o tema. */
 export const PageArt = memo(function PageArt({ page }: { page: number }) {
   const t = themeFor(page);
-  // Em cada par, a página da esquerda mostra a metade esquerda da cena e a da direita a outra metade.
+  // Em cada par, cada página tem a sua parte da cena.
   const left = page % 2 === 0;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <div className="absolute inset-0 opacity-[0.10]" style={{ background: `linear-gradient(${left ? 160 : 200}deg, transparent 20%, ${t.tint} 65%, transparent 95%)` }} />
       <svg viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full opacity-[0.22] blur-[1.4px] dark:opacity-[0.16]">
-        <g transform={left ? undefined : "translate(100 0) scale(-1 1)"}>{t.art}</g>
+        {left ? t.l : t.r}
       </svg>
     </div>
   );
@@ -250,7 +257,7 @@ export function Perforated({ n, className }: { n: number; className?: string }) 
         DOTS[d]!.flatMap((row, y) =>
           [...row].map((on, x) =>
             on === "1" ? (
-              <circle key={`${i}-${x}-${y}`} cx={i * 6 + x + 0.5} cy={y + 0.5} r={0.36} className="fill-tinta/45 dark:fill-black/60" stroke="var(--papel)" strokeWidth={0.08} />
+              <circle key={`${i}-${x}-${y}`} cx={i * 6 + x + 0.5} cy={y + 0.5} r={0.38} className="fill-tinta/60 dark:fill-black/70" stroke="var(--linho)" strokeWidth={0.1} />
             ) : null,
           ),
         ),
