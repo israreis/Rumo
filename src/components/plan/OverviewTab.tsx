@@ -1,3 +1,4 @@
+import { useRouteContext } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -8,6 +9,7 @@ import { Dial } from "@/components/Dial";
 import { BUDGET_CATEGORIES } from "@/lib/budget";
 import { conflictingIds, nightsWithoutLodging, tripDays } from "@/lib/itinerary";
 import { planQuery, type Activity, type ItineraryEvent, type Lodging, type Transport } from "@/lib/plan-api";
+import { profileQuery } from "@/lib/profile";
 import { DOC_KINDS, freeCancelSoon, passportTooShort, progressPct, tripDayOf, upcomingDue } from "@/lib/trip-extras";
 import { daysUntil, formatDate, formatMoney, toDate } from "@/lib/trip-utils";
 import { zonedDate, zonedTime } from "@/lib/tz";
@@ -28,6 +30,8 @@ export function OverviewTab({ trip }: { trip: Trip }) {
   const { data: activities = [] } = useQuery(planQuery<Activity>("activities", id));
   const { data: events = [] } = useQuery(planQuery<ItineraryEvent>("itinerary_events", id));
   const { data: docs = [] } = useQuery(planQuery<TravelerDoc>("traveler_documents", id));
+  const { user } = useRouteContext({ from: "/_authenticated" });
+  const { data: profile } = useQuery(profileQuery(user.id));
   const { data: checklist = [] } = useQuery(planQuery<ChecklistItem>("checklist_items", id));
 
   const now = new Date(), today = format(now, "yyyy-MM-dd");
@@ -53,6 +57,14 @@ export function OverviewTab({ trip }: { trip: Trip }) {
 
   // Alerts
   const alerts: Alert[] = [];
+  // Passaporte cadastrado em "Meu passaporte" (perfil), se nenhum documento da viagem já avisou.
+  const myPassport = profile?.passport_expiry ?? null;
+  if (myPassport && !docs.some((d) => d.kind === "passport" && passportTooShort(d.expires_at, trip.end_date))) {
+    if (trip.start_date && myPassport < trip.start_date)
+      alerts.push({ tone: "destructive", icon: FileWarning, text: `Seu passaporte vence em ${formatDate(myPassport)}, antes da viagem começar.` });
+    else if (passportTooShort(myPassport, trip.end_date))
+      alerts.push({ tone: "destructive", icon: FileWarning, text: `Seu passaporte vence em ${formatDate(myPassport)} — menos de 6 meses após a volta.` });
+  }
   const tName = Object.fromEntries(trip.trip_travelers.map((t) => [t.id!, t.name]));
   docs.forEach((d) => {
     if (d.kind === "passport" && passportTooShort(d.expires_at, trip.end_date))

@@ -499,6 +499,8 @@ export type Database = {
           default_currency: string
           full_name: string | null
           id: string
+          passport_expiry: string | null
+          passport_number: string | null
           updated_at: string
         }
         Insert: {
@@ -507,6 +509,8 @@ export type Database = {
           default_currency?: string
           full_name?: string | null
           id: string
+          passport_expiry?: string | null
+          passport_number?: string | null
           updated_at?: string
         }
         Update: {
@@ -515,6 +519,8 @@ export type Database = {
           default_currency?: string
           full_name?: string | null
           id?: string
+          passport_expiry?: string | null
+          passport_number?: string | null
           updated_at?: string
         }
         Relationships: []

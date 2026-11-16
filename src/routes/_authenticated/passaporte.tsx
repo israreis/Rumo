@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -9,6 +9,10 @@ import { Stamp } from "@/components/Stamp";
 import { collection, markStampsSeen, seenStamps } from "@/lib/stamps";
 import { profileQuery } from "@/lib/profile";
 import { PassportBook } from "@/components/PassportBook";
+import { PassportDialog } from "@/components/PassportDialog";
+import { maskPassport, passportState, relTime, type PassportState } from "@/lib/passport";
+import { AlertTriangle, BadgeCheck, CircleAlert, IdCard } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { listTrips } from "@/lib/trips-api";
 
 export const Route = createFileRoute("/_authenticated/passaporte")({
@@ -25,6 +29,11 @@ function Passport() {
   // Stamps earned since the last visit land with the stamping animation, once.
   const [fresh] = useState(() => (typeof window === "undefined" ? new Set<string>() : seenStamps()));
   const newOnes = col.earned.filter((s) => !fresh.has(s.key));
+  const [editing, setEditing] = useState(false);
+  const pState = useMemo(
+    () => passportState(profile?.passport_expiry, today, (trips ?? []).map((t) => ({ name: t.name, end_date: t.end_date }))),
+    [profile?.passport_expiry, today, trips],
+  );
 
   useEffect(() => {
     if (!trips) return;
@@ -57,20 +66,24 @@ function Passport() {
         </p>
       </header>
 
-      {col.earned.length === 0 ? (
-        <div className="flex flex-col items-center rounded-[14px] border border-dashed bg-card/50 px-6 py-12 text-center">
-          <Stamp top="Rumo" main="Em branco" bottom="Primeira página" tone="oliva" shape="rect" pending className="size-32" />
-          <h2 className="mt-4 text-2xl">Nenhum carimbo ainda</h2>
-          <p className="mt-2 max-w-sm text-sm text-muted-foreground">O primeiro aparece no dia em que você chegar ao primeiro destino de uma viagem.</p>
-          <Button asChild className="mt-6"><Link to="/trips">Ver minhas viagens</Link></Button>
-        </div>
-      ) : (
+      <div className="space-y-4">
+        <PassportStatus state={pState} number={profile?.passport_number ?? null} expiry={profile?.passport_expiry ?? null} onEdit={() => setEditing(true)} />
         <PassportBook
           stamps={chrono}
           seen={fresh}
-          holder={{ name: profile?.full_name ?? null, avatar: profile?.avatar_url ?? null }}
+          holder={{
+            name: profile?.full_name ?? null,
+            avatar: profile?.avatar_url ?? null,
+            passportNumber: profile?.passport_number ?? null,
+            passportExpiry: profile?.passport_expiry ?? null,
+            passportState: pState,
+            onEditPassport: () => setEditing(true),
+          }}
           counts={{ stamps: col.earned.length, cities: col.cities, countries: col.countries }}
         />
+      </div>
+      {editing && (
+        <PassportDialog open onOpenChange={setEditing} userId={user.id} number={profile?.passport_number ?? null} expiry={profile?.passport_expiry ?? null} />
       )}
 
       {col.pending.length > 0 && (
@@ -97,6 +110,31 @@ function Count({ n, label }: { n: number; label: string }) {
       <dt className="sr-only">{label}</dt>
       <dd className="font-num text-2xl font-medium">{n}</dd>
       <dd className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{label}</dd>
+    </div>
+  );
+}
+
+/** Faixa acima do livreto: situação do passaporte real e atalho para cadastrar/atualizar. */
+function PassportStatus({ state, number, expiry, onEdit }: { state: PassportState; number: string | null; expiry: string | null; onEdit: () => void }) {
+  const br = (d: string | null) => (d ? d.split("-").reverse().join("/") : "");
+  const v = {
+    missing: { tone: "border-dashed bg-card/60", Icon: IdCard, icon: "text-muted-foreground", text: "Cadastre o número e a validade do seu passaporte para o Rumo avisar quando ele estiver vencendo.", cta: "Cadastrar" },
+    expired: { tone: "border-destructive/40 bg-destructive/10", Icon: CircleAlert, icon: "text-destructive", text: "", cta: "Atualizar" },
+    expiring: { tone: "border-warning/40 bg-warning/10", Icon: AlertTriangle, icon: "text-warning", text: "", cta: "Atualizar" },
+    "short-for-trip": { tone: "border-warning/40 bg-warning/10", Icon: AlertTriangle, icon: "text-warning", text: "", cta: "Atualizar" },
+    ok: { tone: "bg-card", Icon: BadgeCheck, icon: "text-success", text: "", cta: "Editar" },
+  }[state.kind];
+  const text =
+    state.kind === "expired" ? <><strong>Seu passaporte venceu há {relTime(state.days)}</strong> ({br(expiry)}). Renove antes da próxima viagem.</>
+    : state.kind === "expiring" ? <><strong>Seu passaporte vence em {relTime(state.days)}</strong> ({br(expiry)}). Muitos países exigem pelo menos 6 meses de validade na entrada.</>
+    : state.kind === "short-for-trip" ? <><strong>Validade curta para “{state.trip}”.</strong> O passaporte vence em {br(expiry)}, menos de 6 meses depois da volta ({br(state.returnDate)}); alguns países barram a entrada.</>
+    : state.kind === "ok" ? <>Passaporte <span className="font-num tracking-wider">{maskPassport(number)}</span> válido até <strong>{br(expiry)}</strong>.</>
+    : v.text;
+  return (
+    <div className={cn("flex flex-wrap items-center gap-3 rounded-[14px] border px-4 py-3 text-sm", v.tone)}>
+      <v.Icon className={cn("size-5 shrink-0", v.icon)} />
+      <p className="min-w-0 flex-1">{text}</p>
+      <Button size="sm" variant={state.kind === "ok" ? "ghost" : "outline"} onClick={onEdit}>{v.cta}</Button>
     </div>
   );
 }

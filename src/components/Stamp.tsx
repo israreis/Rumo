@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 
-export type StampTone = "couro" | "marinho" | "oliva";
+export type StampTone = "couro" | "marinho" | "oliva" | "erro" | "alerta";
 export type StampShape = "round" | "rect" | "dashed";
 
 /**

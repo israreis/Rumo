@@ -7,7 +7,7 @@ Seu diário de bordo para planejar, viver e lembrar cada viagem. É um app web i
 - orçamento em várias moedas, com IOF e spread do cartão
 - gastos da viagem, com divisão de contas entre os viajantes
 - documentos, checklist e notas
-- passaporte de carimbos virtuais: cada país visitado vira um carimbo, como na imigração do aeroporto, guardado num livreto com páginas que viram
+- passaporte de carimbos virtuais: cada país visitado vira um carimbo, como na imigração do aeroporto, guardado num livreto com páginas que viram, junto com o número e a validade do seu passaporte real (o app avisa quando estiver vencendo)
 - compartilhamento com companheiros de viagem e link público só leitura do roteiro
 - exportação em PDF, CSV (Excel) e calendário (.ics)
 - uso offline, inclusive para lançar gastos sem internet

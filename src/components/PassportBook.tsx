@@ -4,6 +4,7 @@ import { PassportMark } from "@/components/Logo";
 import { Stamp } from "@/components/Stamp";
 import { Button } from "@/components/ui/button";
 import type { StampItem } from "@/lib/stamps";
+import { maskPassport, type PassportState } from "@/lib/passport";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,7 +16,14 @@ import { cn } from "@/lib/utils";
 const PER_PAGE = 4;
 const DURATION = 750;
 
-type Holder = { name: string | null; avatar: string | null };
+type Holder = {
+  name: string | null;
+  avatar: string | null;
+  passportNumber: string | null;
+  passportExpiry: string | null;
+  passportState: PassportState;
+  onEditPassport?: () => void;
+};
 
 export function PassportBook({ stamps, seen, holder, counts }: {
   stamps: StampItem[]; // em ordem cronológica
@@ -30,7 +38,7 @@ export function PassportBook({ stamps, seen, holder, counts }: {
   const pages = useMemo(() => {
     const chunks: StampItem[][] = [];
     for (let i = 0; i < stamps.length; i += PER_PAGE) chunks.push(stamps.slice(i, i + PER_PAGE));
-    const list: ReactNode[] = [<IdPage key="id" holder={holder} counts={counts} first={stamps[0]?.date ?? null} />];
+    const list: ReactNode[] = [<IdPage key="id" holder={holder} counts={counts} />];
     chunks.forEach((c, i) => list.push(<VisaPage key={`v${i}`} stamps={c} seen={seen} />));
     list.push(<VisaPage key="blank" stamps={[]} seen={seen} hint />);
     if (list.length % 2) list.push(<VisaPage key="blank2" stamps={[]} seen={seen} />);
@@ -205,27 +213,58 @@ function Paper() {
   return <div className="absolute inset-0" />;
 }
 
-function IdPage({ holder, counts, first }: { holder: Holder; counts: { stamps: number; cities: number; countries: number }; first: string | null }) {
+function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; cities: number; countries: number } }) {
+  const st = holder.passportState;
+  const expiryTone = st.kind === "expired" ? "font-semibold text-destructive" : st.kind === "expiring" || st.kind === "short-for-trip" ? "font-semibold text-warning" : "";
+  const br = (d: string | null) => (d ? d.split("-").reverse().join("/") : "—");
+  const yymmdd = holder.passportExpiry ? holder.passportExpiry.slice(2).replace(/-/g, "") : "<<<<<<";
+  const name = (holder.name || "VIAJANTE").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z]+/g, "<");
   return (
-    <div className="flex h-full flex-col p-[7%]">
-      <p className="text-center text-[10px] font-semibold uppercase tracking-[0.25em] text-tinta-suave">Passaporte · Passport</p>
-      <div className="mt-[6%] flex items-center justify-center gap-2">
-        <PassportMark className="size-10 sm:size-12" />
+    <div className="relative flex h-full flex-col p-[7%]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-tinta-suave">Passaporte · Passport</p>
+      <div className="mt-[4%] flex items-center gap-2">
+        <PassportMark className="size-9 sm:size-11" />
         <span className="font-display text-2xl">Rumo</span>
       </div>
-      <div className="mt-[8%] flex items-start gap-4">
+      <div className="mt-[7%] flex items-start gap-4">
         <div className="aspect-[3/4] w-[34%] shrink-0 overflow-hidden rounded-md border border-tinta/20 bg-areia">
           {holder.avatar ? <img src={holder.avatar} alt="" className="h-full w-full object-cover grayscale-[35%] sepia-[20%]" /> : null}
         </div>
-        <dl className="min-w-0 space-y-2 text-xs">
+        <dl className="min-w-0 space-y-1.5 text-xs">
           <Field label="Titular">{holder.name || "Viajante"}</Field>
-          <Field label="Primeiro carimbo">{first ? first.split("-").reverse().join("/") : "—"}</Field>
-          <Field label="Carimbos">{counts.stamps}</Field>
-          <Field label="Cidades · Países">{counts.cities} · {counts.countries}</Field>
+          <Field label="Passaporte nº"><span className="font-num text-[13px] tracking-wider">{maskPassport(holder.passportNumber)}</span></Field>
+          <Field label="Validade"><span className={cn(expiryTone)}>{br(holder.passportExpiry)}</span></Field>
+          <Field label="Carimbos · Cidades · Países">{counts.stamps} · {counts.cities} · {counts.countries}</Field>
         </dl>
       </div>
+      {holder.onEditPassport && (
+        <button
+          type="button"
+          onPointerDown={(e) => e.stopPropagation()}
+          onPointerUp={(e) => e.stopPropagation()}
+          onClick={holder.onEditPassport}
+          className="mt-3 self-start text-xs font-semibold text-primary underline-offset-2 hover:underline"
+        >
+          {holder.passportNumber || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
+        </button>
+      )}
+      {(st.kind === "expired" || st.kind === "expiring" || st.kind === "short-for-trip") && (
+        <div className="pointer-events-none absolute bottom-[16%] right-[6%] w-[46%]">
+          <Stamp
+            top="Validade"
+            main={st.kind === "expired" ? "Vencido" : "Vencendo"}
+            bottom={br(holder.passportExpiry)}
+            tone={st.kind === "expired" ? "erro" : "alerta"}
+            shape="rect"
+            tilt={-12}
+            className="w-full mix-blend-multiply opacity-85 dark:mix-blend-normal"
+          />
+        </div>
+      )}
       <p className="mt-auto break-all font-num text-[9px] leading-tight tracking-[0.12em] text-tinta-suave">
-        P&lt;RUMO&lt;&lt;{(holder.name || "VIAJANTE").toUpperCase().replace(/[^A-Z]+/g, "<")}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+        P&lt;RUMO&lt;&lt;{name}&lt;&lt;&lt;&lt;&lt;&lt;
+        <br />
+        {(holder.passportNumber || "").padEnd(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
       </p>
     </div>
   );
