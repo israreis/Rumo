@@ -23,6 +23,7 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Gastos lançados sem internet vão para a fila local `src/lib/offline-queue.ts` e sincronizam ao voltar a conexão.
 
 ## Identidade visual
+- Guia completo: `docs/identidade-visual.md` (mantenha em sincronia com `src/styles.css`).
 - Tokens em `src/styles.css` seguem o design system "Rumo — Identidade visual": linho/papel/areia, tinta, couro (primária), oliva, latão, caramelo, mar, marinho. Fontes: Fraunces (títulos), DM Sans (UI), Caveat (manuscrito, com moderação), IBM Plex Mono (códigos e valores).
 - Latão e caramelo no tema claro só em ícones, linhas e texto ≥24px (contraste 3:1).
 - Logo: `src/components/Logo.tsx` (`LogoMark` com `animated` para splash/carregamento).
