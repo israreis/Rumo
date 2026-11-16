@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Plus } from "lucide-react";
 import { Stamp } from "@/components/Stamp";
 import { Button } from "@/components/ui/button";
 import type { StampItem } from "@/lib/stamps";
@@ -242,8 +242,9 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
             onPointerDown={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
             onClick={holder.onEditPassport}
-            className="text-xs font-semibold text-primary underline-offset-2 hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
           >
+            {holder.passportLast4 || holder.passportExpiry ? <Pencil className="size-3.5" /> : <Plus className="size-3.5" />}
             {holder.passportLast4 || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
           </button>
         )}
@@ -253,9 +254,10 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
             onPointerDown={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
             onClick={holder.onAddStamps}
-            className="text-xs font-semibold text-primary underline-offset-2 hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
           >
-            + Incluir carimbos de viagens anteriores
+            <Plus className="size-3.5" />
+            Incluir carimbos de viagens anteriores
           </button>
         )}
       </div>
