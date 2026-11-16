@@ -61,6 +61,7 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
     const id = (d.country?.trim() || clean(d.city)).toLowerCase();
     (byCountry.get(id) ?? byCountry.set(id, []).get(id)!).push(d);
   }
+  let n = 0;
   for (const [id, ds] of byCountry) {
     const entry = ds[0]!;
     const country = entry.country?.trim() || clean(entry.city);
@@ -78,9 +79,9 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       date,
       // Carimbado no dia da chegada, ou de qualquer forma quando a viagem já terminou.
       earned: (!!date && date <= today) || ended,
-      // Cor e formato fixos por país, como cada imigração tem o seu carimbo.
+      // Cor fixa por país; o formato alterna entre redondo e retangular.
       tone: TONES[h % TONES.length]!,
-      shape: (h >> 3) % 2 === 0 ? "round" : "rect",
+      shape: n++ % 2 === 0 ? "round" : "rect",
       tilt: (hash(`${trip.id}:${id}`) % 15) - 7,
       country,
       cities: [...new Set(ds.map((d) => clean(d.city).toLowerCase()))],
@@ -117,18 +118,22 @@ export function manualStamp(m: ManualStamp): StampItem {
 
 export function collection(trips: TripLike[], today: string, manual: ManualStamp[] = []) {
   const all = [...trips.flatMap((t) => tripStamps(t, today)), ...manual.map(manualStamp)];
-  const earned = all.filter((s) => s.earned).sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+  const byDate = (a: StampItem, b: StampItem) => (a.date ?? "9").localeCompare(b.date ?? "9") || a.key.localeCompare(b.key);
+  // Formato alterna redondo/retangular na ordem cronológica, como carimbos de imigrações diferentes.
+  const asc = all.filter((s) => s.earned).sort(byDate).map((s, i) => ({ ...s, shape: (i % 2 === 0 ? "round" : "rect") as StampShape }));
+  const earned = [...asc].reverse();
   // "Para carimbar" sem repetidos: só a próxima chegada de cada país.
   const pendingSeen = new Set<string>();
   const pending = all
     .filter((s) => !s.earned)
-    .sort((a, b) => (a.date ?? "9").localeCompare(b.date ?? "9"))
+    .sort(byDate)
     .filter((s) => {
       const id = s.main.toLowerCase();
       if (pendingSeen.has(id)) return false;
       pendingSeen.add(id);
       return true;
-    });
+    })
+    .map((s, i) => ({ ...s, shape: ((asc.length + i) % 2 === 0 ? "round" : "rect") as StampShape }));
   const cities = new Set(earned.flatMap((s) => s.cities.map((c) => `${s.main.toLowerCase()}|${c}`)));
   const countries = new Set(earned.filter((s) => s.country).map((s) => s.country!.toLowerCase()));
   return { earned, pending, cities: cities.size, countries: countries.size };

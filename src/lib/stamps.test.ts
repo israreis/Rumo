@@ -71,4 +71,10 @@ describe("stamps", () => {
     expect(c.earned[0]!.tripName).toBe("Lua de mel");
     expect(c.earned[1]!.bottom).toBe("10 JUL 2019");
   });
+
+  it("alternates round and rectangular stamps in date order", () => {
+    const manual = ["2019-01-01", "2019-02-01", "2019-03-01", "2019-04-01"].map((d, i) => ({ id: `x${i}`, country: `País ${i}`, entry_city: null, stamped_on: d, note: null }));
+    const c = collection([], "2026-11-16", manual);
+    expect([...c.earned].reverse().map((x) => x.shape)).toEqual(["round", "rect", "round", "rect"]);
+  });
 });
