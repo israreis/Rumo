@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { planQuery, PAYMENT_STATUS, TRANSPORT_TYPES, type Transport } from "@/lib/plan-api";
 import { allTimezones, BROWSER_TZ, durationLabel, formatZoned, utcToZoned, zonedToUtc } from "@/lib/tz";
 import type { Trip } from "@/lib/trips-api";
-import { AttachmentF, AttachmentLink, CurrencyF, EditDialog, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
+import { AttachmentF, AttachmentLink, CurrencyF, EditDialog, MoneyF, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
 import { TRANSPORT_ICON } from "./icons";
 import { Input } from "@/components/ui/input";
 
@@ -112,7 +112,7 @@ export function TransportTab({ trip }: { trip: Trip }) {
               <TextF f={f} set={set} k="seat" label="Assento" />
               <TextF f={f} set={set} k="class" label="Classe" />
               <TextF f={f} set={set} k="baggage" label="Bagagem incluída" className="sm:col-span-2" />
-              <TextF f={f} set={set} k="price" label="Valor" type="number" />
+              <MoneyF f={f} set={set} k="price" label="Valor" />
               <CurrencyF f={f} set={set} />
               <FxF f={f} set={set} trip={trip.currency} />
               <SelectF f={f} set={set} k="payment_status" label="Pagamento" options={PAYMENT_STATUS} />

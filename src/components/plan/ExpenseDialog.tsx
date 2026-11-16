@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { MoneyInput } from "@/components/ui/money-input";
 import { BUDGET_CATEGORIES, PAYMENT_METHODS } from "@/lib/budget";
 import { convert, feesFor } from "@/lib/fx";
 import { destinationForDay } from "@/lib/itinerary";
@@ -55,7 +56,7 @@ function ExpenseFields({ trip, f, set, fees }: { trip: Trip; f: Form; set: (k: s
   return (
     <>
       <Field label="Valor" className="sm:col-span-1">
-        <Input autoFocus inputMode="decimal" type="number" step="0.01" className="font-num h-12 text-2xl font-semibold" value={f.amount ?? ""} onChange={(e) => set("amount", e.target.value === "" ? null : Number(e.target.value))} />
+        <MoneyInput autoFocus currency={f.currency} className="h-12 text-2xl font-semibold md:text-2xl" value={f.amount} onValueChange={(v) => set("amount", v)} />
       </Field>
       <CurrencyF f={f} set={set} />
       <FxF f={f} set={set} trip={trip.currency} />
@@ -95,7 +96,9 @@ function ExpenseFields({ trip, f, set, fees }: { trip: Trip; f: Form; set: (k: s
                 <Checkbox id={`sp-${t.id}`} checked={has(t.id!)} onCheckedChange={(v) => toggle(t.id!, !!v)} />
                 <label htmlFor={`sp-${t.id}`} className="flex-1 text-sm">{t.name}</label>
                 {f.split_mode !== "equal" && has(t.id!) && (
-                  <Input type="number" step="0.01" className="h-8 w-28" value={splits.find((s) => s.traveler_id === t.id)?.value ?? 0}
+                  f.split_mode === "amount"
+                    ? <div className="w-32"><MoneyInput currency={f.currency} className="h-8" value={splits.find((s) => s.traveler_id === t.id)?.value ?? null} onValueChange={(v) => setVal(t.id!, v ?? 0)} /></div>
+                    : <Input type="number" step="0.01" className="h-8 w-28" value={splits.find((s) => s.traveler_id === t.id)?.value ?? 0}
                     onChange={(e) => setVal(t.id!, Number(e.target.value) || 0)} />
                 )}
               </div>

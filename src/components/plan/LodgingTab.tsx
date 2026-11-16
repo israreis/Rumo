@@ -7,7 +7,7 @@ import { geocode, LODGING_TYPES, planQuery, type Lodging, type Transport } from 
 import { nightsWithoutLodging } from "@/lib/itinerary";
 import { formatDate, formatMoney, toDate } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
-import { AreaF, AttachmentF, AttachmentLink, CurrencyF, EditDialog, FxF, Money, PAY_STATUS, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
+import { AreaF, AttachmentF, AttachmentLink, CurrencyF, EditDialog, MoneyF, FxF, Money, PAY_STATUS, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
 
 export function nightsOf(l: { check_in_date: string | null; check_out_date: string | null }) {
   const a = toDate(l.check_in_date), b = toDate(l.check_out_date);
@@ -97,10 +97,10 @@ export function LodgingTab({ trip }: { trip: Trip }) {
                 <TextF f={f} set={set} k="check_in_time" label="Horário do check-in" type="time" />
                 <TextF f={f} set={set} k="check_out_date" label="Check-out" type="date" />
                 <TextF f={f} set={set} k="check_out_time" label="Horário do check-out" type="time" />
-                <TextF f={f} set={set} k="nightly_rate" label="Valor por noite" type="number" />
-                <TextF f={f} set={set} k="total" label={`Total (${n} ${n === 1 ? "noite" : "noites"}) — vazio = calcular`} type="number" placeholder={f.nightly_rate ? String((f.nightly_rate * n).toFixed(2)) : ""} />
-                <TextF f={f} set={set} k="tourist_tax" label="Taxa turística" type="number" />
-                <TextF f={f} set={set} k="cleaning_fee" label="Taxa de limpeza" type="number" />
+                <MoneyF f={f} set={set} k="nightly_rate" label="Valor por noite" />
+                <MoneyF f={f} set={set} k="total" label={`Total (${n} ${n === 1 ? "noite" : "noites"}) — vazio = calcular`} placeholder={f.nightly_rate ? (f.nightly_rate * n).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0,00"} />
+                <MoneyF f={f} set={set} k="tourist_tax" label="Taxa turística" />
+                <MoneyF f={f} set={set} k="cleaning_fee" label="Taxa de limpeza" />
                 <CurrencyF f={f} set={set} />
                 <FxF f={f} set={set} trip={trip.currency} />
                 <SelectF f={f} set={set} k="payment_status" label="Pagamento" options={PAY_STATUS} />

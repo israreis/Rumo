@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MoneyInput } from "@/components/ui/money-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CURRENCIES, STATUS_LABEL, type TripStatus } from "@/lib/trip-utils";
@@ -84,8 +85,9 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="budget">Orçamento previsto</Label>
-            <Input id="budget" type="number" min={0} step="0.01" placeholder="0,00" value={v.budget ?? ""} onChange={(e) => set("budget", e.target.value === "" ? null : Number(e.target.value))} />
+            <Label htmlFor="budget">Orçamento previsto ({v.currency})</Label>
+            <MoneyInput id="budget" currency={v.currency} value={v.budget} onValueChange={(b) => set("budget", b)} />
+            <p className="text-xs text-muted-foreground">Na moeda principal. Gastos em outras moedas são convertidos para ela.</p>
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

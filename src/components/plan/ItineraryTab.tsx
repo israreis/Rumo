@@ -18,7 +18,7 @@ import { conflictingIds, dayTimezone, destinationForDay, nightsWithoutLodging, t
 import { formatMoney, toDate } from "@/lib/trip-utils";
 import { zonedDate, zonedTime } from "@/lib/tz";
 import type { Trip } from "@/lib/trips-api";
-import { AreaF, EditDialog, Pill, SelectF, TextF, withFx, type Form } from "./common";
+import { AreaF, EditDialog, MoneyF, Pill, SelectF, TextF, withFx, type Form } from "./common";
 import { ActivityDialog, geocodeIfChanged } from "./ActivitiesTab";
 import { ACTIVITY_ICON, EVENT_ICON, TRANSPORT_ICON } from "./icons";
 import { Stamp } from "@/components/Stamp";
@@ -254,7 +254,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
               <TextF f={f} set={set} k="start_time" label="Início" type="time" />
               <TextF f={f} set={set} k="end_time" label="Fim" type="time" />
               <TextF f={f} set={set} k="location" label="Local" className="sm:col-span-2" />
-              <TextF f={f} set={set} k="cost" label={`Custo (${trip.currency})`} type="number" />
+              <MoneyF f={f} set={set} k="cost" label="Custo" currency={trip.currency} />
               <AreaF f={f} set={set} k="notes" label="Observações" className="sm:col-span-2" />
             </>
           )}

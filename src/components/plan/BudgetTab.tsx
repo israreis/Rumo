@@ -10,7 +10,7 @@ import { tripDays } from "@/lib/itinerary";
 import { formatDate, formatMoney } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
 import { cn } from "@/lib/utils";
-import { CurrencyF, EditDialog, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx } from "./common";
+import { CurrencyF, EditDialog, Field, MoneyF, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx } from "./common";
 import { sum, useBudget, type Line } from "./useBudget";
 
 const KIND = { fixed: "Valor fixo", daily: "Estimativa diária" };
@@ -124,7 +124,7 @@ export function BudgetTab({ trip }: { trip: Trip }) {
               <TextF f={f} set={set} k="description" label="Descrição" className="sm:col-span-2" />
               <SelectF f={f} set={set} k="category" label="Categoria" options={BUDGET_CATEGORIES} />
               <SelectF f={f} set={set} k="kind" label="Tipo" options={KIND} />
-              <TextF f={f} set={set} k="amount" label={f.kind === "daily" ? "Valor por dia por pessoa" : "Valor"} type="number" />
+              <MoneyF f={f} set={set} k="amount" label={f.kind === "daily" ? "Valor por dia por pessoa" : "Valor"} />
               <CurrencyF f={f} set={set} />
               {f.kind === "daily" && <>
                 <TextF f={f} set={set} k="days" label="Nº de dias" type="number" />

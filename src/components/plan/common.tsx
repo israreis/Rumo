@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { MoneyInput } from "@/components/ui/money-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,6 +28,13 @@ export function TextF({ f, set, k, label, type = "text", className, placeholder,
     <Field label={label} className={className}>
       <Input type={type} list={list} placeholder={placeholder} value={f[k] ?? ""} step={type === "number" ? "0.01" : undefined}
         onChange={(e) => set(k, type === "number" ? (e.target.value === "" ? null : Number(e.target.value)) : e.target.value)} />
+    </Field>
+  );
+}
+export function MoneyF({ f, set, k, label, currency, className, placeholder }: { f: Form; set: Setter; k: string; label: string; currency?: string | null; className?: string | undefined; placeholder?: string }) {
+  return (
+    <Field label={label} className={className}>
+      <MoneyInput currency={currency === undefined ? f.currency : currency} placeholder={placeholder} value={f[k]} onValueChange={(v) => set(k, v)} />
     </Field>
   );
 }

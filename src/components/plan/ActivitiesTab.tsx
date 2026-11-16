@@ -6,7 +6,7 @@ import { ACTIVITY_CATEGORIES, geocode, planQuery, PRIORITIES, type Activity } fr
 import { formatDate, formatMoney } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
 import { Switch } from "@/components/ui/switch";
-import { AttachmentF, AttachmentLink, CurrencyF, EditDialog, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
+import { AttachmentF, AttachmentLink, CurrencyF, EditDialog, MoneyF, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
 import { ACTIVITY_ICON } from "./icons";
 
 export const activityTotal = (a: Pick<Activity, "unit_price" | "quantity">) => (a.unit_price ?? 0) * (a.quantity ?? 1);
@@ -31,7 +31,7 @@ export function ActivityDialog({ trip, row, onClose }: { trip: Trip; row: Form; 
           <TextF f={f} set={set} k="date" label="Data (vazio = lista de desejos)" type="date" />
           <TextF f={f} set={set} k="time" label="Horário" type="time" />
           <TextF f={f} set={set} k="location" label="Local / endereço" className="sm:col-span-2" />
-          <TextF f={f} set={set} k="unit_price" label="Valor unitário" type="number" />
+          <MoneyF f={f} set={set} k="unit_price" label="Valor unitário" />
           <TextF f={f} set={set} k="quantity" label="Quantidade" type="number" />
           <CurrencyF f={f} set={set} />
           <Field label="Total"><p className="flex h-9 items-center font-semibold">{formatMoney(activityTotal(f as any), f.currency)}</p></Field>
