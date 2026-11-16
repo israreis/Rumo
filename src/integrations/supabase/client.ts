@@ -6,7 +6,8 @@ import type { Database } from "./types";
  * (see `.env.example`); both are public by design — data is protected by RLS.
  */
 function createSupabaseClient() {
-  const url = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
+  // Accept the project URL with or without the "/rest/v1/" suffix the dashboard also shows.
+  const url = (import.meta.env["VITE_SUPABASE_URL"] as string | undefined)?.trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
   const key = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined;
 
   if (!url || !key) {
