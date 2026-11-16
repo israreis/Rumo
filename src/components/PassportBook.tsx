@@ -259,7 +259,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
       <p className="mt-auto break-all font-num text-[9px] leading-tight tracking-[0.12em] text-tinta-suave">
         P&lt;&lt;&lt;&lt;{name}&lt;&lt;&lt;&lt;&lt;&lt;
         <br />
-        {(holder.passportNumber || "").padEnd(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
+        {(holder.passportNumber ? "<".repeat(Math.max(0, holder.passportNumber.length - 4)) + holder.passportNumber.slice(-4) : "").padEnd(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
       </p>
     </div>
   );
