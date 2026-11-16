@@ -50,7 +50,7 @@ function ActivityCard({ a, onClick, trip }: { a: Activity; onClick: () => void; 
   const Icon = ACTIVITY_ICON[a.category] ?? Ticket;
   return (
     <button onClick={onClick} className="flex w-full gap-3 rounded-2xl border bg-card p-4 text-left shadow-card transition-shadow hover:shadow-lift">
-      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent/15 text-accent"><Icon className="size-4" /></span>
+      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-oliva/15 text-oliva"><Icon className="size-4" /></span>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-semibold">{a.name}</h3>
@@ -92,7 +92,7 @@ export function ActivitiesTab({ trip }: { trip: Trip }) {
               : <p className="text-sm text-muted-foreground">Nada agendado. Dê uma data a um item da lista de desejos.</p>}
           </section>
           <section className="rounded-2xl bg-secondary/60 p-4">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground"><Heart className="size-4 text-accent" /> Lista de desejos</h3>
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground"><Heart className="size-4 text-caramelo" /> Lista de desejos</h3>
             {wish.length ? <div className="space-y-3">{wish.map((a) => <ActivityCard key={a.id} a={a} trip={trip.currency} onClick={() => ed.open(a)} />)}</div>
               : <p className="text-sm text-muted-foreground">Ideias sem data aparecem aqui.</p>}
           </section>

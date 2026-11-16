@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import { STATUS_LABEL, type TripStatus } from "@/lib/trip-utils";
 
 const STYLES: Record<TripStatus, string> = {
-  planning: "bg-secondary text-secondary-foreground",
+  planning: "bg-papel text-tinta",
   confirmed: "bg-primary text-primary-foreground",
-  ongoing: "bg-accent text-accent-foreground",
-  completed: "bg-muted text-muted-foreground",
+  ongoing: "bg-oliva text-sobre-couro",
+  completed: "bg-areia text-tinta",
 };
 
 export function StatusBadge({ status, className }: { status: TripStatus; className?: string }) {

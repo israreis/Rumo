@@ -23,7 +23,7 @@ export function TripCard({ trip }: { trip: Trip }) {
               <div className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">{days === 1 ? "dia" : "dias"}</div>
             </div>
           )}
-          <h3 className="absolute bottom-3 left-4 right-24 text-xl font-semibold text-primary-foreground">{trip.name}</h3>
+          <h3 className="absolute bottom-3 left-4 right-24 font-display text-2xl font-medium text-on-photo">{trip.name}</h3>
         </div>
         <div className="space-y-1.5 p-4 pr-12 text-sm text-muted-foreground">
           <p className="flex items-center gap-2 truncate"><MapPin className="size-4 shrink-0 text-primary" /> {places || "Sem destinos"}</p>

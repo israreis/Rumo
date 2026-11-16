@@ -18,6 +18,9 @@ import { Route as AuthenticatedTripsIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
 import { Route as AuthenticatedTripsNewRouteImport } from './routes/_authenticated/trips.new'
 import { Route as AuthenticatedTripsTripIdEditRouteImport } from './routes/_authenticated/trips.$tripId_.edit'
+import { Route as AuthenticatedTripsTripIdImprimirRouteImport } from './routes/_authenticated/trips.$tripId_.imprimir'
+import { Route as ConviteTokenRouteImport } from './routes/convite.$token'
+import { Route as RTokenRouteImport } from './routes/r.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -65,6 +68,22 @@ const AuthenticatedTripsTripIdEditRoute =
     path: '/trips/$tripId/edit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTripsTripIdImprimirRoute =
+  AuthenticatedTripsTripIdImprimirRouteImport.update({
+    id: '/trips/$tripId_/imprimir',
+    path: '/trips/$tripId/imprimir',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ConviteTokenRoute = ConviteTokenRouteImport.update({
+  id: '/convite/$token',
+  path: '/convite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RTokenRoute = RTokenRouteImport.update({
+  id: '/r/$token',
+  path: '/r/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +94,9 @@ export interface FileRoutesByFullPath {
   '/trips/new': typeof AuthenticatedTripsNewRoute
   '/trips/': typeof AuthenticatedTripsIndexRoute
   '/trips/$tripId/edit': typeof AuthenticatedTripsTripIdEditRoute
+  '/trips/$tripId/imprimir': typeof AuthenticatedTripsTripIdImprimirRoute
+  '/convite/$token': typeof ConviteTokenRoute
+  '/r/$token': typeof RTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,6 +107,9 @@ export interface FileRoutesByTo {
   '/trips/new': typeof AuthenticatedTripsNewRoute
   '/trips': typeof AuthenticatedTripsIndexRoute
   '/trips/$tripId/edit': typeof AuthenticatedTripsTripIdEditRoute
+  '/trips/$tripId/imprimir': typeof AuthenticatedTripsTripIdImprimirRoute
+  '/convite/$token': typeof ConviteTokenRoute
+  '/r/$token': typeof RTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,6 +122,9 @@ export interface FileRoutesById {
   '/_authenticated/trips/new': typeof AuthenticatedTripsNewRoute
   '/_authenticated/trips/': typeof AuthenticatedTripsIndexRoute
   '/_authenticated/trips/$tripId_/edit': typeof AuthenticatedTripsTripIdEditRoute
+  '/_authenticated/trips/$tripId_/imprimir': typeof AuthenticatedTripsTripIdImprimirRoute
+  '/convite/$token': typeof ConviteTokenRoute
+  '/r/$token': typeof RTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,6 +137,9 @@ export interface FileRouteTypes {
     | '/trips/new'
     | '/trips/'
     | '/trips/$tripId/edit'
+    | '/trips/$tripId/imprimir'
+    | '/convite/$token'
+    | '/r/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -119,6 +150,9 @@ export interface FileRouteTypes {
     | '/trips/new'
     | '/trips'
     | '/trips/$tripId/edit'
+    | '/trips/$tripId/imprimir'
+    | '/convite/$token'
+    | '/r/$token'
   id:
     | '__root__'
     | '/'
@@ -130,6 +164,9 @@ export interface FileRouteTypes {
     | '/_authenticated/trips/new'
     | '/_authenticated/trips/'
     | '/_authenticated/trips/$tripId_/edit'
+    | '/_authenticated/trips/$tripId_/imprimir'
+    | '/convite/$token'
+    | '/r/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -137,6 +174,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ConviteTokenRoute: typeof ConviteTokenRoute
+  RTokenRoute: typeof RTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +243,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTripsTripIdEditRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/trips/$tripId_/imprimir': {
+      id: '/_authenticated/trips/$tripId_/imprimir'
+      path: '/trips/$tripId/imprimir'
+      fullPath: '/trips/$tripId/imprimir'
+      preLoaderRoute: typeof AuthenticatedTripsTripIdImprimirRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/convite/$token': {
+      id: '/convite/$token'
+      path: '/convite/$token'
+      fullPath: '/convite/$token'
+      preLoaderRoute: typeof ConviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/r/$token': {
+      id: '/r/$token'
+      path: '/r/$token'
+      fullPath: '/r/$token'
+      preLoaderRoute: typeof RTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -213,6 +273,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTripsNewRoute: typeof AuthenticatedTripsNewRoute
   AuthenticatedTripsIndexRoute: typeof AuthenticatedTripsIndexRoute
   AuthenticatedTripsTripIdEditRoute: typeof AuthenticatedTripsTripIdEditRoute
+  AuthenticatedTripsTripIdImprimirRoute: typeof AuthenticatedTripsTripIdImprimirRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -221,6 +282,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTripsNewRoute: AuthenticatedTripsNewRoute,
   AuthenticatedTripsIndexRoute: AuthenticatedTripsIndexRoute,
   AuthenticatedTripsTripIdEditRoute: AuthenticatedTripsTripIdEditRoute,
+  AuthenticatedTripsTripIdImprimirRoute: AuthenticatedTripsTripIdImprimirRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -231,6 +293,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ConviteTokenRoute: ConviteTokenRoute,
+  RTokenRoute: RTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

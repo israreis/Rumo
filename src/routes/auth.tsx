@@ -2,20 +2,23 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/Logo";
+import { Logo, LogoMark } from "@/components/Logo";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import hero from "@/assets/auth-hero.jpg";
 
+type AuthSearch = { redirect?: string };
+
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>): AuthSearch =>
+    typeof s["redirect"] === "string" && s["redirect"].startsWith("/") ? { redirect: s["redirect"] } : {},
   head: () => ({
     meta: [
-      { title: "Entrar — Rota" },
+      { title: "Entrar — Rumo" },
       { name: "description", content: "Entre ou crie sua conta para planejar suas viagens." },
-      { property: "og:title", content: "Entrar — Rota" },
+      { property: "og:title", content: "Entrar — Rumo" },
       { property: "og:description", content: "Entre ou crie sua conta para planejar suas viagens." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -28,6 +31,8 @@ type Mode = "login" | "signup" | "forgot";
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
+  const target = redirect && !redirect.startsWith("//") ? redirect : "/trips";
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,11 +40,17 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
 
+  // Already signed in (or just back from Google): continue to where the user was going.
   useEffect(() => {
+    const go = () => navigate({ href: target, replace: true });
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/trips", replace: true });
+      if (data.user) go();
     });
-  }, [navigate]);
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") go();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [navigate, target]);
 
   async function submit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
@@ -48,12 +59,12 @@ function AuthPage() {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: "/trips" });
+        navigate({ href: target });
       } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/trips", data: { full_name: name } },
+          options: { emailRedirectTo: window.location.origin + target, data: { full_name: name } },
         });
         if (error) throw error;
         setSent("Enviamos um link de confirmação para o seu e-mail. Confirme para entrar.");
@@ -73,26 +84,28 @@ function AuthPage() {
   }
 
   async function google(): Promise<void> {
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth" });
-    if (result.error) return void toast.error("Não foi possível entrar com o Google.");
-    if (result.redirected) return;
-    navigate({ to: "/trips" });
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth${redirect ? `?redirect=${encodeURIComponent(target)}` : ""}` },
+    });
+    if (error) toast.error("Não foi possível entrar com o Google.");
   }
 
   const title = { login: "Bem-vindo de volta", signup: "Crie sua conta", forgot: "Recuperar senha" }[mode];
 
   return (
-    <div className="grid min-h-screen md:grid-cols-2">
-      <div className="flex flex-col px-6 py-6 sm:px-12">
+    <div className="grid min-h-dvh md:grid-cols-2">
+      <div className="pt-safe flex flex-col px-6 py-6 sm:px-12">
         <Logo />
         <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-10">
-          <h1 className="text-3xl font-semibold">{title}</h1>
+          <p className="font-hand text-2xl text-primary">{mode === "signup" ? "Primeira página do diário" : "Bom te ver por aqui"}</p>
+          <h1 className="mt-1 text-4xl">{title}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {mode === "forgot" ? "Informe seu e-mail para receber o link." : "Suas viagens, organizadas do seu jeito."}
           </p>
 
           {sent ? (
-            <div className="mt-8 rounded-xl border bg-card p-5 text-sm">
+            <div className="mt-8 rounded-xl border bg-card p-5 text-sm shadow-card">
               <p>{sent}</p>
               <Button variant="link" className="mt-2 px-0" onClick={() => { setSent(null); setMode("login"); }}>
                 Voltar para o login
@@ -114,24 +127,24 @@ function AuthPage() {
                 {mode === "signup" && (
                   <div className="space-y-1.5">
                     <Label htmlFor="name">Nome</Label>
-                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <Input id="name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} required />
                   </div>
                 )}
                 <div className="space-y-1.5">
                   <Label htmlFor="email">E-mail</Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 {mode !== "forgot" && (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">Senha</Label>
                       {mode === "login" && (
-                        <button type="button" className="text-xs text-primary hover:underline" onClick={() => setMode("forgot")}>
+                        <button type="button" className="text-xs font-medium text-primary hover:underline" onClick={() => setMode("forgot")}>
                           Esqueci a senha
                         </button>
                       )}
                     </div>
-                    <Input id="password" type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <Input id="password" type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
                 )}
                 <Button type="submit" className="h-11 w-full" disabled={loading}>
@@ -140,7 +153,7 @@ function AuthPage() {
               </form>
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 {mode === "login" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
-                <button className="font-medium text-primary hover:underline" onClick={() => setMode(mode === "login" ? "signup" : "login")}>
+                <button className="font-semibold text-primary hover:underline" onClick={() => setMode(mode === "login" ? "signup" : "login")}>
                   {mode === "login" ? "Cadastre-se" : "Entrar"}
                 </button>
               </p>
@@ -151,7 +164,10 @@ function AuthPage() {
       <div className="relative hidden md:block">
         <img src={hero} alt="Litoral visto de cima com estrada sinuosa" width={1024} height={1408} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-cover-fade" />
-        <p className="absolute bottom-10 left-10 right-10 font-display text-3xl text-primary-foreground">
+        <div className="absolute right-8 top-8 rounded-full bg-papel/90 p-1.5 shadow-lift backdrop-blur">
+          <LogoMark animated className="size-16" />
+        </div>
+        <p className="absolute bottom-10 left-10 right-10 font-display text-3xl text-on-photo">
           “O mundo é um livro, e quem não viaja lê apenas uma página.”
         </p>
       </div>

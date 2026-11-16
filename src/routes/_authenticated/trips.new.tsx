@@ -7,9 +7,9 @@ import { profileQuery } from "@/lib/profile";
 export const Route = createFileRoute("/_authenticated/trips/new")({
   head: () => ({
     meta: [
-      { title: "Nova viagem — Rota" },
+      { title: "Nova viagem — Rumo" },
       { name: "description", content: "Comece a planejar uma nova viagem." },
-      { property: "og:title", content: "Nova viagem — Rota" },
+      { property: "og:title", content: "Nova viagem — Rumo" },
       { property: "og:description", content: "Comece a planejar uma nova viagem." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

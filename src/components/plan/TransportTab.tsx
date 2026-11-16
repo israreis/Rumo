@@ -38,26 +38,44 @@ export function TransportTab({ trip }: { trip: Trip }) {
             const Icon = TRANSPORT_ICON[t.type] ?? Plane;
             const dur = durationLabel(t.departure_at, t.arrival_at);
             return (
-              <button key={t.id} onClick={() => openRow(t)} className="block w-full rounded-2xl border bg-card p-4 text-left shadow-card transition-shadow hover:shadow-lift sm:p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="grid size-9 place-items-center rounded-full bg-primary/10 text-primary"><Icon className="size-4" /></span>
-                  <span className="font-semibold">{TRANSPORT_TYPES[t.type]}</span>
-                  {t.company && <span className="text-sm text-muted-foreground">· {t.company} {t.code}</span>}
-                  <span className="ml-auto"><Pill tone={PAY_TONE[t.payment_status as keyof typeof PAY_TONE] ?? "muted"}>{PAYMENT_STATUS[t.payment_status]}</Pill></span>
+              <button key={t.id} onClick={() => openRow(t)} className="group relative grid w-full overflow-hidden rounded-[14px] bg-card text-left shadow-card transition-shadow hover:shadow-lift sm:grid-cols-[1fr_11rem]">
+                {/* Ticket body */}
+                <div className="p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="grid size-8 place-items-center rounded-full bg-primary/10 text-primary"><Icon className="size-4" strokeWidth={1.5} /></span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{TRANSPORT_TYPES[t.type]}{t.company && ` · ${t.company}`}</span>
+                    <span className="ml-auto sm:hidden"><Pill tone={PAY_TONE[t.payment_status as keyof typeof PAY_TONE] ?? "muted"}>{PAYMENT_STATUS[t.payment_status]}</Pill></span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+                    <div className="min-w-0"><p className="truncate font-display text-xl">{t.origin || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.departure_at, t.departure_tz)}</p></div>
+                    <div className="flex w-16 flex-col items-center text-xs text-muted-foreground sm:w-28">
+                      <div className="relative w-full border-t-[1.5px] border-dashed border-latao"><ArrowRight className="absolute -top-2 left-1/2 size-4 -translate-x-1/2 bg-card px-0.5 text-latao" /></div>
+                      {dur && <span className="mt-2 flex items-center gap-1 font-num"><Clock className="size-3" />{dur}</span>}
+                    </div>
+                    <div className="min-w-0 text-right"><p className="truncate font-display text-xl">{t.destination || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.arrival_at, t.arrival_tz)}</p></div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                    {t.code && <span>Voo/trecho <strong className="font-num text-foreground">{t.code}</strong></span>}
+                    {t.seat && <span>Assento <strong className="font-num text-foreground">{t.seat}</strong></span>}
+                    {t.class && <span>{t.class}</span>}
+                    {t.baggage && <span>Bagagem: {t.baggage}</span>}
+                    {t.booking_url && <a href={t.booking_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-primary hover:underline"><ExternalLink className="size-3" /> Reserva</a>}
+                    <AttachmentLink url={t.attachment_url} />
+                  </div>
                 </div>
-                <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                  <div><p className="font-display text-lg font-semibold">{t.origin || "—"}</p><p className="text-sm text-muted-foreground">{formatZoned(t.departure_at, t.departure_tz)}</p></div>
-                  <div className="flex flex-col items-center text-xs text-muted-foreground"><ArrowRight className="size-4" />{dur && <span className="mt-1 flex items-center gap-1"><Clock className="size-3" />{dur}</span>}</div>
-                  <div className="text-right"><p className="font-display text-lg font-semibold">{t.destination || "—"}</p><p className="text-sm text-muted-foreground">{formatZoned(t.arrival_at, t.arrival_tz)}</p></div>
-                </div>
-                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  {t.locator && <span>Localizador <strong className="text-foreground">{t.locator}</strong></span>}
-                  {t.seat && <span>Assento {t.seat}</span>}
-                  {t.class && <span>{t.class}</span>}
-                  {t.baggage && <span>Bagagem: {t.baggage}</span>}
-                  {t.price != null && <Money className="font-medium text-foreground" amount={t.price} currency={t.currency} converted={t.converted_amount} trip={trip.currency} />}{t.installments > 1 && <span>{t.installments}× no cartão</span>}
-                  {t.booking_url && <a href={t.booking_url} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1 text-primary hover:underline"><ExternalLink className="size-3" /> Reserva</a>}
-                  <AttachmentLink url={t.attachment_url} />
+                {/* Stub, separated by the perforation */}
+                <div className="relative flex flex-row items-center justify-between gap-3 border-t-[1.5px] border-dashed border-border px-4 py-3 sm:flex-col sm:items-start sm:justify-between sm:border-l-[1.5px] sm:border-t-0 sm:p-5">
+                  <span aria-hidden className="absolute -left-2.5 -top-2.5 size-5 rounded-full bg-background sm:-left-2.5 sm:-top-2.5" />
+                  <span aria-hidden className="absolute -right-2.5 -top-2.5 size-5 rounded-full bg-background sm:-bottom-2.5 sm:-left-2.5 sm:right-auto sm:top-auto" />
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">Localizador</p>
+                    <p className="font-num text-base font-medium tracking-wider">{t.locator || "—"}</p>
+                  </div>
+                  <span className="hidden sm:block"><Pill tone={PAY_TONE[t.payment_status as keyof typeof PAY_TONE] ?? "muted"}>{PAYMENT_STATUS[t.payment_status]}</Pill></span>
+                  <div className="text-right sm:text-left">
+                    {t.price != null && <Money className="block text-base font-medium text-foreground" amount={t.price} currency={t.currency} converted={t.converted_amount} trip={trip.currency} />}
+                    {t.installments > 1 && <span className="text-xs text-muted-foreground">{t.installments}× no cartão</span>}
+                  </div>
                 </div>
               </button>
             );

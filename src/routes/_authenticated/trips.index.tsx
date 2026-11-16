@@ -10,9 +10,9 @@ import { listTrips } from "@/lib/trips-api";
 export const Route = createFileRoute("/_authenticated/trips/")({
   head: () => ({
     meta: [
-      { title: "Minhas viagens — Rota" },
+      { title: "Minhas viagens — Rumo" },
       { name: "description", content: "Todas as suas viagens planejadas, em andamento e concluídas." },
-      { property: "og:title", content: "Minhas viagens — Rota" },
+      { property: "og:title", content: "Minhas viagens — Rumo" },
       { property: "og:description", content: "Todas as suas viagens planejadas, em andamento e concluídas." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -27,7 +27,7 @@ function Dashboard() {
     <div>
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Painel</p>
+          <p className="font-hand text-2xl text-primary">Para onde agora?</p>
           <h1 className="mt-1 text-3xl font-semibold sm:text-4xl">Minhas viagens</h1>
         </div>
         <Button asChild><Link to="/trips/new"><Plus /> <span className="hidden sm:inline">Nova viagem</span></Link></Button>
