@@ -4,6 +4,7 @@ import { Stamp } from "@/components/Stamp";
 import { Button } from "@/components/ui/button";
 import type { StampItem } from "@/lib/stamps";
 import { maskPassport, type PassportState } from "@/lib/passport";
+import { PageArt, Perforated } from "@/components/PassportArt";
 import { cn } from "@/lib/utils";
 
 /**
@@ -200,10 +201,11 @@ function Sheet({ side, number, children, lifting }: {
         aria-hidden
         className={cn("pointer-events-none absolute inset-y-0 w-10", side === "left" ? "right-0 bg-gradient-to-l" : "left-0 bg-gradient-to-r", "from-tinta/15 to-transparent")}
       />
-      {children}
+      {number >= 0 && children && <PageArt page={number} />}
       {number >= 0 && children && (
-        <span className={cn("absolute bottom-2.5 font-num text-[10px] text-tinta-suave", side === "left" ? "left-4" : "right-4")}>{number + 1}</span>
+        <Perforated n={number + 1} className={cn("absolute top-3 h-3", side === "left" ? "right-7" : "right-3.5")} />
       )}
+      <div className="relative h-full">{children}</div>
     </div>
   );
 }

@@ -295,6 +295,6 @@
 .passport-paper {
   background-color: var(--papel);
   background-image:
-    repeating-radial-gradient(circle at 50% 115%, transparent 0 11px, color-mix(in oklab, var(--latao) 11%, transparent) 11px 12px),
-    repeating-linear-gradient(118deg, transparent 0 16px, color-mix(in oklab, var(--salvia) 9%, transparent) 16px 17px);
+    repeating-radial-gradient(circle at 50% 115%, transparent 0 11px, color-mix(in oklab, var(--latao) 7%, transparent) 11px 12px),
+    repeating-linear-gradient(118deg, transparent 0 16px, color-mix(in oklab, var(--salvia) 5%, transparent) 16px 17px);
 }
