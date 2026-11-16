@@ -43,6 +43,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
     e.preventDefault();
     if (v.start_date && v.end_date && v.end_date < v.start_date)
       return void toast.error("A data de volta deve ser depois da ida.");
+    if (v.travelers_count < 1) return void toast.error("Informe o número de viajantes.");
     setSaving(true);
     try {
       await onSubmit(v);
@@ -73,7 +74,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-1.5">
             <Label htmlFor="count">Nº de viajantes</Label>
-            <Input id="count" type="number" min={1} value={v.travelers_count} onChange={(e) => set("travelers_count", Number(e.target.value) || 1)} />
+            <Input id="count" type="number" inputMode="numeric" min={1} step={1} required placeholder="1" value={v.travelers_count > 0 ? v.travelers_count : ""} onChange={(e) => set("travelers_count", Math.max(0, Math.floor(Number(e.target.value) || 0)))} />
           </div>
           <div className="space-y-1.5">
             <Label>Moeda principal</Label>
