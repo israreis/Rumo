@@ -150,6 +150,7 @@ No celular, os campos de formulário ficam em 16 px para o iOS não dar zoom.
 - **Rota tracejada:** linha `latao` de 1,5 px (traço 4, espaço 4) ligando pontos do roteiro e trechos de transporte.
 - **Mostrador** (`src/components/Dial.tsx`): o anel graduado da bússola usado como indicador circular de progresso. Os traços preenchidos ficam em couro, ou em erro quando o orçamento passa de 100%. Aparece no orçamento usado (Visão geral) e no progresso da checklist.
 - **Textura de papel** (`bg-papel-textura`): ruído de 2–3% sobre o `linho` do fundo da página, nunca sobre cartões.
+- **Fundo de papel-moeda** (`PageBackdrop`): hachuras finas em diagonal (caramelo a 9%) com duas faixas largas de latão, mais uma rosa dos ventos grande e apagada (6%) no canto inferior direito. Fixo atrás de todas as telas do app, nunca dentro dos cartões; mais fraco no tema escuro e fora da impressão.
 
 ## 7. Iconografia
 
