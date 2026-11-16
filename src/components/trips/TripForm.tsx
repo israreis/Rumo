@@ -72,22 +72,15 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
             <Input id="end" type="date" value={v.end_date ?? ""} onChange={(e) => set("end_date", e.target.value)} />
           </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="count">Nº de viajantes</Label>
             <Input id="count" type="number" inputMode="numeric" min={1} step={1} required placeholder="1" value={v.travelers_count > 0 ? v.travelers_count : ""} onChange={(e) => set("travelers_count", Math.max(0, Math.floor(Number(e.target.value) || 0)))} />
           </div>
           <div className="space-y-1.5">
-            <Label>Moeda principal</Label>
-            <Select value={v.currency} onValueChange={(c) => set("currency", c)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>{CURRENCIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="budget">Orçamento previsto ({v.currency})</Label>
+            <Label htmlFor="budget">Orçamento previsto{v.currency !== "BRL" && ` (${v.currency})`}</Label>
             <MoneyInput id="budget" currency={v.currency} value={v.budget} onValueChange={(b) => set("budget", b)} />
-            <p className="text-xs text-muted-foreground">Na moeda principal. Gastos em outras moedas são convertidos para ela.</p>
+            {v.currency === "BRL" && <p className="text-xs text-muted-foreground">Em reais. Valores em outras moedas são convertidos para reais nos resumos.</p>}
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

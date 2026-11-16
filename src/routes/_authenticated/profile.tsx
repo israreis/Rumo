@@ -8,9 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { profileQuery } from "@/lib/profile";
-import { CURRENCIES } from "@/lib/trip-utils";
 import { uploadImage } from "@/lib/trips-api";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -75,14 +73,6 @@ function Profile() {
         </div>
         <div className="space-y-1.5"><Label htmlFor="pname">Nome</Label><Input id="pname" value={name} onChange={(e) => setName(e.target.value)} /></div>
         <div className="space-y-1.5"><Label>E-mail</Label><Input value={user.email ?? ""} disabled /></div>
-        <div className="space-y-1.5">
-          <Label>Moeda padrão</Label>
-          <Select value={currency} onValueChange={setCurrency}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{CURRENCIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">Usada como padrão em novas viagens.</p>
-        </div>
         <Button type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
       </form>
     </div>

@@ -32,7 +32,7 @@ function NewTrip() {
         submitLabel="Criar viagem"
         initial={{
           name: "", start_date: null, end_date: null, travelers_count: 0,
-          currency: profile?.default_currency ?? "BRL", budget: null, cover_url: null, status_override: null, iof_pct: 3.5, card_spread_pct: 0,
+          currency: "BRL", budget: null, cover_url: null, status_override: null, iof_pct: 3.5, card_spread_pct: 0,
           destinations: [{ city: "", country: "", arrival_date: null, departure_date: null }],
           travelers: [{ name: profile?.full_name ?? "", email: user.email ?? "" }],
         }}
