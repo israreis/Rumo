@@ -35,7 +35,7 @@ export const PageArt = memo(function PageArt({ page }: { page: number }) {
         alt=""
         loading="lazy"
         draggable={false}
-        className={`absolute ${a.box} m-auto w-auto max-w-[92%] object-contain opacity-[0.38] blur-[0.5px] mix-blend-multiply dark:opacity-25 dark:mix-blend-screen dark:invert`}
+        className={`absolute ${a.box} m-auto w-auto max-w-[92%] object-contain opacity-[0.5] blur-[0.4px] dark:opacity-30 dark:invert`}
       />
     </div>
   );

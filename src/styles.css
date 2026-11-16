@@ -296,7 +296,7 @@
 .passport-paper {
   background-color: var(--papel);
   background-image:
-    linear-gradient(118deg, transparent 0 22%, color-mix(in oklab, #f4d79c 45%, transparent) 22% 38%, transparent 38% 62%, color-mix(in oklab, #f6e2b8 50%, transparent) 62% 74%, transparent 74%),
+    linear-gradient(118deg, transparent 0 22%, color-mix(in oklab, #f4d79c 30%, transparent) 22% 38%, transparent 38% 62%, color-mix(in oklab, #f6e2b8 35%, transparent) 62% 74%, transparent 74%),
     repeating-linear-gradient(32deg, transparent 0 5px, color-mix(in oklab, #e59a5c 22%, transparent) 5px 6px);
 }
 .dark .passport-paper {

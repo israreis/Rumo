@@ -1,11 +1,11 @@
 # Créditos das gravuras do livreto
 
-Todas em domínio público, obtidas no Wikimedia Commons e convertidas para a tinta azul do passaporte (fundo transparente, bordas esmaecidas). Usadas por `src/components/PassportArt.tsx`.
+Todas em domínio público, obtidas no Wikimedia Commons (exceto a harpia, ver abaixo) e convertidas para a tinta azul do passaporte (fundo transparente, bordas esmaecidas). Usadas por `src/components/PassportArt.tsx`.
 
 | Arquivo | Assunto | Origem | Fonte |
 |---|---|---|---|
 | `azul.webp` | Arara-azul | A. F. Lydon, litografia do séc. XIX | [Psittacus hyacinthinus Lydon.jpg](https://commons.wikimedia.org/wiki/File:Psittacus_hyacinthinus_Lydon.jpg) |
-| `harpia.webp` | Harpia | gravura do séc. XIX | [Great harpy of America.JPG](https://commons.wikimedia.org/wiki/File:Great_harpy_of_America.JPG) |
+| `harpia.webp` | Harpia | Ilustração enviada pelo dono do projeto ("harpia correta") | Autor e licença a confirmar pelo dono antes de tornar o app público |
 | `onca.webp` | Onça-pintada | Pearson Scott Foresman, desenho doado ao domínio público | [Jaguar (PSF).png](https://commons.wikimedia.org/wiki/File:Jaguar_%28PSF%29.png) |
 | `caninde.webp` | Arara-canindé | gravura do séc. XIX | [Natural History, Birds - Macaw.jpg](https://commons.wikimedia.org/wiki/File:Natural_History%2C_Birds_-_Macaw.jpg) |
 | `tucano.webp` | Tucano | Pearson Scott Foresman, desenho doado ao domínio público | [Toucan (PSF).png](https://commons.wikimedia.org/wiki/File:Toucan_%28PSF%29.png) |

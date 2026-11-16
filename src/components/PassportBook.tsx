@@ -289,7 +289,7 @@ function VisaPage({ stamps, seen, hint }: { stamps: StampItem[]; seen: Set<strin
     <div className="flex h-full flex-col px-[5%] pb-[8%] pt-[5%]">
       <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-tinta-suave">Vistos · Visas</p>
       {hint && !stamps.length ? (
-        <p className="m-auto max-w-[70%] -rotate-3 text-center font-hand text-xl text-tinta-suave/80">Espaço reservado para o próximo carimbo</p>
+        <p className="mx-auto mt-[14%] max-w-[70%] -rotate-3 text-center font-hand text-xl text-tinta-suave/80">Espaço reservado para o próximo carimbo</p>
       ) : (
         <ul className="mt-2 grid flex-1 grid-cols-2 grid-rows-2 place-items-center">
           {stamps.map((s, i) => (
