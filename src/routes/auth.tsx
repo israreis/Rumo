@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo, LogoMark } from "@/components/Logo";
 import { GoogleIcon } from "@/components/GoogleIcon";
-import hero from "@/assets/auth-hero.jpg";
+import hero from "@/assets/auth-escocia.webp";
 
 type AuthSearch = { redirect?: string };
 
@@ -162,14 +162,15 @@ function AuthPage() {
         </div>
       </div>
       <div className="relative hidden md:block">
-        <img src={hero} alt="Litoral visto de cima com estrada sinuosa" width={1024} height={1408} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={hero} alt="Trem a vapor cruzando o viaduto de Glenfinnan, nas Terras Altas da Escócia" width={2000} height={1279} className="absolute inset-0 h-full w-full object-cover object-[42%_center]" />
         <div className="absolute inset-0 bg-cover-fade" />
         <div className="absolute right-8 top-8 rounded-full bg-papel/90 p-1.5 shadow-lift backdrop-blur">
           <LogoMark animated className="size-16" />
         </div>
-        <p className="absolute bottom-10 left-10 right-10 font-display text-3xl text-on-photo">
-          “O mundo é um livro, e quem não viaja lê apenas uma página.”
-        </p>
+        <figure className="absolute bottom-10 left-10 right-10 text-on-photo">
+          <blockquote className="font-display text-3xl leading-snug">“O mundo é um livro, e quem não viaja lê apenas uma página.”</blockquote>
+          <figcaption className="mt-2 font-hand text-2xl text-on-photo/85">— Santo Agostinho</figcaption>
+        </figure>
       </div>
     </div>
   );
