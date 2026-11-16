@@ -170,7 +170,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={onStart} onDragOver={onOver} onDragEnd={onEnd}
       onDragCancel={() => { dragging.current = false; setActiveId(null); setItems(buildItems()); }}>
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Roteiro dia a dia</h2>
           {days.map((day, i) => {

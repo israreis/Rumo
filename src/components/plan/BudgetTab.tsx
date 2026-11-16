@@ -64,7 +64,7 @@ export function BudgetTab({ trip }: { trip: Trip }) {
       {!lines.length ? (
         <EmptyState icon={PiggyBank} title="Orçamento vazio" text="Transportes, hospedagens e atividades com valor entram aqui sozinhos. Adicione também estimativas como alimentação por dia." action={<Button onClick={openNew}><Plus /> Adicionar item</Button>} />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="space-y-4">
             {byCat.map(({ c, v, ls }) => (
               <section key={c} className="rounded-2xl border bg-card p-4 shadow-card">

@@ -92,7 +92,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,1.3fr)]">
         <div className="rounded-2xl bg-primary p-5 text-primary-foreground shadow-card">
           <p className="text-xs uppercase tracking-wide opacity-80">{dayOf ? "Em viagem" : until != null && until > 0 ? "Contagem regressiva" : "Viagem"}</p>
           <p className="mt-2 font-display text-3xl font-semibold">
@@ -102,7 +102,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
         <Kpi label="Total previsto" value={formatMoney(goal, cur)} sub={trip.budget ? `planejado ${formatMoney(planned, cur)}` : "soma do planejado"} />
         <Kpi label="Gasto até agora" value={formatMoney(spent, cur)} sub={`${formatMoney(paidPlan, cur)} pago antes + ${formatMoney(spentExp, cur)} na viagem`} />
         <div className="flex min-w-0 items-center gap-3 rounded-2xl border bg-card p-4 shadow-card">
-          <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-20 lg:size-16 xl:size-24" />
+          <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-20" />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Saldo</p>
             <p className={cn("mt-1 whitespace-nowrap font-num text-lg font-medium leading-tight xl:text-xl", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>

@@ -38,7 +38,7 @@ export function TransportTab({ trip }: { trip: Trip }) {
             const Icon = TRANSPORT_ICON[t.type] ?? Plane;
             const dur = durationLabel(t.departure_at, t.arrival_at);
             return (
-              <button key={t.id} onClick={() => openRow(t)} className="group relative grid w-full overflow-hidden rounded-[14px] bg-card text-left shadow-card transition-shadow hover:shadow-lift sm:grid-cols-[1fr_11rem]">
+              <button key={t.id} onClick={() => openRow(t)} className="group relative grid w-full overflow-hidden rounded-[14px] bg-card text-left shadow-card transition-shadow hover:shadow-lift grid-cols-1 sm:grid-cols-[minmax(0,1fr)_11rem]">
                 {/* Ticket body */}
                 <div className="p-4 sm:p-5">
                   <div className="flex flex-wrap items-center gap-2">

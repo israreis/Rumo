@@ -85,7 +85,7 @@ export function ActivitiesTab({ trip }: { trip: Trip }) {
       {!data.length ? (
         <EmptyState icon={Ticket} title="Nenhuma atividade" text="Adicione atrações, passeios, museus, shows e restaurantes. Sem data, eles vão para a lista de desejos." action={<Button onClick={() => openNew()}><Plus /> Adicionar atividade</Button>} />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <section>
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Agendadas</h3>
             {dated.length ? <div className="space-y-3">{dated.map((a) => <ActivityCard key={a.id} a={a} trip={trip.currency} onClick={() => ed.open(a)} />)}</div>

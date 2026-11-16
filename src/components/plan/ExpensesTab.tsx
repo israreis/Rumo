@@ -99,7 +99,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
         )}
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <section>
           <h3 className="mb-3 font-semibold">Lançamentos</h3>
           {!expenses.length ? (

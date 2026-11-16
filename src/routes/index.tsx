@@ -39,7 +39,7 @@ function Index() {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 pb-20">
-        <section className="grid items-center gap-10 pt-8 md:grid-cols-[1.1fr_1fr] md:pt-16">
+        <section className="grid items-center gap-10 pt-8 grid-cols-1 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:pt-16">
           <div>
             <p className="font-hand text-3xl text-primary">Dia 1: chegamos!</p>
             <h1 className="mt-2 text-5xl leading-[1.02] md:text-7xl">Enquadre o caminho antes de partir.</h1>
