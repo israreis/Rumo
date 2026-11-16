@@ -4,6 +4,7 @@ import { ptBR } from "date-fns/locale";
 import { AlertTriangle, BedDouble, CalendarClock, CheckSquare, Clock, FileWarning, PiggyBank, Wallet } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
+import { Dial } from "@/components/Dial";
 import { BUDGET_CATEGORIES } from "@/lib/budget";
 import { conflictingIds, nightsWithoutLodging, tripDays } from "@/lib/itinerary";
 import { planQuery, type Activity, type ItineraryEvent, type Lodging, type Transport } from "@/lib/plan-api";
@@ -100,7 +101,13 @@ export function OverviewTab({ trip }: { trip: Trip }) {
         </div>
         <Kpi label="Total previsto" value={formatMoney(goal, cur)} sub={trip.budget ? `planejado ${formatMoney(planned, cur)}` : "soma do planejado"} />
         <Kpi label="Gasto até agora" value={formatMoney(spent, cur)} sub={`${formatMoney(paidPlan, cur)} pago antes + ${formatMoney(spentExp, cur)} na viagem`} />
-        <Kpi label="Saldo" value={formatMoney(balance, cur)} tone={balance < 0 ? "destructive" : "success"} sub={goal ? `${Math.round((spent / goal) * 100)}% usado` : ""} />
+        <div className="flex items-center gap-4 rounded-2xl border bg-card p-4 shadow-card">
+          <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-24" />
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Saldo</p>
+            <p className={cn("mt-1 font-num text-xl font-medium", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>
+          </div>
+        </div>
       </div>
 
       <section className="rounded-2xl border bg-card p-5 shadow-card">
@@ -143,7 +150,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
           ) : <Muted>Sem vencimentos nos próximos 45 dias.</Muted>}
         </Card>
         <Card title="Pendências do checklist" icon={CheckSquare}>
-          <div className="flex items-center gap-2"><Progress value={progressPct(checklist)} className="h-2" /><span className="text-sm font-medium">{progressPct(checklist)}%</span></div>
+          <div className="flex items-center gap-3"><Dial value={progressPct(checklist)} label="Checklist concluída" sub="pronto" className="size-20" /><Progress value={progressPct(checklist)} className="h-2" /></div>
           {!checklist.length ? <Muted>Nenhum item. Use um modelo na aba Checklist.</Muted> : !openTasks.length ? <Muted>Tudo concluído!</Muted> : (
             <ul className="mt-3 space-y-1.5 text-sm">
               {openTasks.slice(0, 6).map((c) => (

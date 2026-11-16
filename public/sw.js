@@ -8,7 +8,7 @@
  * - Map tiles: cache first, capped.
  * Writes are never cached; offline expenses are queued by the app (src/lib/offline-queue.ts).
  */
-const VERSION = "rumo-v1";
+const VERSION = "rumo-v2";
 const PAGES = `${VERSION}-pages`;
 const STATIC = `${VERSION}-static`;
 const DATA = `${VERSION}-data`;
@@ -16,7 +16,7 @@ const FILES = `${VERSION}-files`;
 const TILES = `${VERSION}-tiles`;
 const KEEP = [PAGES, STATIC, DATA, FILES, TILES];
 
-const PRECACHE = ["/trips", "/manifest.webmanifest", "/favicon.svg", "/icons/icon-192.png", "/brand/rumo-simbolo-lente.svg"];
+const PRECACHE = ["/trips", "/manifest.webmanifest", "/favicon.svg", "/icons/icon-192.png", "/brand/rumo-simbolo-lente-animado.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -93,7 +93,7 @@ async function cacheFirst(request, cacheName, max) {
 
 const OFFLINE_HTML = `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sem conexão — Rumo</title><body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#f3eee4;color:#2a211a;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:24px">
-<div><img src="/brand/rumo-simbolo-lente.svg" width="72" height="72" alt=""><h1 style="font:600 24px Georgia,serif;margin:16px 0 8px">Você está sem conexão</h1>
+<div><img src="/brand/rumo-simbolo-lente-animado.svg" width="72" height="72" alt=""><h1 style="font:600 24px Georgia,serif;margin:16px 0 8px">Você está sem conexão</h1>
 <p style="color:#6b5d4f;margin:0 0 20px">Abra o Rumo uma vez com internet para guardar suas viagens neste aparelho.</p>
 <button onclick="location.reload()" style="background:#8a4f2a;color:#fbf8f2;border:0;border-radius:8px;padding:10px 18px;font:600 15px system-ui">Tentar de novo</button></div></body></html>`;
 

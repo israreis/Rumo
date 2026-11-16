@@ -14,6 +14,8 @@ const buttonVariants = cva(
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        // Design system "secundário": positive parallel actions (e.g. add to itinerary, apply template).
+        oliva: "bg-oliva text-sobre-couro shadow-sm hover:bg-oliva/90",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },

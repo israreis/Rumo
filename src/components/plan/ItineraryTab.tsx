@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -20,6 +21,8 @@ import type { Trip } from "@/lib/trips-api";
 import { AreaF, EditDialog, Pill, SelectF, TextF, withFx, type Form } from "./common";
 import { ActivityDialog, geocodeIfChanged } from "./ActivitiesTab";
 import { ACTIVITY_ICON, EVENT_ICON, TRANSPORT_ICON } from "./icons";
+import { Stamp } from "@/components/Stamp";
+import { tripStamps } from "@/lib/stamps";
 import type { MapPoint } from "./DayMap";
 
 const DayMap = lazy(() => import("./DayMap"));
@@ -79,6 +82,9 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
     return m;
   }, [transports, lodgings]);
 
+  // Arrival days already lived get the city stamp in the day header (virtual passport).
+  const todayIso = format(new Date(), "yyyy-MM-dd");
+  const stampByDay = useMemo(() => new Map(tripStamps(trip, todayIso).filter((s) => s.kind === "city" && s.earned && s.date).map((s) => [s.date!, s])), [trip, todayIso]);
   const gaps = useMemo(() => new Set(nightsWithoutLodging(trip.start_date, trip.end_date, lodgings, transports)), [trip, lodgings, transports]);
   const [selected, setSelected] = useState<string | null>(null);
   const selDay = selected ?? days[0];
@@ -185,7 +191,12 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
                   <span className="rounded-lg bg-primary px-2 py-1 text-xs font-bold text-primary-foreground">Dia {i + 1}</span>
                   <h3 className="text-lg font-semibold capitalize">{format(toDate(day)!, "EEE, dd/MM", { locale: ptBR })}</h3>
                   {dest && <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" />{dest.city}</span>}
-                  <div className="ml-auto flex gap-1">
+                  <div className="ml-auto flex items-center gap-1">
+                    {stampByDay.get(day) && (() => { const s = stampByDay.get(day)!; return (
+                      <Link to="/passaporte" aria-label={`Carimbo de ${s.main} no passaporte`} className="-my-4" onClick={(e) => e.stopPropagation()}>
+                        <Stamp top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt} className="size-16" />
+                      </Link>
+                    ); })()}
                     {conflicts.size > 0 && <Pill tone="destructive"><AlertTriangle className="size-3" /> Conflito de horário</Pill>}
                     {!isLast && gaps.has(day) && <Pill tone="warning"><BedDouble className="size-3" /> Sem hospedagem</Pill>}
                   </div>

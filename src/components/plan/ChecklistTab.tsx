@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Dial } from "@/components/Dial";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,7 +46,7 @@ export function ChecklistTab({ trip }: { trip: Trip }) {
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-3"><Progress value={pct} className="h-2.5" /><span className="w-12 text-right font-semibold">{pct}%</span></div>
+      <div className="flex items-center gap-4"><Dial value={pct} label="Checklist concluída" sub="pronto" className="size-24" /><Progress value={pct} className="h-2.5" /></div>
       <div className="grid gap-6 lg:grid-cols-2">
         {Object.entries(CHECKLIST_LISTS).map(([list, label]) => (
           <ListCard key={list} trip={trip} list={list} label={label} items={items.filter((i) => i.list === list)} onUpdate={upd} onChange={refresh} />
@@ -121,7 +122,7 @@ function TemplateDialog({ trip, tplKey, count, onClose, onDone }: { trip: Trip; 
           <div><p className="mb-1 text-sm font-medium">Pré-viagem</p><Textarea rows={9} value={pre} onChange={(e) => setPre(e.target.value)} /></div>
           <div><p className="mb-1 text-sm font-medium">Mala</p><Textarea rows={9} value={packing} onChange={(e) => setPacking(e.target.value)} /></div>
         </div>
-        <DialogFooter><Button onClick={apply}>Adicionar à checklist</Button></DialogFooter>
+        <DialogFooter><Button variant="oliva" onClick={apply}>Adicionar à checklist</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   );

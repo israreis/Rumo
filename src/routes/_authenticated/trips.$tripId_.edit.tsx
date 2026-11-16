@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TripForm } from "@/components/trips/TripForm";
+import { Splash } from "@/components/Logo";
 import { getTrip, saveTrip } from "@/lib/trips-api";
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId_/edit")({
@@ -22,7 +23,7 @@ function EditTrip() {
   const { data: trip, isLoading } = useQuery({ queryKey: ["trips", tripId], queryFn: () => getTrip(tripId) });
   const navigate = useNavigate();
   const qc = useQueryClient();
-  if (isLoading) return null;
+  if (isLoading) return <Splash label="Abrindo a viagem…" />;
   if (!trip) return <p className="text-muted-foreground">Viagem não encontrada.</p>;
   const { id: _id, owner_id: _o, public_token: _p, trip_destinations, trip_travelers, ...rest } = trip;
   return (

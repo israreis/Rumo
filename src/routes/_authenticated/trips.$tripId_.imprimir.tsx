@@ -5,7 +5,9 @@ import { ptBR } from "date-fns/locale";
 import { ArrowLeft, Printer } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { LogoMark, Splash } from "@/components/Logo";
+import { LogoMark, Splash, Wordmark } from "@/components/Logo";
+import { Stamp } from "@/components/Stamp";
+import { tripStamps } from "@/lib/stamps";
 import { buildAgenda, type AgendaKind } from "@/lib/agenda";
 import { planQuery, TRANSPORT_TYPES, type Activity, type ItineraryEvent, type Lodging, type PlanTable, type Transport } from "@/lib/plan-api";
 import { CONTACT_KINDS, DOC_KINDS } from "@/lib/trip-extras";
@@ -73,8 +75,8 @@ function PrintTrip() {
             <p className="mt-1 text-sm">{trip.trip_destinations.map((d) => d.city).join(" · ")}</p>
           </div>
           <div className="flex items-center gap-2">
-            <LogoMark className="size-10" />
-            <span className="font-display text-2xl font-semibold">rumo</span>
+            <LogoMark animated={false} className="size-10" />
+            <Wordmark className="text-2xl" />
           </div>
         </header>
 
@@ -175,6 +177,15 @@ function PrintTrip() {
             </ul>
           </section>
         )}
+
+        <section className="print-avoid mt-8">
+          <h2 className="text-xl font-medium">Carimbos da viagem</h2>
+          <ul className="mt-3 flex flex-wrap gap-4">
+            {tripStamps(trip, "9999-12-31").filter((s) => s.kind === "city").map((s) => (
+              <li key={s.key}><Stamp top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt} className="size-24" /></li>
+            ))}
+          </ul>
+        </section>
 
         <footer className="mt-10 border-t pt-4 text-xs text-tinta-suave">Gerado pelo Rumo em {format(new Date(), "dd/MM/yyyy HH:mm")}.</footer>
       </article>

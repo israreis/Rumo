@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LogoMark, Splash } from "@/components/Logo";
+import { PassportMark, Splash } from "@/components/Logo";
 import { supabase } from "@/integrations/supabase/client";
 import { acceptInvite } from "@/lib/sharing-api";
 
@@ -54,7 +54,7 @@ function AcceptInvite() {
   return (
     <div className="grid min-h-dvh place-items-center px-4">
       <div className="max-w-sm text-center">
-        <LogoMark className="mx-auto size-16" />
+        <PassportMark className="mx-auto size-20" />
         <h1 className="mt-6 text-3xl">Convite de viagem</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error}</p>
         {email && <p className="mt-1 text-xs text-muted-foreground">Você entrou como {email}.</p>}

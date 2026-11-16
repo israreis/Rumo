@@ -116,7 +116,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
-      <body>
+      <body className="bg-papel-textura">
         {children}
         <Scripts />
       </body>

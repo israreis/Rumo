@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedPassaporteRouteImport } from './routes/_authenticated/passaporte'
 import { Route as AuthenticatedTripsIndexRouteImport } from './routes/_authenticated/trips.index'
 import { Route as AuthenticatedTripsTripIdRouteImport } from './routes/_authenticated/trips.$tripId'
 import { Route as AuthenticatedTripsNewRouteImport } from './routes/_authenticated/trips.new'
@@ -44,6 +45,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPassaporteRoute = AuthenticatedPassaporteRouteImport.update({
+  id: '/passaporte',
+  path: '/passaporte',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTripsIndexRoute = AuthenticatedTripsIndexRouteImport.update({
@@ -86,6 +92,7 @@ const RTokenRoute = RTokenRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/passaporte': typeof AuthenticatedPassaporteRoute
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/r/$token': typeof RTokenRoute
 }
 export interface FileRoutesByTo {
+  '/passaporte': typeof AuthenticatedPassaporteRoute
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/passaporte': typeof AuthenticatedPassaporteRoute
   '/_authenticated/trips/$tripId': typeof AuthenticatedTripsTripIdRoute
   '/_authenticated/trips/new': typeof AuthenticatedTripsNewRoute
   '/_authenticated/trips/': typeof AuthenticatedTripsIndexRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/passaporte'
     | '/auth'
     | '/reset-password'
     | '/profile'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/passaporte'
     | '/auth'
     | '/reset-password'
     | '/profile'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/profile'
+    | '/_authenticated/passaporte'
     | '/_authenticated/trips/$tripId'
     | '/_authenticated/trips/new'
     | '/_authenticated/trips/'
@@ -213,6 +225,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/passaporte': {
+      id: '/_authenticated/passaporte'
+      path: '/passaporte'
+      fullPath: '/passaporte'
+      preLoaderRoute: typeof AuthenticatedPassaporteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/trips/': {
@@ -269,6 +288,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedPassaporteRoute: typeof AuthenticatedPassaporteRoute
   AuthenticatedTripsTripIdRoute: typeof AuthenticatedTripsTripIdRoute
   AuthenticatedTripsNewRoute: typeof AuthenticatedTripsNewRoute
   AuthenticatedTripsIndexRoute: typeof AuthenticatedTripsIndexRoute
@@ -278,6 +298,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedPassaporteRoute: AuthenticatedPassaporteRoute,
   AuthenticatedTripsTripIdRoute: AuthenticatedTripsTripIdRoute,
   AuthenticatedTripsNewRoute: AuthenticatedTripsNewRoute,
   AuthenticatedTripsIndexRoute: AuthenticatedTripsIndexRoute,

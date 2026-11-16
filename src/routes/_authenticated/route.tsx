@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Luggage, LogOut, Plus, User } from "lucide-react";
+import { Luggage, LogOut, Plus, Stamp as StampIcon, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo, Splash } from "@/components/Logo";
 import { OfflineIndicator } from "@/components/OfflineSync";
@@ -34,6 +34,7 @@ export const Route = createFileRoute("/_authenticated")({
 const NAV = [
   { to: "/trips", label: "Viagens", icon: Luggage, exact: false },
   { to: "/trips/new", label: "Nova", icon: Plus, exact: true },
+  { to: "/passaporte", label: "Passaporte", icon: StampIcon, exact: true },
   { to: "/profile", label: "Perfil", icon: User, exact: true },
 ] as const;
 
@@ -64,6 +65,9 @@ function AppLayout() {
           <Logo to="/trips" />
           <div className="flex items-center gap-1">
             <OfflineIndicator className="mr-1" />
+            <Link to="/passaporte" className="mr-1 hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground md:inline-flex">
+              <StampIcon className="size-4" /> Passaporte
+            </Link>
             <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger aria-label="Menu da conta" className="rounded-full">
@@ -75,6 +79,7 @@ function AppLayout() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate">{name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild><Link to="/passaporte"><StampIcon /> Meu passaporte</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/profile"><User /> Meu perfil</Link></DropdownMenuItem>
                 <DropdownMenuItem onClick={signOut}><LogOut /> Sair</DropdownMenuItem>
               </DropdownMenuContent>
@@ -92,7 +97,7 @@ function AppLayout() {
         aria-label="Navegação principal"
         className="no-print pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-papel/95 backdrop-blur md:hidden"
       >
-        <ul className="mx-auto grid h-16 max-w-md grid-cols-3">
+        <ul className="mx-auto grid h-16 max-w-md grid-cols-4">
           {NAV.map((n) => {
             const on = active(n.to, n.exact);
             return (
@@ -106,7 +111,7 @@ function AppLayout() {
                   aria-current={on ? "page" : undefined}
                 >
                   <span className={cn("grid h-7 w-12 place-items-center rounded-full transition-colors", on && "bg-primary/12")}>
-                    <n.icon className="size-5" strokeWidth={on ? 2 : 1.5} />
+                    <n.icon className={cn("size-5", on && "[stroke-width:2]")} />
                   </span>
                   {n.label}
                 </Link>

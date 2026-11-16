@@ -5,6 +5,8 @@ import type { Trip } from "@/lib/trips-api";
 import { StatusBadge } from "./StatusBadge";
 import { TripActions } from "./TripActions";
 import { TripCover } from "./TripCover";
+import { Stamp } from "@/components/Stamp";
+import { stampDate } from "@/lib/stamps";
 
 export function TripCard({ trip }: { trip: Trip }) {
   const status = computeStatus(trip.start_date, trip.end_date, trip.status_override);
@@ -17,6 +19,11 @@ export function TripCard({ trip }: { trip: Trip }) {
           <TripCover url={trip.cover_url} className="transition-transform duration-500 group-hover:scale-105" />
           <div className="absolute inset-0 bg-cover-fade" />
           <StatusBadge status={status} className="absolute left-3 top-3" />
+          {status === "completed" && (
+            <div className="absolute right-2 top-2 rounded-full bg-papel/85 p-0.5 backdrop-blur">
+              <Stamp top="Viagem" main="Concluída" bottom={stampDate(trip.end_date)} tone="oliva" shape="dashed" tilt={-6} className="size-20" />
+            </div>
+          )}
           {days != null && status !== "completed" && (
             <div className="absolute bottom-3 right-3 rounded-xl bg-background/90 px-3 py-1.5 text-center backdrop-blur">
               <div className="font-display text-xl font-semibold leading-none text-foreground">{days}</div>

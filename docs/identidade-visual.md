@@ -4,7 +4,7 @@
 
 Este documento é a referência da marca Rumo. Os valores daqui são os mesmos de `src/styles.css`, que é a fonte usada pelo app. Se um valor mudar, mude nos dois lugares.
 
-> "Rumo" ainda é um nome provisório. Se o nome mudar, o símbolo continua valendo: troca-se só o wordmark.
+> O nome do app é escrito **Rumo**, com R maiúsculo. Ainda é provisório: Se o nome mudar, o símbolo continua valendo: troca-se só o wordmark.
 
 ---
 
@@ -23,18 +23,20 @@ A frase que guia tudo é **"enquadrar o caminho"**. O app deve parecer um objeto
 
 ## 2. Logo
 
-Os arquivos estão em [`public/brand/`](../public/brand), e no código o logo é o componente [`src/components/Logo.tsx`](../src/components/Logo.tsx) (`LogoMark`, `Logo` e `Splash`).
+Os arquivos estão em [`public/brand/`](../public/brand), e no código o logo é o componente [`src/components/Logo.tsx`](../src/components/Logo.tsx) (`LogoMark`, `Wordmark`, `Logo`, `PassportMark` e `Splash`).
+
+**No app, o símbolo é sempre o animado:** cabeçalho, login, página inicial, telas de carregamento, 404, favicon e página offline. Só o PDF impresso usa a versão estática (`<LogoMark animated={false} />`).
 
 | Versão | Arquivo | Uso |
 | --- | --- | --- |
 | Lente + bússola (principal) | `rumo-simbolo-lente.svg` | Cabeçalho, login e materiais em geral |
 | Lente + bússola animada | `rumo-simbolo-lente-animado.svg` · `<LogoMark animated />` | Splash, carregamento e estados de espera. O ponteiro oscila e assenta no norte num ciclo de 5 s. |
-| Passaporte | `rumo-simbolo-passaporte.svg` | Versão afetiva: área de Documentos, convites, e-mails e redes |
+| Passaporte | `rumo-simbolo-passaporte.svg` · `<PassportMark />` | Versão afetiva: tela Meu passaporte, área de Documentos, convites, e-mails e redes |
 | Monocromática escura | `rumo-simbolo-lente-mono.svg` | Carimbos, marca d'água em PDF, favicon pequeno, impressão em uma cor |
 | Monocromática clara | `rumo-simbolo-lente-mono-claro.svg` | A mesma, sobre fundos escuros ou couro |
 | Ícone do app | `rumo-icone-app.svg` · `public/icons/*.png` | PWA, ícone na tela inicial, favicon de 48 px ou mais |
 
-**Wordmark:** "rumo" em minúsculas, Fraunces 600, cor `tinta` (ou `linho` sobre fundo escuro), tracking −0,02em. Na assinatura horizontal, o símbolo vem à esquerda, com altura de cerca de 1,3× a das minúsculas.
+**Wordmark:** "Rumo", com R maiúsculo, em Fraunces 600 (`<Wordmark />`), cor `tinta` (ou `linho` sobre fundo escuro), tracking −0,02em. Na assinatura horizontal, o símbolo vem à esquerda, com altura de cerca de 1,3× a das minúsculas.
 
 **Animação:** só o ponteiro se move. Ele gira em torno do centro do viewBox (100,100) pelos ângulos 0 → 34° → −22° → 14° → −7° → 3° → 0 e fica parado no último terço do ciclo, com a curva `cubic-bezier(.4,0,.2,1)`. Com `prefers-reduced-motion`, a animação é desligada. No CSS, use a classe `.agulha`.
 
@@ -140,14 +142,19 @@ No celular, os campos de formulário ficam em 16 px para o iOS não dar zoom.
 ## 6. Elementos gráficos
 
 - **Ticket:** cartão de transporte com picote, ou seja, uma linha tracejada e dois recortes semicirculares. O corpo traz origem e destino em Fraunces e horários em mono. O canhoto traz o localizador, o status e o valor. Veja `src/components/plan/TransportTab.tsx`.
-- **Carimbo:** selo de uma cor só (`couro`, `marinho` ou `oliva`), circular com texto em arco ou retangular com contorno duplo, girado entre −8° e 8°. Serve para marcar cidade visitada, dia concluído e viagem encerrada. No máximo três por tela.
+- **Carimbo** (`src/components/Stamp.tsx`): selo de uma cor só (`couro`, `marinho` ou `oliva`), em três formatos: circular com texto em arco, retangular com contorno duplo e tracejado (viagem concluída). Fica girado entre −8° e 8°. Os carimbos ainda não ganhos aparecem tracejados e esmaecidos, e os novos entram com a animação `animate-carimbo`.
+- **Passaporte de carimbos** (`/passaporte`, regras em `src/lib/stamps.ts`): os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual. Cada cidade de uma viagem vira um carimbo no dia da chegada (a mesma cidade duas vezes na mesma viagem conta uma vez), e cada viagem concluída ganha o carimbo "Viagem concluída". O carimbo aparece:
+  - no cabeçalho do dia de chegada, no Roteiro;
+  - no cartão das viagens concluídas;
+  - na seção "Carimbos da viagem" do PDF;
+  - na coleção da tela Meu passaporte, com a contagem de cidades e países.
 - **Rota tracejada:** linha `latao` de 1,5 px (traço 4, espaço 4) ligando pontos do roteiro e trechos de transporte.
-- **Mostrador:** o anel graduado da bússola pode servir de indicador circular de progresso, para orçamento ou checklist.
-- **Textura de papel** (opcional): ruído de 2–3% sobre o `linho`, nunca sobre cartões.
+- **Mostrador** (`src/components/Dial.tsx`): o anel graduado da bússola usado como indicador circular de progresso. Os traços preenchidos ficam em couro, ou em erro quando o orçamento passa de 100%. Aparece no orçamento usado (Visão geral) e no progresso da checklist.
+- **Textura de papel** (`bg-papel-textura`): ruído de 2–3% sobre o `linho` do fundo da página, nunca sobre cartões.
 
 ## 7. Iconografia
 
-Os ícones são do **Lucide** (já vem com o shadcn/ui), com traço de 1,5 px e cantos arredondados, em 16, 20 ou 24 px. A cor padrão é `tinta-suave`; ativo usa `couro`, e decorativo grande usa `latao`.
+Os ícones são do **Lucide** (já vem com o shadcn/ui), com traço de 1,5 px (aplicado globalmente em `svg.lucide`, em `src/styles.css`) e cantos arredondados, em 16, 20 ou 24 px. A cor padrão é `tinta-suave`; ativo usa `couro`, e decorativo grande usa `latao`.
 
 | Módulo | Ícone |
 | --- | --- |
@@ -170,7 +177,7 @@ Use flat lays e lugares com luz natural, tons quentes e dessaturados e grão lev
 
 O app fala em português do Brasil, tratando o usuário por "você". O tom é de um companheiro de viagem organizado: claro, caloroso e sem exagero.
 
-- **Botões:** curtos e no infinitivo, como "Salvar viagem" e "Adicionar gasto".
+- **Botões:** curtos e no infinitivo, como "Salvar viagem" e "Adicionar gasto". As variantes são primário (`default`, couro), secundário (`oliva`), contorno (`outline`), fantasma (`ghost`) e o flutuante "+ Gasto".
 - **Estados vazios:** convidam, sem dar ordens. Exemplo: *"Nenhum voo por aqui ainda. Que tal começar pela ida?"*
 - **Alertas:** são diretos e dizem o que fazer. Exemplo: *"Seu passaporte vence em 4 meses. Renove antes de 10/03."*
 - **Valores:** sempre com a moeda. Quando estrangeira, com o equivalente em BRL ao lado: `€ 120,00 · R$ 742,80`.

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/EmptyState";
 import { planQuery } from "@/lib/plan-api";
 import { CONTACT_KINDS, DOC_KINDS, passportTooShort } from "@/lib/trip-extras";
+import { PassportMark } from "@/components/Logo";
 import { formatDate } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
 import type { Database } from "@/integrations/supabase/types";
@@ -24,7 +25,7 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
     <div className="space-y-8">
       <section>
         <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="text-2xl font-semibold">Documentos</h2>
+          <h2 className="flex items-center gap-3 text-2xl font-semibold"><PassportMark className="size-10" /> Documentos</h2>
           <Button onClick={() => de.open({ kind: "passport", traveler_id: travelers[0]?.id ?? null })} disabled={!travelers.length}><Plus /> Documento</Button>
         </div>
         {!travelers.length ? (

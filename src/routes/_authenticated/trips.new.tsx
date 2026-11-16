@@ -1,3 +1,4 @@
+import { Splash } from "@/components/Logo";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TripForm } from "@/components/trips/TripForm";
@@ -23,7 +24,7 @@ function NewTrip() {
   const { data: profile, isLoading } = useQuery(profileQuery(user.id));
   const navigate = useNavigate();
   const qc = useQueryClient();
-  if (isLoading) return null;
+  if (isLoading) return <Splash />;
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="mb-6 text-3xl font-semibold">Nova viagem</h1>

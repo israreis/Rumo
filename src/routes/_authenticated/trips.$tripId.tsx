@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { differenceInCalendarDays } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Splash } from "@/components/Logo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyState } from "@/components/EmptyState";
 import { StatusBadge } from "@/components/trips/StatusBadge";
@@ -67,7 +67,7 @@ function TripPage() {
   const { data: role = "viewer" } = useQuery({ ...myRoleQuery(tripId, trip?.owner_id), enabled: !!trip });
   const canEdit = role !== "viewer";
 
-  if (isLoading) return <Skeleton className="h-72 rounded-3xl" />;
+  if (isLoading) return <Splash label="Abrindo a viagem…" />;
   if (!trip)
     return <EmptyState icon={MapPin} title="Viagem não encontrada" text="Ela pode ter sido excluída." action={<Button asChild><Link to="/trips">Voltar</Link></Button>} />;
 
