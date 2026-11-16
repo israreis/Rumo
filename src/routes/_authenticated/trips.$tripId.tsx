@@ -104,7 +104,7 @@ function TripPage() {
       )}
       <Tabs defaultValue="overview" className="mt-6">
         <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
-          <TabsList className="h-auto w-max gap-1 bg-transparent p-0 lg:w-full lg:flex-wrap lg:justify-start">
+          <TabsList className="h-auto w-max gap-x-1.5 gap-y-2.5 bg-transparent p-0 lg:w-full lg:flex-wrap lg:justify-start">
             {TABS.map((t) => (
               <TabsTrigger key={t.id} value={t.id} className="gap-1.5 rounded-full border px-3.5 py-1.5 bg-card data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 <t.icon className="size-4" /> {t.label}
