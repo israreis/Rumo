@@ -8,7 +8,7 @@
  * - Map tiles: cache first, capped.
  * Writes are never cached; offline expenses are queued by the app (src/lib/offline-queue.ts).
  */
-const VERSION = "rumo-v3";
+const VERSION = "rumo-v4";
 const PAGES = `${VERSION}-pages`;
 const STATIC = `${VERSION}-static`;
 const DATA = `${VERSION}-data`;
