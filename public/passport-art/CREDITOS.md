@@ -5,7 +5,7 @@ Todas, menos a harpia, em domínio público, obtidas no Wikimedia Commons (excet
 | Arquivo | Assunto | Origem | Fonte |
 |---|---|---|---|
 | `azul.webp` | Arara-azul | A. F. Lydon, litografia do séc. XIX | [Psittacus hyacinthinus Lydon.jpg](https://commons.wikimedia.org/wiki/File:Psittacus_hyacinthinus_Lydon.jpg) |
-| `harpia.webp` | Harpia | ilustração escolhida pelo dono do app (não é das gravuras em domínio público acima; confirme a autoria e a permissão de uso antes de publicar o app para outras pessoas) | arquivo enviado pelo usuário |
+| `harpia-real.webp` | Harpia | ilustração escolhida pelo dono do app (não é das gravuras em domínio público acima; confirme a autoria e a permissão de uso antes de publicar o app para outras pessoas) | arquivo enviado pelo usuário |
 | `onca.webp` | Onça-pintada | Pearson Scott Foresman, desenho doado ao domínio público | [Jaguar (PSF).png](https://commons.wikimedia.org/wiki/File:Jaguar_%28PSF%29.png) |
 | `caninde.webp` | Arara-canindé | gravura do séc. XIX | [Natural History, Birds - Macaw.jpg](https://commons.wikimedia.org/wiki/File:Natural_History%2C_Birds_-_Macaw.jpg) |
 | `tucano.webp` | Tucano | Pearson Scott Foresman, desenho doado ao domínio público | [Toucan (PSF).png](https://commons.wikimedia.org/wiki/File:Toucan_%28PSF%29.png) |

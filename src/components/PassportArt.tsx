@@ -12,7 +12,7 @@ type Art = { src: string; alt: string; box: string };
 
 const ARTS: Art[] = [
   { src: "/passport-art/azul.webp", alt: "Arara-azul", box: "right-[4%] bottom-[12%] h-[52%]" },
-  { src: "/passport-art/harpia.webp", alt: "Harpia", box: "right-[3%] bottom-[8%] h-[64%]" },
+  { src: "/passport-art/harpia-real.webp", alt: "Harpia", box: "right-[3%] bottom-[8%] h-[64%]" },
   { src: "/passport-art/onca.webp", alt: "Onça-pintada", box: "left-[4%] right-[4%] bottom-[14%] h-[40%]" },
   { src: "/passport-art/caninde.webp", alt: "Arara-canindé", box: "right-[6%] bottom-[10%] h-[58%]" },
   { src: "/passport-art/tucano.webp", alt: "Tucano", box: "left-[6%] bottom-[12%] h-[50%]" },
