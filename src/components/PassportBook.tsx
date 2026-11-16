@@ -275,7 +275,8 @@ function VisaPage({ stamps, seen, hint }: { stamps: StampItem[]; seen: Set<strin
 function jitter(key: string, i: number) {
   let h = 0;
   for (let k = 0; k < key.length; k++) h = (h * 31 + key.charCodeAt(k)) | 0;
-  const x = ((h & 0xff) / 255 - 0.5) * 14;
-  const y = (((h >> 8) & 0xff) / 255 - 0.5) * 14 + (i % 2 ? 4 : -4);
+  const x = ((h & 0xff) / 255 - 0.5) * 10;
+  // Linha de cima desce um pouco, para não invadir o cabeçalho da página.
+  const y = (((h >> 8) & 0xff) / 255 - 0.5) * 8 + (i < 2 ? 5 : -2);
   return `translate(${x.toFixed(1)}%, ${y.toFixed(1)}%)`;
 }
