@@ -124,9 +124,11 @@ export function PassportBook({ stamps, seen, holder, counts }: {
   const sides = per === 2 ? (["left", "right"] as const) : (["right"] as const);
 
   return (
-    <div className="mx-auto w-full max-w-[52rem]">
+    <div className="mx-auto w-full max-w-[56rem]">
+      <div className="flex items-center gap-1.5 sm:gap-4">
+      <PageArrow dir={-1} hidden={view <= 0 || !!turn} onClick={() => go(-1)} />
       <div
-        className="paper-light relative touch-pan-y select-none rounded-[20px] bg-couro p-2 shadow-lift sm:p-3"
+        className="paper-light relative min-w-0 flex-1 touch-pan-y select-none rounded-[20px] bg-couro p-2 shadow-lift sm:p-3"
         onPointerDown={onDown}
         onPointerUp={onUp}
         onPointerCancel={() => (startX.current = null)}
@@ -156,8 +158,8 @@ export function PassportBook({ stamps, seen, holder, counts }: {
           )}
           {per === 2 && <div aria-hidden className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-tinta/15" />}
         </div>
-        <PageArrow dir={-1} hidden={view <= 0 || !!turn} onClick={() => go(-1)} />
-        <PageArrow dir={1} hidden={view >= last || !!turn} onClick={() => go(1)} />
+      </div>
+      <PageArrow dir={1} hidden={view >= last || !!turn} onClick={() => go(1)} />
       </div>
 
       <p className="mt-3 text-center font-num text-xs text-muted-foreground">
@@ -167,7 +169,7 @@ export function PassportBook({ stamps, seen, holder, counts }: {
   );
 }
 
-/** Seta na borda do livreto, na altura do meio da página, para virar a folha. */
+/** Seta ao lado do livreto (fora da capa), na altura do meio, para virar a folha. */
 function PageArrow({ dir, hidden, onClick }: { dir: 1 | -1; hidden: boolean; onClick: () => void }) {
   const Icon = dir === 1 ? ChevronRight : ChevronLeft;
   return (
@@ -179,8 +181,7 @@ function PageArrow({ dir, hidden, onClick }: { dir: 1 | -1; hidden: boolean; onC
       onClick={onClick}
       tabIndex={hidden ? -1 : 0}
       className={cn(
-        "absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-papel/90 text-couro shadow-lift backdrop-blur transition-[opacity,transform] duration-200 hover:bg-papel active:scale-95 sm:size-11",
-        dir === 1 ? "right-1 sm:-right-5" : "left-1 sm:-left-5",
+        "grid size-8 shrink-0 place-items-center rounded-full border border-border bg-card text-primary shadow-card transition-[opacity,transform] duration-200 hover:bg-card active:scale-95 sm:size-11",
         // Discreta em repouso e sólida ao passar o mouse, focar ou tocar. Em tela de toque (sem hover)
         // fica um pouco mais visível, para não sumir.
         hidden
