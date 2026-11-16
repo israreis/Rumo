@@ -67,7 +67,6 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
     const country = entry.country?.trim() || clean(entry.city);
     // Chegada fora do período (ou sem data) numa viagem encerrada: vale a data de volta.
     const date = entry.arrival_date && (!trip.end_date || entry.arrival_date <= trip.end_date) ? entry.arrival_date : trip.end_date;
-    const h = hash(id);
     out.push({
       key: `${trip.id}:${id}`,
       tripId: trip.id,
@@ -79,8 +78,8 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       date,
       // Carimbado no dia da chegada, ou de qualquer forma quando a viagem já terminou.
       earned: (!!date && date <= today) || ended,
-      // Cor fixa por país; o formato alterna entre redondo e retangular.
-      tone: TONES[h % TONES.length]!,
+      // Formato e cor alternam entre os carimbos.
+      tone: TONES[n % TONES.length]!,
       shape: n++ % 2 === 0 ? "round" : "rect",
       tilt: (hash(`${trip.id}:${id}`) % 15) - 7,
       country,
@@ -119,8 +118,10 @@ export function manualStamp(m: ManualStamp): StampItem {
 export function collection(trips: TripLike[], today: string, manual: ManualStamp[] = []) {
   const all = [...trips.flatMap((t) => tripStamps(t, today)), ...manual.map(manualStamp)];
   const byDate = (a: StampItem, b: StampItem) => (a.date ?? "9").localeCompare(b.date ?? "9") || a.key.localeCompare(b.key);
-  // Formato alterna redondo/retangular na ordem cronológica, como carimbos de imigrações diferentes.
-  const asc = all.filter((s) => s.earned).sort(byDate).map((s, i) => ({ ...s, shape: (i % 2 === 0 ? "round" : "rect") as StampShape }));
+  // Formato (redondo/retangular) e cor (couro, marinho, oliva) alternam na ordem cronológica,
+  // como carimbos de imigrações diferentes; ciclos de 2 e 3 evitam combinações repetidas em sequência.
+  const look = (i: number) => ({ shape: (i % 2 === 0 ? "round" : "rect") as StampShape, tone: TONES[i % TONES.length]! });
+  const asc = all.filter((s) => s.earned).sort(byDate).map((s, i) => ({ ...s, ...look(i) }));
   const earned = [...asc].reverse();
   // "Para carimbar" sem repetidos: só a próxima chegada de cada país.
   const pendingSeen = new Set<string>();
@@ -133,7 +134,7 @@ export function collection(trips: TripLike[], today: string, manual: ManualStamp
       pendingSeen.add(id);
       return true;
     })
-    .map((s, i) => ({ ...s, shape: ((asc.length + i) % 2 === 0 ? "round" : "rect") as StampShape }));
+    .map((s, i) => ({ ...s, ...look(asc.length + i) }));
   const cities = new Set(earned.flatMap((s) => s.cities.map((c) => `${s.main.toLowerCase()}|${c}`)));
   const countries = new Set(earned.filter((s) => s.country).map((s) => s.country!.toLowerCase()));
   return { earned, pending, cities: cities.size, countries: countries.size };
