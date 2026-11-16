@@ -23,6 +23,7 @@ type Holder = {
   passportExpiry: string | null;
   passportState: PassportState;
   onEditPassport?: () => void;
+  onAddStamps?: () => void;
 };
 
 export function PassportBook({ stamps, seen, holder, counts }: {
@@ -234,17 +235,30 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
           <Field label="Carimbos · Cidades · Países">{counts.stamps} · {counts.cities} · {counts.countries}</Field>
         </dl>
       </div>
-      {holder.onEditPassport && (
-        <button
-          type="button"
-          onPointerDown={(e) => e.stopPropagation()}
-          onPointerUp={(e) => e.stopPropagation()}
-          onClick={holder.onEditPassport}
-          className="mt-3 self-start text-xs font-semibold text-primary underline-offset-2 hover:underline"
-        >
-          {holder.passportLast4 || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
-        </button>
-      )}
+      <div className="mt-3 flex flex-col items-start gap-1.5">
+        {holder.onEditPassport && (
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onClick={holder.onEditPassport}
+            className="text-xs font-semibold text-primary underline-offset-2 hover:underline"
+          >
+            {holder.passportLast4 || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
+          </button>
+        )}
+        {holder.onAddStamps && (
+          <button
+            type="button"
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onClick={holder.onAddStamps}
+            className="text-xs font-semibold text-primary underline-offset-2 hover:underline"
+          >
+            + Incluir carimbos de viagens anteriores
+          </button>
+        )}
+      </div>
       {(st.kind === "expired" || st.kind === "expiring" || st.kind === "short-for-trip") && (
         <div className="pointer-events-none absolute bottom-[16%] right-[6%] w-[46%]">
           <Stamp

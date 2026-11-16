@@ -89,8 +89,34 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
   return out;
 }
 
-export function collection(trips: TripLike[], today: string) {
-  const all = trips.flatMap((t) => tripStamps(t, today));
+/** Carimbo cadastrado à mão, de uma viagem anterior ao uso do app (tabela `manual_stamps`). */
+export type ManualStamp = { id: string; country: string; entry_city: string | null; stamped_on: string; note: string | null };
+
+export function manualStamp(m: ManualStamp): StampItem {
+  const country = m.country.trim();
+  const id = country.toLowerCase();
+  const h = hash(id);
+  const city = m.entry_city ? clean(m.entry_city) : null;
+  return {
+    key: `manual:${m.id}`,
+    tripId: "manual",
+    tripName: m.note?.trim() || "Viagem anterior",
+    kind: "country",
+    top: city || "Entrada",
+    main: country,
+    bottom: stampDate(m.stamped_on),
+    date: m.stamped_on,
+    earned: true,
+    tone: TONES[h % TONES.length]!,
+    shape: (h >> 3) % 2 === 0 ? "round" : "rect",
+    tilt: (hash(`manual:${m.id}`) % 15) - 7,
+    country,
+    cities: city ? [city.toLowerCase()] : [],
+  };
+}
+
+export function collection(trips: TripLike[], today: string, manual: ManualStamp[] = []) {
+  const all = [...trips.flatMap((t) => tripStamps(t, today)), ...manual.map(manualStamp)];
   const earned = all.filter((s) => s.earned).sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
   // "Para carimbar" sem repetidos: só a próxima chegada de cada país.
   const pendingSeen = new Set<string>();

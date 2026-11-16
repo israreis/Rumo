@@ -10,6 +10,7 @@ import { collection, markStampsSeen, seenStamps } from "@/lib/stamps";
 import { profileQuery } from "@/lib/profile";
 import { PassportBook } from "@/components/PassportBook";
 import { PassportDialog } from "@/components/PassportDialog";
+import { ManualStampsDialog, listManualStamps, manualStampsKey } from "@/components/ManualStampsDialog";
 import { maskPassport, passportState, relTime, type PassportState } from "@/lib/passport";
 import { AlertTriangle, BadgeCheck, CircleAlert, IdCard } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,8 +25,10 @@ function Passport() {
   const { user } = Route.useRouteContext();
   const { data: trips, isLoading } = useQuery({ queryKey: ["trips"], queryFn: listTrips });
   const { data: profile } = useQuery(profileQuery(user.id));
+  const { data: manual = [] } = useQuery({ queryKey: manualStampsKey(user.id), queryFn: listManualStamps });
+  const [adding, setAdding] = useState(false);
   const today = format(new Date(), "yyyy-MM-dd");
-  const col = useMemo(() => collection(trips ?? [], today), [trips, today]);
+  const col = useMemo(() => collection(trips ?? [], today, manual), [trips, today, manual]);
   // Stamps earned since the last visit land with the stamping animation, once.
   const [fresh] = useState(() => (typeof window === "undefined" ? new Set<string>() : seenStamps()));
   const newOnes = col.earned.filter((s) => !fresh.has(s.key));
@@ -39,7 +42,7 @@ function Passport() {
     if (!trips) return;
     if (newOnes.length && fresh.size) toast.success(newOnes.length === 1 ? "Novo carimbo no passaporte!" : `${newOnes.length} carimbos novos no passaporte!`);
     markStampsSeen(col.earned.map((s) => s.key));
-  }, [trips]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [trips, manual.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isLoading) return <Splash label="Abrindo o passaporte…" />;
 
@@ -78,10 +81,12 @@ function Passport() {
             passportExpiry: profile?.passport_expiry ?? null,
             passportState: pState,
             onEditPassport: () => setEditing(true),
+            onAddStamps: () => setAdding(true),
           }}
           counts={{ stamps: col.earned.length, cities: col.cities, countries: col.countries }}
         />
       </div>
+      {adding && <ManualStampsDialog open onOpenChange={setAdding} userId={user.id} stamps={manual} />}
       {editing && (
         <PassportDialog open onOpenChange={setEditing} userId={user.id} last4={profile?.passport_last4 ?? null} expiry={profile?.passport_expiry ?? null} />
       )}

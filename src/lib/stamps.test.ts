@@ -57,4 +57,18 @@ describe("stamps", () => {
     expect(c.countries).toBe(1);
     expect(c.earned.find((x) => x.main === "Portugal")!.bottom).toBe("26 DEZ 2025");
   });
+
+  it("adds stamps typed in by hand to the collection and its counters", () => {
+    const manual = [
+      { id: "m1", country: "Argentina", entry_city: "Buenos Aires", stamped_on: "2019-07-10", note: null },
+      { id: "m2", country: "Portugal", entry_city: null, stamped_on: "2022-05-02", note: "Lua de mel" },
+    ];
+    const c = collection([trip], "2027-10-01", manual);
+    expect(c.earned.map((x) => x.main)).toEqual(["Portugal", "Argentina"]);
+    expect(c.countries).toBe(2);
+    expect(c.cities).toBe(1);
+    expect(c.earned[0]!.top).toBe("Entrada");
+    expect(c.earned[0]!.tripName).toBe("Lua de mel");
+    expect(c.earned[1]!.bottom).toBe("10 JUL 2019");
+  });
 });

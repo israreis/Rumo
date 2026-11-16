@@ -492,6 +492,36 @@ export type Database = {
           },
         ]
       }
+      manual_stamps: {
+        Row: {
+          country: string
+          created_at: string
+          entry_city: string | null
+          id: string
+          note: string | null
+          stamped_on: string
+          user_id: string
+        }
+        Insert: {
+          country: string
+          created_at?: string
+          entry_city?: string | null
+          id?: string
+          note?: string | null
+          stamped_on: string
+          user_id?: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          entry_city?: string | null
+          id?: string
+          note?: string | null
+          stamped_on?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
