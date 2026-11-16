@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
 /*
- * Rumo symbol: a camera lens (knurled barrel, brass focus ring, iris) holding a compass.
+ * Rumo Trip symbol: a camera lens (knurled barrel, brass focus ring, iris) holding a compass.
  * Fixed brand colours — the mark reads the same on light and dark grounds.
  * Same geometry as the SVG files in public/brand/.
  */
@@ -57,7 +57,7 @@ const GLARE = (() => {
 })();
 
 /**
- * The Rumo symbol. Animated by default (the needle swings and settles on north every 5 s,
+ * The Rumo Trip symbol. Animated by default (the needle swings and settles on north every 5 s,
  * paused under prefers-reduced-motion); pass `animated={false}` for print and tiny sizes.
  */
 export function LogoMark({ className, animated = true, title }: { className?: string; animated?: boolean; title?: string }) {
@@ -88,10 +88,10 @@ export function LogoMark({ className, animated = true, title }: { className?: st
   );
 }
 
-/** Wordmark lockup: symbol + "Rumo" in Fraunces. */
+/** Wordmark lockup: symbol + "Rumo Trip" in Fraunces. */
 export function Logo({ to = "/", className }: { to?: "/" | "/trips"; className?: string }) {
   return (
-    <Link to={to} className={cn("flex items-center gap-2.5 text-foreground", className)} aria-label="Rumo — início">
+    <Link to={to} className={cn("flex items-center gap-2.5 text-foreground", className)} aria-label="Rumo Trip — início">
       <LogoMark className="size-8" />
       <Wordmark className="text-[26px]" />
     </Link>
@@ -99,7 +99,7 @@ export function Logo({ to = "/", className }: { to?: "/" | "/trips"; className?:
 }
 
 export function Wordmark({ className }: { className?: string }) {
-  return <span className={cn("font-display font-semibold leading-none tracking-[-0.02em]", className)}>Rumo</span>;
+  return <span className={cn("font-display font-semibold leading-none tracking-[-0.02em]", className)}>Rumo Trip</span>;
 }
 
 /** Passport version of the mark: leather cover with the lens-compass emblem in brass. */

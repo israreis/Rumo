@@ -1,7 +1,7 @@
 import type { StampShape, StampTone } from "@/components/Stamp";
 
 /**
- * Virtual passport stamps. Passports are hardly stamped any more, so Rumo keeps the
+ * Virtual passport stamps. Passports are hardly stamped any more, so Rumo Trip keeps the
  * ritual like airport immigration: one stamp per country entered on a trip, dated by the
  * first arrival there and naming the city of entry. Only countries, as in a real passport. Derived from the trips themselves, so nothing to sync.
  */

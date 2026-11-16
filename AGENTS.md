@@ -1,4 +1,4 @@
-# Rumo — regras do projeto
+# Rumo Trip — regras do projeto
 
 App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwind v4 + shadcn/ui, dados no Supabase (Postgres + Auth + Storage) acessados direto do navegador sob RLS.
 
@@ -25,9 +25,9 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 
 ## Identidade visual
 - Guia completo: `docs/identidade-visual.md` (mantenha em sincronia com `src/styles.css`).
-- Tokens em `src/styles.css` seguem o design system "Rumo — Identidade visual": linho/papel/areia, tinta, couro (primária), oliva, latão, caramelo, mar, marinho. Fontes: Fraunces (títulos), DM Sans (UI), Caveat (manuscrito, com moderação), IBM Plex Mono (códigos e valores).
+- Tokens em `src/styles.css` seguem o design system "Rumo Trip — Identidade visual": linho/papel/areia, tinta, couro (primária), oliva, latão, caramelo, mar, marinho. Fontes: Fraunces (títulos), DM Sans (UI), Caveat (manuscrito, com moderação), IBM Plex Mono (códigos e valores).
 - Latão e caramelo no tema claro só em ícones, linhas e texto ≥24px (contraste 3:1).
-- Nome do app: **Rumo** (R maiúsculo); use `<Wordmark />`.
+- Nome do app: **Rumo Trip** (R e T maiúsculos); use `<Wordmark />`.
 - Logo: `src/components/Logo.tsx`. `LogoMark` é animado por padrão em todo o app (cabeçalho, login, carregamentos via `<Splash />`); só o PDF usa `animated={false}`. `PassportMark` em Passaporte, Documentos e convites.
 - Carimbos: `src/components/Stamp.tsx` + regras puras em `src/lib/stamps.ts` (um por país por viagem, como na imigração: nome do país, cidade de entrada e data da primeira chegada; formato alterna redondo/retangular em ordem cronológica; tinta com falhas e respingos gerados por semente; só países, sem carimbo de viagem concluída; "Para carimbar" sem repetidos); coleção em `/passaporte`, exibida como livreto (`src/components/PassportBook.tsx`, sempre no tema claro via `.paper-light`, mesmo no modo escuro: página de identificação + páginas de vistos com 4 carimbos, folha que gira em 3D; fundo de cada página com gravuras de fauna e paisagens brasileiras em domínio público (`public/passport-art/`, créditos em `CREDITOS.md`; arara-azul, harpia, onça e arara-canindé primeiro), sobre hachuras laranja, e número da página perfurado, em `src/components/PassportArt.tsx`). Derivados das viagens; viagem encerrada carimba todos os seus países. Carimbos de viagens anteriores ao app são cadastrados à mão em `manual_stamps` (só o dono lê/altera) via `ManualStampsDialog` e entram na coleção por `manualStamp`.
 - Mostrador (`src/components/Dial.tsx`) para progresso circular; botão secundário é a variante `oliva`.

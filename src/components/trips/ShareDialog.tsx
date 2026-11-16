@@ -44,13 +44,13 @@ export function ShareDialog({ trip, open, onOpenChange, role }: { trip: Trip; op
   });
 
   async function shareInvite(token: string, to: string) {
-    return shareOrCopy(inviteLink(token), `Convite para ${trip.name}`, `Te convidei para planejar "${trip.name}" comigo no Rumo. Entre com o e-mail ${to}:`);
+    return shareOrCopy(inviteLink(token), `Convite para ${trip.name}`, `Te convidei para planejar "${trip.name}" comigo no Rumo Trip. Entre com o e-mail ${to}:`);
   }
 
   function mailto(token: string, to: string) {
     const subject = encodeURIComponent(`Convite para a viagem "${trip.name}"`);
     const body = encodeURIComponent(
-      `Oi! Te convidei para planejar "${trip.name}" comigo no Rumo.\n\nAbra o link e entre (ou crie sua conta) com este e-mail (${to}):\n${inviteLink(token)}\n`,
+      `Oi! Te convidei para planejar "${trip.name}" comigo no Rumo Trip.\n\nAbra o link e entre (ou crie sua conta) com este e-mail (${to}):\n${inviteLink(token)}\n`,
     );
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   }

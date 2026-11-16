@@ -35,7 +35,7 @@ const COUNTRIES = [
   "República Dominicana", "República Tcheca", "Rússia", "Suécia", "Suíça", "Tailândia", "Turquia", "Uruguai", "Venezuela", "Vietnã",
 ];
 
-/** Incluir (e remover) carimbos de viagens feitas antes de usar o Rumo. */
+/** Incluir (e remover) carimbos de viagens feitas antes de usar o Rumo Trip. */
 export function ManualStampsDialog({ open, onOpenChange, userId, stamps }: {
   open: boolean; onOpenChange: (o: boolean) => void; userId: string; stamps: ManualStamp[];
 }) {
@@ -79,7 +79,7 @@ export function ManualStampsDialog({ open, onOpenChange, userId, stamps }: {
       <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Carimbos de viagens anteriores</DialogTitle>
-          <DialogDescription>Inclua os países por onde você já passou antes de usar o Rumo. Cada um vira um carimbo no livreto, na data da entrada.</DialogDescription>
+          <DialogDescription>Inclua os países por onde você já passou antes de usar o Rumo Trip. Cada um vira um carimbo no livreto, na data da entrada.</DialogDescription>
         </DialogHeader>
 
         <form

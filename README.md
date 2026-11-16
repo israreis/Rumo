@@ -1,4 +1,4 @@
-# Rumo
+# Rumo Trip
 
 Seu diário de bordo para planejar, viver e lembrar cada viagem. É um app web instalável (PWA) para uso pessoal, com:
 
@@ -58,7 +58,7 @@ Depois abra <http://localhost:3000>.
 ### Login com Google (opcional)
 
 1. No [Google Cloud Console](https://console.cloud.google.com), abra a **Google Auth Platform**:
-   - **Branding:** nome do app ("Rumo") e e-mail de suporte.
+   - **Branding:** nome do app ("Rumo Trip") e e-mail de suporte.
    - **Público-alvo:** *Externo*. Enquanto o app estiver no modo **Testando**, só os e-mails listados em **Usuários de teste** conseguem entrar (até 100). Adicione o seu e o de quem você for convidar para as viagens.
    - **Clientes → Criar cliente → Aplicativo da Web**:
      - *Origens JavaScript autorizadas:* `http://localhost:3000` e `https://rumo-ashy.vercel.app`.
@@ -97,7 +97,7 @@ Abra o endereço publicado:
 - **iPhone (Safari):** Compartilhar → *Adicionar à Tela de Início*.
 - **Android (Chrome):** menu ⋮ → *Instalar app*, ou aceite o convite que aparece na tela.
 
-O Rumo passa a abrir em tela cheia, com ícone próprio. Uma viagem aberta com internet fica disponível depois sem conexão. Gastos lançados offline aparecem como "pendentes" e são enviados quando a internet volta.
+O Rumo Trip passa a abrir em tela cheia, com ícone próprio. Uma viagem aberta com internet fica disponível depois sem conexão. Gastos lançados offline aparecem como "pendentes" e são enviados quando a internet volta.
 
 O app guarda arquivos no aparelho para funcionar offline. Se, depois de um deploy, a tela parecer de uma versão antiga, recarregue com **Ctrl+Shift+R** no computador, ou feche e reabra o app no celular.
 

@@ -40,7 +40,7 @@ export function PassportDialog({ open, onOpenChange, userId, last4, expiry }: {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Dados do passaporte</DialogTitle>
-          <DialogDescription>Ficam só na sua conta. Do número, o Rumo guarda apenas os 4 últimos dígitos, o suficiente para reconhecer o documento. A validade serve para avisar quando ele estiver vencendo.</DialogDescription>
+          <DialogDescription>Ficam só na sua conta. Do número, o Rumo Trip guarda apenas os 4 últimos dígitos, o suficiente para reconhecer o documento. A validade serve para avisar quando ele estiver vencendo.</DialogDescription>
         </DialogHeader>
         <form
           className="grid gap-4"

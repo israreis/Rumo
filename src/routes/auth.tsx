@@ -16,9 +16,9 @@ export const Route = createFileRoute("/auth")({
     typeof s["redirect"] === "string" && s["redirect"].startsWith("/") ? { redirect: s["redirect"] } : {},
   head: () => ({
     meta: [
-      { title: "Entrar — Rumo" },
+      { title: "Entrar — Rumo Trip" },
       { name: "description", content: "Entre ou crie sua conta para planejar suas viagens." },
-      { property: "og:title", content: "Entrar — Rumo" },
+      { property: "og:title", content: "Entrar — Rumo Trip" },
       { property: "og:description", content: "Entre ou crie sua conta para planejar suas viagens." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

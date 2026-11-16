@@ -10,9 +10,9 @@ import { listTrips } from "@/lib/trips-api";
 export const Route = createFileRoute("/_authenticated/trips/")({
   head: () => ({
     meta: [
-      { title: "Minhas viagens — Rumo" },
+      { title: "Minhas viagens — Rumo Trip" },
       { name: "description", content: "Todas as suas viagens planejadas, em andamento e concluídas." },
-      { property: "og:title", content: "Minhas viagens — Rumo" },
+      { property: "og:title", content: "Minhas viagens — Rumo Trip" },
       { property: "og:description", content: "Todas as suas viagens planejadas, em andamento e concluídas." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

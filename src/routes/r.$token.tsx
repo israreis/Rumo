@@ -25,7 +25,7 @@ export const Route = createFileRoute("/r/$token")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Roteiro de viagem — Rumo" },
+      { title: "Roteiro de viagem — Rumo Trip" },
       { name: "description", content: "Acompanhe o roteiro desta viagem, dia a dia." },
       { name: "robots", content: "noindex" },
     ],
@@ -141,7 +141,7 @@ function PublicItinerary() {
         </section>
 
         <p className="mt-10 text-center text-xs text-muted-foreground">
-          Planejado com <Link to="/" className="font-semibold text-primary hover:underline">Rumo</Link>
+          Planejado com <Link to="/" className="font-semibold text-primary hover:underline">Rumo Trip</Link>
         </p>
       </main>
     </div>

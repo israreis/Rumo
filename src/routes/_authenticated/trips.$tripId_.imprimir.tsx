@@ -20,7 +20,7 @@ type Contact = Database["public"]["Tables"]["emergency_contacts"]["Row"];
 type Doc = Database["public"]["Tables"]["traveler_documents"]["Row"];
 
 export const Route = createFileRoute("/_authenticated/trips/$tripId_/imprimir")({
-  head: () => ({ meta: [{ title: "Roteiro para imprimir — Rumo" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Roteiro para imprimir — Rumo Trip" }, { name: "robots", content: "noindex" }] }),
   component: PrintTrip,
 });
 
@@ -187,7 +187,7 @@ function PrintTrip() {
           </ul>
         </section>
 
-        <footer className="mt-10 border-t pt-4 text-xs text-tinta-suave">Gerado pelo Rumo em {format(new Date(), "dd/MM/yyyy HH:mm")}.</footer>
+        <footer className="mt-10 border-t pt-4 text-xs text-tinta-suave">Gerado pelo Rumo Trip em {format(new Date(), "dd/MM/yyyy HH:mm")}.</footer>
       </article>
     </div>
   );

@@ -34,9 +34,9 @@ import { myRoleQuery } from "@/lib/sharing-api";
 export const Route = createFileRoute("/_authenticated/trips/$tripId")({
   head: () => ({
     meta: [
-      { title: "Viagem — Rumo" },
+      { title: "Viagem — Rumo Trip" },
       { name: "description", content: "Visão geral, roteiro, orçamento e tudo sobre a sua viagem." },
-      { property: "og:title", content: "Viagem — Rumo" },
+      { property: "og:title", content: "Viagem — Rumo Trip" },
       { property: "og:description", content: "Visão geral, roteiro, orçamento e tudo sobre a sua viagem." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

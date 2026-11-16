@@ -1,4 +1,4 @@
--- Rumo — schema completo do banco (gerado por scripts/build-setup-sql.mjs; não edite à mão).
+-- Rumo Trip — schema completo do banco (gerado por scripts/build-setup-sql.mjs; não edite à mão).
 -- Cole tudo no SQL Editor de um projeto Supabase NOVO e clique em Run.
 
 -- ============================================================

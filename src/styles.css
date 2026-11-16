@@ -10,10 +10,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Rumo — identidade visual.
+ * Rumo Trip — identidade visual.
  * Paleta tirada da mesa do viajante: linho do caderno, couro da capa da câmera,
  * latão das ferragens, oliva da mochila, azul do passaporte e o mar dos mapas.
- * Fonte da verdade: design system "Rumo — Identidade visual".
+ * Fonte da verdade: design system "Rumo Trip — Identidade visual".
  *
  * shadcn variables (--background, --primary…) are mapped onto the brand tokens so the
  * UI kit follows the brand; brand tokens are also exposed as Tailwind colors

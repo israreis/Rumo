@@ -1,10 +1,10 @@
-# Rumo — Identidade visual
+# Rumo Trip — Identidade visual
 
 **Seu diário de bordo para planejar, viver e lembrar cada viagem.**
 
-Este documento é a referência da marca Rumo. Os valores daqui são os mesmos de `src/styles.css`, que é a fonte usada pelo app. Se um valor mudar, mude nos dois lugares.
+Este documento é a referência da marca Rumo Trip. Os valores daqui são os mesmos de `src/styles.css`, que é a fonte usada pelo app. Se um valor mudar, mude nos dois lugares.
 
-> O nome do app é escrito **Rumo**, com R maiúsculo. Ainda é provisório: Se o nome mudar, o símbolo continua valendo: troca-se só o wordmark.
+> O nome do app é escrito **Rumo Trip**, com R maiúsculo. Ainda é provisório: Se o nome mudar, o símbolo continua valendo: troca-se só o wordmark.
 
 ---
 
@@ -36,7 +36,7 @@ Os arquivos estão em [`public/brand/`](../public/brand), e no código o logo é
 | Monocromática clara | `rumo-simbolo-lente-mono-claro.svg` | A mesma, sobre fundos escuros ou couro |
 | Ícone do app | `rumo-icone-app.svg` · `public/icons/*.png` | PWA, ícone na tela inicial, favicon de 48 px ou mais |
 
-**Wordmark:** "Rumo", com R maiúsculo, em Fraunces 600 (`<Wordmark />`), cor `tinta` (ou `linho` sobre fundo escuro), tracking −0,02em. Na assinatura horizontal, o símbolo vem à esquerda, com altura de cerca de 1,3× a das minúsculas.
+**Wordmark:** "Rumo Trip", com R maiúsculo, em Fraunces 600 (`<Wordmark />`), cor `tinta` (ou `linho` sobre fundo escuro), tracking −0,02em. Na assinatura horizontal, o símbolo vem à esquerda, com altura de cerca de 1,3× a das minúsculas.
 
 **Animação:** só o ponteiro se move. Ele gira em torno do centro do viewBox (100,100) pelos ângulos 0 → 34° → −22° → 14° → −7° → 3° → 0 e fica parado no último terço do ciclo, com a curva `cubic-bezier(.4,0,.2,1)`. Com `prefers-reduced-motion`, a animação é desligada. No CSS, use a classe `.agulha`.
 
@@ -143,7 +143,7 @@ No celular, os campos de formulário ficam em 16 px para o iOS não dar zoom.
 
 - **Ticket:** cartão de transporte com picote, ou seja, uma linha tracejada e dois recortes semicirculares. O corpo traz origem e destino em Fraunces e horários em mono. O canhoto traz o localizador, o status e o valor. Veja `src/components/plan/TransportTab.tsx`.
 - **Carimbo** (`src/components/Stamp.tsx`): selo de uma cor só (`couro`, `marinho` ou `oliva`), em dois formatos fixos por país: circular com texto em arco ou retangular com contorno duplo (`erro` e `alerta` só para o aviso de validade do passaporte). Fica girado entre −8° e 8°. Os carimbos ainda não ganhos aparecem tracejados e esmaecidos, e os novos entram com a animação `animate-carimbo`.
-- **Passaporte de carimbos** (`/passaporte`, regras em `src/lib/stamps.ts`): os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual como a imigração de aeroporto. Cada país de uma viagem vira um carimbo com a cidade de entrada e a data da primeira chegada; só países, como num passaporte de verdade. O carimbo aparece:
+- **Passaporte de carimbos** (`/passaporte`, regras em `src/lib/stamps.ts`): os passaportes quase não são mais carimbados, então o Rumo Trip guarda esse ritual como a imigração de aeroporto. Cada país de uma viagem vira um carimbo com a cidade de entrada e a data da primeira chegada; só países, como num passaporte de verdade. O carimbo aparece:
   - no cabeçalho do dia de entrada no país, no Roteiro;
   - na seção "Carimbos da viagem" do PDF;
   - no livreto da tela Meu passaporte (página de identificação com os dados do passaporte real e páginas de vistos que viram em 3D).

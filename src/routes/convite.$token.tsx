@@ -8,7 +8,7 @@ import { acceptInvite } from "@/lib/sharing-api";
 
 export const Route = createFileRoute("/convite/$token")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Convite de viagem — Rumo" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Convite de viagem — Rumo Trip" }, { name: "robots", content: "noindex" }] }),
   component: AcceptInvite,
 });
 

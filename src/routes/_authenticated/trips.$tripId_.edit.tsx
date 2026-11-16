@@ -7,9 +7,9 @@ import { getTrip, saveTrip } from "@/lib/trips-api";
 export const Route = createFileRoute("/_authenticated/trips/$tripId_/edit")({
   head: () => ({
     meta: [
-      { title: "Editar viagem — Rumo" },
+      { title: "Editar viagem — Rumo Trip" },
       { name: "description", content: "Atualize destinos, datas, viajantes e orçamento." },
-      { property: "og:title", content: "Editar viagem — Rumo" },
+      { property: "og:title", content: "Editar viagem — Rumo Trip" },
       { property: "og:description", content: "Atualize destinos, datas, viajantes e orçamento." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

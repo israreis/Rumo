@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { listTrips } from "@/lib/trips-api";
 
 export const Route = createFileRoute("/_authenticated/passaporte")({
-  head: () => ({ meta: [{ title: "Meu passaporte — Rumo" }, { name: "description", content: "Sua coleção de carimbos de viagem." }] }),
+  head: () => ({ meta: [{ title: "Meu passaporte — Rumo Trip" }, { name: "description", content: "Sua coleção de carimbos de viagem." }] }),
   component: Passport,
 });
 
@@ -53,7 +53,7 @@ function Passport() {
     <div className="space-y-10">
       <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center">
         <div className="flex items-center gap-4 sm:gap-6">
-          <PassportMark className="size-16 shrink-0 sm:size-24" title="Passaporte Rumo" />
+          <PassportMark className="size-16 shrink-0 sm:size-24" title="Passaporte Rumo Trip" />
           <div className="min-w-0">
             <p className="font-hand text-xl text-primary sm:text-2xl">Carimbe cada chegada</p>
             <h1 className="text-3xl sm:text-4xl">Meu passaporte</h1>
@@ -65,7 +65,7 @@ function Passport() {
           <Count n={col.countries} label={col.countries === 1 ? "país" : "países"} />
         </dl>
         <p className="max-w-2xl text-sm text-muted-foreground lg:-mt-2">
-          Os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual: cada país ganha um carimbo no dia em que você entra nele, como na imigração do aeroporto.
+          Os passaportes quase não são mais carimbados, então o Rumo Trip guarda esse ritual: cada país ganha um carimbo no dia em que você entra nele, como na imigração do aeroporto.
         </p>
       </header>
 
@@ -123,7 +123,7 @@ function Count({ n, label }: { n: number; label: string }) {
 function PassportStatus({ state, last4, expiry, onEdit }: { state: PassportState; last4: string | null; expiry: string | null; onEdit: () => void }) {
   const br = (d: string | null) => (d ? d.split("-").reverse().join("/") : "");
   const v = {
-    missing: { tone: "border-dashed bg-card/60", Icon: IdCard, icon: "text-muted-foreground", text: "Cadastre o número e a validade do seu passaporte para o Rumo avisar quando ele estiver vencendo.", cta: "Cadastrar" },
+    missing: { tone: "border-dashed bg-card/60", Icon: IdCard, icon: "text-muted-foreground", text: "Cadastre o número e a validade do seu passaporte para o Rumo Trip avisar quando ele estiver vencendo.", cta: "Cadastrar" },
     expired: { tone: "border-destructive/40 bg-destructive/10", Icon: CircleAlert, icon: "text-destructive", text: "", cta: "Atualizar" },
     expiring: { tone: "border-warning/40 bg-warning/10", Icon: AlertTriangle, icon: "text-warning", text: "", cta: "Atualizar" },
     "short-for-trip": { tone: "border-warning/40 bg-warning/10", Icon: AlertTriangle, icon: "text-warning", text: "", cta: "Atualizar" },

@@ -7,9 +7,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rumo — seu diário de bordo para planejar viagens" },
+      { title: "Rumo Trip — seu diário de bordo para planejar viagens" },
       { name: "description", content: "Roteiro dia a dia, passagens, hospedagem, orçamento multimoeda e gastos da viagem, em um app que funciona até sem internet." },
-      { property: "og:title", content: "Rumo — seu diário de bordo para planejar viagens" },
+      { property: "og:title", content: "Rumo Trip — seu diário de bordo para planejar viagens" },
       { property: "og:description", content: "Roteiro, passagens, hospedagem, orçamento e gastos em um só lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -44,7 +44,7 @@ function Index() {
             <p className="font-hand text-3xl text-primary">Dia 1: chegamos!</p>
             <h1 className="mt-2 text-5xl leading-[1.02] md:text-7xl">Enquadre o caminho antes de partir.</h1>
             <p className="mt-6 max-w-md text-lg text-muted-foreground">
-              Rumo é o seu diário de bordo: roteiro, passagens, hospedagem, orçamento e gastos da viagem, do primeiro rascunho ao último dia.
+              Rumo Trip é o seu diário de bordo: roteiro, passagens, hospedagem, orçamento e gastos da viagem, do primeiro rascunho ao último dia.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button asChild size="lg"><Link to="/trips">Começar a planejar <ArrowRight /></Link></Button>
@@ -62,7 +62,7 @@ function Index() {
               </div>
             </div>
             <div className="absolute -right-3 -top-6 rotate-6 rounded-full bg-papel p-2 shadow-lift sm:-right-6">
-              <LogoMark animated className="size-20 sm:size-24" title="Bússola do Rumo" />
+              <LogoMark animated className="size-20 sm:size-24" title="Bússola do Rumo Trip" />
             </div>
           </div>
         </section>
@@ -79,7 +79,7 @@ function Index() {
       </main>
 
       <footer className="border-t py-6 text-center text-xs text-muted-foreground">
-        Rumo · planeje, viva e lembre cada viagem
+        Rumo Trip · planeje, viva e lembre cada viagem
       </footer>
     </div>
   );

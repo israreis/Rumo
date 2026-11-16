@@ -3,7 +3,7 @@ export function renderErrorPage(): string {
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Algo deu errado — Rumo</title>
+    <title>Algo deu errado — Rumo Trip</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body { font: 15px/1.5 system-ui, -apple-system, sans-serif; background: #f3eee4; color: #2a211a; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 1.5rem; }

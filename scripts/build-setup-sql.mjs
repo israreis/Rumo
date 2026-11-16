@@ -6,6 +6,6 @@ import { join } from "node:path";
 const dir = "supabase/migrations";
 const files = readdirSync(dir).filter((f) => f.endsWith(".sql")).sort();
 const parts = files.map((f) => `-- ============================================================\n-- ${f}\n-- ============================================================\n${readFileSync(join(dir, f), "utf8").trim()}\n`);
-const header = `-- Rumo — schema completo do banco (gerado por scripts/build-setup-sql.mjs; não edite à mão).\n-- Cole tudo no SQL Editor de um projeto Supabase NOVO e clique em Run.\n\n`;
+const header = `-- Rumo Trip — schema completo do banco (gerado por scripts/build-setup-sql.mjs; não edite à mão).\n-- Cole tudo no SQL Editor de um projeto Supabase NOVO e clique em Run.\n\n`;
 writeFileSync("supabase/setup.sql", header + parts.join("\n"));
 console.log(`supabase/setup.sql ← ${files.length} migrações`);
