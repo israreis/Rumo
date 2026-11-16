@@ -299,7 +299,66 @@
     linear-gradient(118deg, transparent 0 22%, color-mix(in oklab, #f4d79c 30%, transparent) 22% 38%, transparent 38% 62%, color-mix(in oklab, #f6e2b8 35%, transparent) 62% 74%, transparent 74%),
     repeating-linear-gradient(32deg, transparent 0 5px, color-mix(in oklab, #e59a5c 22%, transparent) 5px 6px);
 }
-.dark .passport-paper {
-  background-image:
-    repeating-linear-gradient(32deg, transparent 0 5px, color-mix(in oklab, #e59a5c 10%, transparent) 5px 6px);
+
+/* Páginas do passaporte: sempre claras, mesmo no tema escuro (não existe passaporte escuro).
+   Redeclara os tokens do tema claro dentro da página; o restante do app segue o tema. */
+.paper-light,
+.dark .paper-light {
+  color-scheme: light;
+/* Brand tokens — tema claro */
+  --linho: #f3eee4;
+  --papel: #fbf8f2;
+  --areia: #e6dccb;
+  --borda: #d8cdb9;
+  --tinta: #2a211a;
+  --tinta-suave: #6b5d4f;
+  --couro: #8a4f2a;
+  --couro-hover: #6e3d1f;
+  --sobre-couro: #fbf8f2;
+  --oliva: #5f6446;
+  --salvia: #d9dbc6;
+  --latao: #a88449;
+  --caramelo: #b9783f;
+  --mar: #3f6d66;
+  --marinho: #23324a;
+  --sucesso: #4a6b35;
+  --alerta: #94600f;
+  --erro: #9e3426;
+
+  /* shadcn mapping */
+  --background: var(--linho);
+  --foreground: var(--tinta);
+  --card: var(--papel);
+  --card-foreground: var(--tinta);
+  --popover: var(--papel);
+  --popover-foreground: var(--tinta);
+  --primary: var(--couro);
+  --primary-foreground: var(--sobre-couro);
+  --secondary: var(--areia);
+  --secondary-foreground: var(--tinta);
+  --muted: #ece5d8;
+  --muted-foreground: var(--tinta-suave);
+  --accent: var(--salvia);
+  --accent-foreground: var(--tinta);
+  --destructive: var(--erro);
+  --destructive-foreground: var(--sobre-couro);
+  --border: var(--borda);
+  --input: #a39380;
+  --ring: var(--couro);
+  --success: var(--sucesso);
+  --warning: var(--alerta);
+  --chart-1: var(--couro);
+  --chart-2: var(--oliva);
+  --chart-3: var(--mar);
+  --chart-4: var(--latao);
+  --chart-5: var(--marinho);
+  --sidebar: var(--papel);
+  --sidebar-foreground: var(--tinta);
+  --sidebar-primary: var(--couro);
+  --sidebar-primary-foreground: var(--sobre-couro);
+  --sidebar-accent: var(--areia);
+  --sidebar-accent-foreground: var(--tinta);
+  --sidebar-border: var(--borda);
+  --sidebar-ring: var(--couro);
+  color: var(--tinta);
 }

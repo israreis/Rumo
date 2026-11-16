@@ -35,7 +35,7 @@ export const PageArt = memo(function PageArt({ page }: { page: number }) {
         alt=""
         loading="lazy"
         draggable={false}
-        className={`absolute ${a.box} m-auto w-auto max-w-[92%] object-contain opacity-[0.5] blur-[0.4px] dark:opacity-30 dark:invert`}
+        className={`absolute ${a.box} m-auto w-auto max-w-[92%] object-contain opacity-[0.5] blur-[0.4px]`}
       />
     </div>
   );
@@ -65,7 +65,7 @@ export function Perforated({ n, className }: { n: number; className?: string }) 
         DOTS[d]!.flatMap((row, y) =>
           [...row].map((on, x) =>
             on === "1" ? (
-              <circle key={`${i}-${x}-${y}`} cx={i * 6 + x + 0.5} cy={y + 0.5} r={0.38} className="fill-tinta/60 dark:fill-black/70" stroke="var(--linho)" strokeWidth={0.1} />
+              <circle key={`${i}-${x}-${y}`} cx={i * 6 + x + 0.5} cy={y + 0.5} r={0.38} className="fill-tinta/60" stroke="var(--linho)" strokeWidth={0.1} />
             ) : null,
           ),
         ),

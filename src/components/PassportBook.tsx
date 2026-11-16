@@ -127,7 +127,7 @@ export function PassportBook({ stamps, seen, holder, counts }: {
   return (
     <div className="mx-auto w-full max-w-[52rem]">
       <div
-        className="relative touch-pan-y select-none rounded-[20px] bg-couro p-2 shadow-lift sm:p-3"
+        className="paper-light relative touch-pan-y select-none rounded-[20px] bg-couro p-2 shadow-lift sm:p-3"
         onPointerDown={onDown}
         onPointerUp={onUp}
         onPointerCancel={() => (startX.current = null)}
@@ -193,7 +193,7 @@ function Sheet({ side, number, children, lifting }: {
   return (
     <div
       className={cn(
-        "passport-paper relative aspect-[5/7] overflow-hidden text-tinta",
+        "passport-paper paper-light relative aspect-[5/7] overflow-hidden text-tinta",
         side === "left" ? "rounded-l-[10px]" : "rounded-r-[10px]",
         lifting && "shadow-lift",
       )}
@@ -270,7 +270,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
             tone={st.kind === "expired" ? "erro" : "alerta"}
             shape="rect"
             tilt={-12}
-            className="w-full mix-blend-multiply opacity-85 dark:mix-blend-normal"
+            className="w-full mix-blend-multiply opacity-85"
           />
         </div>
       )}
@@ -313,7 +313,7 @@ function VisaPage({ stamps, seen, hint }: { stamps: StampItem[]; seen: Set<strin
               <Stamp
                 top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt}
                 fresh={fresh(s.key)}
-                className="w-[92%] mix-blend-multiply opacity-90 dark:mix-blend-normal"
+                className="w-[92%] mix-blend-multiply opacity-90"
               />
             </li>
           ))}
