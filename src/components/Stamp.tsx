@@ -35,7 +35,7 @@ export function Stamp({
           <>
             <defs><path id={`arc-${id}`} d="M80,80 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" /></defs>
             <circle cx="80" cy="80" r="74" fill="none" strokeWidth="3" strokeDasharray={pending ? "6 5" : undefined} />
-            <circle cx="80" cy="80" r="66" fill="none" strokeWidth="1.2" />
+            <circle cx="80" cy="80" r="66" fill="none" strokeWidth="1.2" strokeDasharray="3 3" />
             <text stroke="none" className="font-sans" fontWeight="600" fontSize="10.5" letterSpacing="1.6">
               <textPath href={`#arc-${id}`}>{`${[top, bottom].filter(Boolean).join(" · ")} ·`.toUpperCase()}</textPath>
             </text>
