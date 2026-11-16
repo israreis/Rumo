@@ -67,7 +67,7 @@ describe("stamps", () => {
     expect(c.earned.map((x) => x.main)).toEqual(["Portugal", "Argentina"]);
     expect(c.countries).toBe(2);
     expect(c.cities).toBe(1);
-    expect(c.earned[0]!.top).toBe("Entrada");
+    expect(c.earned[0]!.top).toBe("");
     expect(c.earned[0]!.tripName).toBe("Lua de mel");
     expect(c.earned[1]!.bottom).toBe("10 JUL 2019");
   });

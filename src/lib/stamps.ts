@@ -102,7 +102,7 @@ export function manualStamp(m: ManualStamp): StampItem {
     tripId: "manual",
     tripName: m.note?.trim() || "Viagem anterior",
     kind: "country",
-    top: city || "Entrada",
+    top: city || "", // sem cidade, o carimbo fica só com país e data
     main: country,
     bottom: stampDate(m.stamped_on),
     date: m.stamped_on,

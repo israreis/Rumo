@@ -33,7 +33,7 @@ export function Stamp({
             <circle cx="80" cy="80" r="74" fill="none" strokeWidth="3" strokeDasharray={pending ? "6 5" : undefined} />
             <circle cx="80" cy="80" r="66" fill="none" strokeWidth="1.2" />
             <text stroke="none" className="font-sans" fontWeight="600" fontSize="10.5" letterSpacing="1.6">
-              <textPath href={`#arc-${id}`}>{`${top} · ${bottom ?? ""} ·`.toUpperCase()}</textPath>
+              <textPath href={`#arc-${id}`}>{`${[top, bottom].filter(Boolean).join(" · ")} ·`.toUpperCase()}</textPath>
             </text>
             <text stroke="none" x="80" y="87" textAnchor="middle" className="font-display" fontWeight="600" fontSize={mainSize}>{main}</text>
           </>
@@ -42,9 +42,9 @@ export function Stamp({
           <>
             <rect x="10" y="30" width="140" height="100" rx="10" fill="none" strokeWidth="3" strokeDasharray={pending ? "6 5" : undefined} />
             <rect x="18" y="38" width="124" height="84" rx="6" fill="none" strokeWidth="1.2" strokeDasharray="3 3" />
-            <text stroke="none" x="80" y="62" textAnchor="middle" className="font-sans" fontWeight="600" fontSize={topSize} letterSpacing="1.4">{top.toUpperCase()}</text>
-            <text stroke="none" x="80" y="92" textAnchor="middle" className="font-display" fontWeight="600" fontSize={mainSize + 1}>{main}</text>
-            {bottom && <text stroke="none" x="80" y="112" textAnchor="middle" className="font-sans" fontWeight="600" fontSize="10" letterSpacing="1.4">{bottom.toUpperCase()}</text>}
+            {top && <text stroke="none" x="80" y="62" textAnchor="middle" className="font-sans" fontWeight="600" fontSize={topSize} letterSpacing="1.4">{top.toUpperCase()}</text>}
+            <text stroke="none" x="80" y={top ? 92 : 84} textAnchor="middle" className="font-display" fontWeight="600" fontSize={mainSize + 1}>{main}</text>
+            {bottom && <text stroke="none" x="80" y={top ? 112 : 106} textAnchor="middle" className="font-sans" fontWeight="600" fontSize="10" letterSpacing="1.4">{bottom.toUpperCase()}</text>}
           </>
         )}
         {shape === "dashed" && (
