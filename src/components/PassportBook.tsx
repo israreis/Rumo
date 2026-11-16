@@ -32,7 +32,7 @@ export function PassportBook({ stamps, seen, holder, counts }: {
     for (let i = 0; i < stamps.length; i += PER_PAGE) chunks.push(stamps.slice(i, i + PER_PAGE));
     const list: ReactNode[] = [<IdPage key="id" holder={holder} counts={counts} first={stamps[0]?.date ?? null} />];
     chunks.forEach((c, i) => list.push(<VisaPage key={`v${i}`} stamps={c} seen={seen} />));
-    list.push(<VisaPage key="blank" stamps={[]} seen={seen} />);
+    list.push(<VisaPage key="blank" stamps={[]} seen={seen} hint />);
     if (list.length % 2) list.push(<VisaPage key="blank2" stamps={[]} seen={seen} />);
     return list;
   }, [stamps, seen, holder, counts]);
@@ -240,21 +240,33 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function VisaPage({ stamps, seen }: { stamps: StampItem[]; seen: Set<string> }) {
+/** Carimbos que já fizeram a animação nesta visita: a folha que gira remonta a página e não deve repetir. */
+const played = new Set<string>();
+
+function VisaPage({ stamps, seen, hint }: { stamps: StampItem[]; seen: Set<string>; hint?: boolean }) {
+  const fresh = (k: string) => seen.size > 0 && !seen.has(k) && !played.has(k);
+  useEffect(() => {
+    const t = setTimeout(() => stamps.forEach((s) => played.add(s.key)), 700);
+    return () => clearTimeout(t);
+  }, [stamps]);
   return (
     <div className="flex h-full flex-col px-[5%] pb-[8%] pt-[5%]">
       <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-tinta-suave">Vistos · Visas</p>
-      <ul className="mt-2 grid flex-1 grid-cols-2 grid-rows-2 place-items-center">
-        {stamps.map((s, i) => (
-          <li key={s.key} className="flex size-full items-center justify-center" style={{ transform: jitter(s.key, i) }} title={s.tripName}>
-            <Stamp
-              top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt}
-              fresh={seen.size > 0 && !seen.has(s.key)}
-              className="w-[92%] mix-blend-multiply opacity-90 dark:mix-blend-normal"
-            />
-          </li>
-        ))}
-      </ul>
+      {hint && !stamps.length ? (
+        <p className="m-auto max-w-[70%] -rotate-3 text-center font-hand text-xl text-tinta-suave/80">Espaço reservado para o próximo carimbo</p>
+      ) : (
+        <ul className="mt-2 grid flex-1 grid-cols-2 grid-rows-2 place-items-center">
+          {stamps.map((s, i) => (
+            <li key={s.key} className="flex size-full items-center justify-center" style={{ transform: jitter(s.key, i) }} title={s.tripName}>
+              <Stamp
+                top={s.top} main={s.main} bottom={s.bottom} tone={s.tone} shape={s.shape} tilt={s.tilt}
+                fresh={fresh(s.key)}
+                className="w-[92%] mix-blend-multiply opacity-90 dark:mix-blend-normal"
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
