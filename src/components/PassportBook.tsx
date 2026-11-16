@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Pencil, Plus } from "lucide-react";
 import { Stamp } from "@/components/Stamp";
-import { Button } from "@/components/ui/button";
 import type { StampItem } from "@/lib/stamps";
 import { maskPassport, type PassportState } from "@/lib/passport";
 import { PageArt, Perforated } from "@/components/PassportArt";
@@ -157,20 +156,36 @@ export function PassportBook({ stamps, seen, holder, counts }: {
           )}
           {per === 2 && <div aria-hidden className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-tinta/15" />}
         </div>
+        <PageArrow dir={-1} hidden={view <= 0 || !!turn} onClick={() => go(-1)} />
+        <PageArrow dir={1} hidden={view >= last || !!turn} onClick={() => go(1)} />
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <Button variant="outline" size="sm" onClick={() => go(-1)} disabled={view <= 0 || !!turn} aria-label="Página anterior">
-          <ChevronLeft /> <span className="hidden sm:inline">Anterior</span>
-        </Button>
-        <p className="font-num text-xs text-muted-foreground">
-          {per === 2 ? `Páginas ${view + 1}–${view + 2}` : `Página ${view + 1}`} de {pages.length}
-        </p>
-        <Button variant="outline" size="sm" onClick={() => go(1)} disabled={view >= last || !!turn} aria-label="Próxima página">
-          <span className="hidden sm:inline">Próxima</span> <ChevronRight />
-        </Button>
-      </div>
+      <p className="mt-3 text-center font-num text-xs text-muted-foreground">
+        {per === 2 ? `Páginas ${view + 1}–${view + 2}` : `Página ${view + 1}`} de {pages.length}
+      </p>
     </div>
+  );
+}
+
+/** Seta na borda do livreto, na altura do meio da página, para virar a folha. */
+function PageArrow({ dir, hidden, onClick }: { dir: 1 | -1; hidden: boolean; onClick: () => void }) {
+  const Icon = dir === 1 ? ChevronRight : ChevronLeft;
+  return (
+    <button
+      type="button"
+      aria-label={dir === 1 ? "Próxima página" : "Página anterior"}
+      onPointerDown={(e) => e.stopPropagation()}
+      onPointerUp={(e) => e.stopPropagation()}
+      onClick={onClick}
+      tabIndex={hidden ? -1 : 0}
+      className={cn(
+        "absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-papel/90 text-couro shadow-lift backdrop-blur transition-opacity duration-200 hover:bg-papel active:scale-95 sm:size-11",
+        dir === 1 ? "right-1 sm:-right-5" : "left-1 sm:-left-5",
+        hidden && "pointer-events-none opacity-0",
+      )}
+    >
+      <Icon className="size-5" />
+    </button>
   );
 }
 
