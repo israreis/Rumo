@@ -67,14 +67,14 @@ function Passport() {
       </header>
 
       <div className="space-y-4">
-        <PassportStatus state={pState} number={profile?.passport_number ?? null} expiry={profile?.passport_expiry ?? null} onEdit={() => setEditing(true)} />
+        <PassportStatus state={pState} last4={profile?.passport_last4 ?? null} expiry={profile?.passport_expiry ?? null} onEdit={() => setEditing(true)} />
         <PassportBook
           stamps={chrono}
           seen={fresh}
           holder={{
             name: profile?.full_name ?? null,
             avatar: profile?.avatar_url ?? null,
-            passportNumber: profile?.passport_number ?? null,
+            passportLast4: profile?.passport_last4 ?? null,
             passportExpiry: profile?.passport_expiry ?? null,
             passportState: pState,
             onEditPassport: () => setEditing(true),
@@ -83,7 +83,7 @@ function Passport() {
         />
       </div>
       {editing && (
-        <PassportDialog open onOpenChange={setEditing} userId={user.id} number={profile?.passport_number ?? null} expiry={profile?.passport_expiry ?? null} />
+        <PassportDialog open onOpenChange={setEditing} userId={user.id} last4={profile?.passport_last4 ?? null} expiry={profile?.passport_expiry ?? null} />
       )}
 
       {col.pending.length > 0 && (
@@ -115,7 +115,7 @@ function Count({ n, label }: { n: number; label: string }) {
 }
 
 /** Faixa acima do livreto: situação do passaporte real e atalho para cadastrar/atualizar. */
-function PassportStatus({ state, number, expiry, onEdit }: { state: PassportState; number: string | null; expiry: string | null; onEdit: () => void }) {
+function PassportStatus({ state, last4, expiry, onEdit }: { state: PassportState; last4: string | null; expiry: string | null; onEdit: () => void }) {
   const br = (d: string | null) => (d ? d.split("-").reverse().join("/") : "");
   const v = {
     missing: { tone: "border-dashed bg-card/60", Icon: IdCard, icon: "text-muted-foreground", text: "Cadastre o número e a validade do seu passaporte para o Rumo avisar quando ele estiver vencendo.", cta: "Cadastrar" },
@@ -128,7 +128,7 @@ function PassportStatus({ state, number, expiry, onEdit }: { state: PassportStat
     state.kind === "expired" ? <><strong>Seu passaporte venceu há {relTime(state.days)}</strong> ({br(expiry)}). Renove antes da próxima viagem.</>
     : state.kind === "expiring" ? <><strong>Seu passaporte vence em {relTime(state.days)}</strong> ({br(expiry)}). Muitos países exigem pelo menos 6 meses de validade na entrada.</>
     : state.kind === "short-for-trip" ? <><strong>Validade curta para “{state.trip}”.</strong> O passaporte vence em {br(expiry)}, menos de 6 meses depois da volta ({br(state.returnDate)}); alguns países barram a entrada.</>
-    : state.kind === "ok" ? <>Passaporte <span className="font-num tracking-wider">{maskPassport(number)}</span> válido até <strong>{br(expiry)}</strong>.</>
+    : state.kind === "ok" ? <>Passaporte <span className="font-num tracking-wider">{maskPassport(last4)}</span> válido até <strong>{br(expiry)}</strong>.</>
     : v.text;
   return (
     <div className={cn("flex flex-wrap items-center gap-3 rounded-[14px] border px-4 py-3 text-sm", v.tone)}>

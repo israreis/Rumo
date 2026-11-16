@@ -31,16 +31,14 @@ export function passportState(
   return { kind: "ok", months };
 }
 
-/** "FX1234567" → "•••••4567": o número completo só aparece no formulário. */
-export function maskPassport(n: string | null | undefined) {
-  if (!n) return "—";
-  const v = n.trim();
-  return v.length <= 4 ? v : `${"•".repeat(Math.min(5, v.length - 4))}${v.slice(-4)}`;
+/** O banco guarda só os 4 últimos caracteres do número: "4567" → "•••••4567". */
+export function maskPassport(last4: string | null | undefined) {
+  return last4 ? `•••••${last4}` : "—";
 }
 
-/** Normaliza o que foi digitado: maiúsculas, sem espaços nem pontuação. */
-export function normalizePassport(n: string) {
-  return n.toUpperCase().replace(/[^A-Z0-9]/g, "");
+/** Do que foi digitado (número inteiro ou só o fim), fica só o que vai para o banco: 4 últimos, maiúsculos. */
+export function passportLast4(typed: string) {
+  return typed.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(-4);
 }
 
 export function relTime(days: number) {

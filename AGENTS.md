@@ -20,7 +20,7 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Lugares são geocodificados ao salvar via OpenStreetMap Nominatim; o mapa Leaflet é lazy.
 - Todo valor guarda moeda original, `fx_rate` (Frankfurter, buscada uma vez e congelada) e `converted_amount` na moeda da viagem via `withFx`; taxas do cartão (IOF+spread) congeladas em `expenses.fees_pct`.
 - Linhas de orçamento vêm de `useBudget`; regras puras de dinheiro em `src/lib/budget.ts`. Alertas e regras de documentos/checklist em `src/lib/trip-extras.ts`.
-- Passaporte real do usuário (número e validade) fica em `profiles.passport_number`/`passport_expiry`; situação (vencido, vencendo em < 6 meses, curto para a próxima viagem) em `src/lib/passport.ts`; número sempre mascarado fora do formulário (`maskPassport`).
+- Passaporte real do usuário: só os 4 últimos dígitos (`profiles.passport_last4`, nunca o número completo) e a validade (`passport_expiry`); situação (vencido, vencendo em < 6 meses, curto para a próxima viagem) em `src/lib/passport.ts`; exibidos mascarados com `maskPassport`.
 - Gastos lançados sem internet vão para a fila local `src/lib/offline-queue.ts` e sincronizam ao voltar a conexão.
 
 ## Identidade visual

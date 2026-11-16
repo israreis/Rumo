@@ -18,7 +18,7 @@ const DURATION = 750;
 type Holder = {
   name: string | null;
   avatar: string | null;
-  passportNumber: string | null;
+  passportLast4: string | null;
   passportExpiry: string | null;
   passportState: PassportState;
   onEditPassport?: () => void;
@@ -227,7 +227,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
         </div>
         <dl className="min-w-0 space-y-1.5 text-xs">
           <Field label="Titular">{holder.name || "Viajante"}</Field>
-          <Field label="Passaporte nº"><span className="font-num text-[13px] tracking-wider">{maskPassport(holder.passportNumber)}</span></Field>
+          <Field label="Passaporte nº"><span className="font-num text-[13px] tracking-wider">{maskPassport(holder.passportLast4)}</span></Field>
           <Field label="Validade"><span className={cn(expiryTone)}>{br(holder.passportExpiry)}</span></Field>
           <Field label="Carimbos · Cidades · Países">{counts.stamps} · {counts.cities} · {counts.countries}</Field>
         </dl>
@@ -240,7 +240,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
           onClick={holder.onEditPassport}
           className="mt-3 self-start text-xs font-semibold text-primary underline-offset-2 hover:underline"
         >
-          {holder.passportNumber || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
+          {holder.passportLast4 || holder.passportExpiry ? "Editar dados do passaporte" : "Cadastrar meu passaporte"}
         </button>
       )}
       {(st.kind === "expired" || st.kind === "expiring" || st.kind === "short-for-trip") && (
@@ -259,7 +259,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
       <p className="mt-auto break-all font-num text-[9px] leading-tight tracking-[0.12em] text-tinta-suave">
         P&lt;&lt;&lt;&lt;{name}&lt;&lt;&lt;&lt;&lt;&lt;
         <br />
-        {(holder.passportNumber ? "<".repeat(Math.max(0, holder.passportNumber.length - 4)) + holder.passportNumber.slice(-4) : "").padEnd(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
+        {(holder.passportLast4 ?? "").padStart(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
       </p>
     </div>
   );

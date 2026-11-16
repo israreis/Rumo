@@ -500,7 +500,7 @@ export type Database = {
           full_name: string | null
           id: string
           passport_expiry: string | null
-          passport_number: string | null
+          passport_last4: string | null
           updated_at: string
         }
         Insert: {
@@ -510,7 +510,7 @@ export type Database = {
           full_name?: string | null
           id: string
           passport_expiry?: string | null
-          passport_number?: string | null
+          passport_last4?: string | null
           updated_at?: string
         }
         Update: {
@@ -520,7 +520,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           passport_expiry?: string | null
-          passport_number?: string | null
+          passport_last4?: string | null
           updated_at?: string
         }
         Relationships: []

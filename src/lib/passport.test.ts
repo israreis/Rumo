@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maskPassport, normalizePassport, passportState, relTime } from "./passport";
+import { maskPassport, passportLast4, passportState, relTime } from "./passport";
 
 describe("passport", () => {
   it("classifies the expiry date", () => {
@@ -15,10 +15,11 @@ describe("passport", () => {
     expect(passportState("2028-06-01", "2026-11-16", trips).kind).toBe("ok");
   });
 
-  it("masks and normalizes the number", () => {
-    expect(maskPassport("FX1234567")).toBe("•••••4567");
+  it("keeps only the last 4 characters", () => {
+    expect(maskPassport("4567")).toBe("•••••4567");
     expect(maskPassport(null)).toBe("—");
-    expect(normalizePassport(" fx 123.456-7 ")).toBe("FX1234567");
+    expect(passportLast4(" fx 123.456-7 ")).toBe("4567");
+    expect(passportLast4("ab12")).toBe("AB12");
     expect(relTime(10)).toBe("10 dias");
     expect(relTime(120)).toBe("4 meses");
   });

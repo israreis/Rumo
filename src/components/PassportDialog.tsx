@@ -6,28 +6,28 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { normalizePassport } from "@/lib/passport";
+import { passportLast4 } from "@/lib/passport";
 
 /** Cadastro do passaporte real (número e validade), guardado no perfil do usuário. */
-export function PassportDialog({ open, onOpenChange, userId, number, expiry }: {
-  open: boolean; onOpenChange: (o: boolean) => void; userId: string; number: string | null; expiry: string | null;
+export function PassportDialog({ open, onOpenChange, userId, last4, expiry }: {
+  open: boolean; onOpenChange: (o: boolean) => void; userId: string; last4: string | null; expiry: string | null;
 }) {
   const qc = useQueryClient();
-  const [n, setN] = useState(number ?? "");
+  const [n, setN] = useState(last4 ?? "");
   const [e, setE] = useState(expiry ?? "");
   const [saving, setSaving] = useState(false);
-  const clean = normalizePassport(n);
-  const invalid = clean.length > 0 && (clean.length < 5 || clean.length > 20);
+  const clean = passportLast4(n);
+  const invalid = clean.length > 0 && clean.length < 4;
 
   const save = async (clear = false) => {
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ passport_number: clear ? null : clean || null, passport_expiry: clear ? null : e || null })
+      .update({ passport_last4: clear ? null : clean || null, passport_expiry: clear ? null : e || null })
       .eq("id", userId);
     setSaving(false);
     if (error) {
-      toast.error(/passport_/.test(error.message) ? "O banco ainda não tem os campos do passaporte. Rode a migração 20261116000007 no Supabase." : error.message);
+      toast.error(/passport_/.test(error.message) ? "O banco ainda não está pronto para os dados do passaporte. Rode a migração 20261116000008 no Supabase." : error.message);
       return;
     }
     await qc.invalidateQueries({ queryKey: ["profile", userId] });
@@ -40,7 +40,7 @@ export function PassportDialog({ open, onOpenChange, userId, number, expiry }: {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Dados do passaporte</DialogTitle>
-          <DialogDescription>Ficam só na sua conta. O Rumo avisa quando a validade estiver chegando ao fim ou for curta para uma viagem.</DialogDescription>
+          <DialogDescription>Ficam só na sua conta. Do número, o Rumo guarda apenas os 4 últimos dígitos, o suficiente para reconhecer o documento. A validade serve para avisar quando ele estiver vencendo.</DialogDescription>
         </DialogHeader>
         <form
           className="grid gap-4"
@@ -50,16 +50,16 @@ export function PassportDialog({ open, onOpenChange, userId, number, expiry }: {
           }}
         >
           <div className="grid gap-1.5">
-            <Label htmlFor="pp-number">Número</Label>
-            <Input id="pp-number" value={n} onChange={(ev) => setN(ev.target.value)} placeholder="Ex.: FX123456" autoComplete="off" className="font-num uppercase tracking-wider" />
-            {invalid && <p className="text-xs text-destructive">O número tem entre 5 e 20 letras e algarismos.</p>}
+            <Label htmlFor="pp-number">4 últimos dígitos do número</Label>
+            <Input id="pp-number" value={n} onChange={(ev) => setN(passportLast4(ev.target.value))} placeholder="Ex.: 3456" autoComplete="off" className="w-32 font-num uppercase tracking-[0.3em]" />
+            {invalid && <p className="text-xs text-destructive">Informe os 4 últimos caracteres.</p>}
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="pp-expiry">Válido até</Label>
             <Input id="pp-expiry" type="date" value={e} onChange={(ev) => setE(ev.target.value)} />
           </div>
           <DialogFooter className="gap-2 sm:justify-between">
-            {(number || expiry) ? (
+            {(last4 || expiry) ? (
               <Button type="button" variant="ghost" className="text-destructive" disabled={saving} onClick={() => save(true)}>Remover dados</Button>
             ) : <span />}
             <Button type="submit" disabled={saving || invalid}>{saving ? "Salvando…" : "Salvar"}</Button>
