@@ -142,12 +142,11 @@ No celular, os campos de formulário ficam em 16 px para o iOS não dar zoom.
 ## 6. Elementos gráficos
 
 - **Ticket:** cartão de transporte com picote, ou seja, uma linha tracejada e dois recortes semicirculares. O corpo traz origem e destino em Fraunces e horários em mono. O canhoto traz o localizador, o status e o valor. Veja `src/components/plan/TransportTab.tsx`.
-- **Carimbo** (`src/components/Stamp.tsx`): selo de uma cor só (`couro`, `marinho` ou `oliva`), em três formatos: circular com texto em arco, retangular com contorno duplo e tracejado (viagem concluída). Fica girado entre −8° e 8°. Os carimbos ainda não ganhos aparecem tracejados e esmaecidos, e os novos entram com a animação `animate-carimbo`.
-- **Passaporte de carimbos** (`/passaporte`, regras em `src/lib/stamps.ts`): os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual. Cada cidade de uma viagem vira um carimbo no dia da chegada (a mesma cidade duas vezes na mesma viagem conta uma vez), e cada viagem concluída ganha o carimbo "Viagem concluída". O carimbo aparece:
-  - no cabeçalho do dia de chegada, no Roteiro;
-  - no cartão das viagens concluídas;
+- **Carimbo** (`src/components/Stamp.tsx`): selo de uma cor só (`couro`, `marinho` ou `oliva`), em dois formatos fixos por país: circular com texto em arco ou retangular com contorno duplo (`erro` e `alerta` só para o aviso de validade do passaporte). Fica girado entre −8° e 8°. Os carimbos ainda não ganhos aparecem tracejados e esmaecidos, e os novos entram com a animação `animate-carimbo`.
+- **Passaporte de carimbos** (`/passaporte`, regras em `src/lib/stamps.ts`): os passaportes quase não são mais carimbados, então o Rumo guarda esse ritual como a imigração de aeroporto. Cada país de uma viagem vira um carimbo com a cidade de entrada e a data da primeira chegada; só países, como num passaporte de verdade. O carimbo aparece:
+  - no cabeçalho do dia de entrada no país, no Roteiro;
   - na seção "Carimbos da viagem" do PDF;
-  - na coleção da tela Meu passaporte, com a contagem de cidades e países.
+  - no livreto da tela Meu passaporte (página de identificação com os dados do passaporte real e páginas de vistos que viram em 3D).
 - **Rota tracejada:** linha `latao` de 1,5 px (traço 4, espaço 4) ligando pontos do roteiro e trechos de transporte.
 - **Mostrador** (`src/components/Dial.tsx`): o anel graduado da bússola usado como indicador circular de progresso. Os traços preenchidos ficam em couro, ou em erro quando o orçamento passa de 100%. Aparece no orçamento usado (Visão geral) e no progresso da checklist.
 - **Textura de papel** (`bg-papel-textura`): ruído de 2–3% sobre o `linho` do fundo da página, nunca sobre cartões.

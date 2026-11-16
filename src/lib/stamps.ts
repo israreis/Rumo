@@ -3,14 +3,13 @@ import type { StampShape, StampTone } from "@/components/Stamp";
 /**
  * Virtual passport stamps. Passports are hardly stamped any more, so Rumo keeps the
  * ritual like airport immigration: one stamp per country entered on a trip, dated by the
- * first arrival there and naming the city of entry; a finished trip adds a "Viagem concluída"
- * stamp. Derived from the trips themselves, so nothing to sync.
+ * first arrival there and naming the city of entry. Only countries, as in a real passport. Derived from the trips themselves, so nothing to sync.
  */
 export type StampItem = {
   key: string;
   tripId: string;
   tripName: string;
-  kind: "country" | "trip";
+  kind: "country";
   top: string;
   main: string;
   bottom: string;
@@ -87,37 +86,19 @@ export function tripStamps(trip: TripLike, today: string): StampItem[] {
       cities: [...new Set(ds.map((d) => clean(d.city).toLowerCase()))],
     });
   }
-  if (trip.end_date) {
-    out.push({
-      key: `${trip.id}:done`,
-      tripId: trip.id,
-      tripName: trip.name,
-      kind: "trip",
-      top: "Viagem",
-      main: "Concluída",
-      bottom: stampDate(trip.end_date),
-      date: trip.end_date,
-      earned: trip.end_date < today,
-      tone: "oliva",
-      shape: "rect",
-      tilt: (hash(trip.id) % 9) - 4,
-      country: null,
-      cities: [],
-    });
-  }
   return out;
 }
 
 export function collection(trips: TripLike[], today: string) {
   const all = trips.flatMap((t) => tripStamps(t, today));
   const earned = all.filter((s) => s.earned).sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
-  // "Para carimbar" sem repetidos: só a próxima chegada de cada país (e o próximo "concluída").
+  // "Para carimbar" sem repetidos: só a próxima chegada de cada país.
   const pendingSeen = new Set<string>();
   const pending = all
     .filter((s) => !s.earned)
     .sort((a, b) => (a.date ?? "9").localeCompare(b.date ?? "9"))
     .filter((s) => {
-      const id = s.kind === "trip" ? "trip" : s.main.toLowerCase();
+      const id = s.main.toLowerCase();
       if (pendingSeen.has(id)) return false;
       pendingSeen.add(id);
       return true;

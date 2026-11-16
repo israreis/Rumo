@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { PassportMark } from "@/components/Logo";
 import { Stamp } from "@/components/Stamp";
 import { Button } from "@/components/ui/button";
 import type { StampItem } from "@/lib/stamps";
@@ -222,11 +221,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
   return (
     <div className="relative flex h-full flex-col p-[7%]">
       <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-tinta-suave">Passaporte · Passport</p>
-      <div className="mt-[4%] flex items-center gap-2">
-        <PassportMark className="size-9 sm:size-11" />
-        <span className="font-display text-2xl">Rumo</span>
-      </div>
-      <div className="mt-[7%] flex items-start gap-4">
+      <div className="mt-[8%] flex items-start gap-4">
         <div className="aspect-[3/4] w-[34%] shrink-0 overflow-hidden rounded-md border border-tinta/20 bg-areia">
           {holder.avatar ? <img src={holder.avatar} alt="" className="h-full w-full object-cover grayscale-[35%] sepia-[20%]" /> : null}
         </div>
@@ -262,7 +257,7 @@ function IdPage({ holder, counts }: { holder: Holder; counts: { stamps: number; 
         </div>
       )}
       <p className="mt-auto break-all font-num text-[9px] leading-tight tracking-[0.12em] text-tinta-suave">
-        P&lt;RUMO&lt;&lt;{name}&lt;&lt;&lt;&lt;&lt;&lt;
+        P&lt;&lt;&lt;&lt;{name}&lt;&lt;&lt;&lt;&lt;&lt;
         <br />
         {(holder.passportNumber || "").padEnd(9, "<")}&lt;&lt;&lt;{yymmdd}&lt;&lt;&lt;&lt;&lt;&lt;
       </p>

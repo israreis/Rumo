@@ -19,9 +19,9 @@ describe("stamps", () => {
     expect(stampDate("2027-10-21")).toBe("21 OUT 2027");
   });
 
-  it("makes one stamp per country, entered through the first city, plus the finished-trip stamp", () => {
+  it("makes one stamp per country, entered through the first city, only", () => {
     const s = tripStamps(trip, "2027-10-24");
-    expect(s.map((x) => x.main)).toEqual(["Reino Unido", "Islândia", "Concluída"]);
+    expect(s.map((x) => x.main)).toEqual(["Reino Unido", "Islândia"]);
     expect(s[0]!.top).toBe("Londres");
     expect(s[0]!.bottom).toBe("16 OUT 2027");
     expect(s.filter((x) => x.earned).map((x) => x.main)).toEqual(["Reino Unido"]);
@@ -30,17 +30,17 @@ describe("stamps", () => {
 
   it("counts cities and countries of the collected stamps only", () => {
     const c = collection([trip], "2027-11-01");
-    expect(c.earned).toHaveLength(3);
+    expect(c.earned).toHaveLength(2);
     expect(c.pending).toHaveLength(0);
     expect(c.cities).toBe(4);
     expect(c.countries).toBe(2);
     expect(collection([trip], "2027-10-01").earned).toHaveLength(0);
   });
 
-  it("lists each country (and the finished-trip stamp) only once in 'para carimbar'", () => {
+  it("lists each country only once in 'para carimbar'", () => {
     const again = { ...trip, id: "t3", end_date: "2028-05-10", trip_destinations: [{ city: "Manchester", country: "Reino Unido", arrival_date: "2028-05-01" }] };
     const c = collection([trip, again], "2027-10-01");
-    expect(c.pending.map((x) => x.main)).toEqual(["Reino Unido", "Islândia", "Concluída"]);
+    expect(c.pending.map((x) => x.main)).toEqual(["Reino Unido", "Islândia"]);
   });
 
   it("a finished trip stamps all its countries, even with arrival dates left in the future", () => {
@@ -52,7 +52,7 @@ describe("stamps", () => {
       ],
     };
     const c = collection([done], "2026-11-16");
-    expect(c.earned).toHaveLength(2);
+    expect(c.earned).toHaveLength(1);
     expect(c.cities).toBe(2);
     expect(c.countries).toBe(1);
     expect(c.earned.find((x) => x.main === "Portugal")!.bottom).toBe("26 DEZ 2025");
