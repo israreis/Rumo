@@ -291,10 +291,15 @@
   &::-webkit-scrollbar { display: none; }
 }
 
-/* Papel de passaporte: fundo de segurança em linhas finas (guilloché simplificado) */
+/* Papel de passaporte: hachuras finas laranja em diagonal, com faixas claras e amareladas,
+   como o fundo de segurança impresso nas páginas de vistos. */
 .passport-paper {
   background-color: var(--papel);
   background-image:
-    repeating-radial-gradient(circle at 50% 115%, transparent 0 11px, color-mix(in oklab, var(--latao) 7%, transparent) 11px 12px),
-    repeating-linear-gradient(118deg, transparent 0 16px, color-mix(in oklab, var(--salvia) 5%, transparent) 16px 17px);
+    linear-gradient(118deg, transparent 0 22%, color-mix(in oklab, #f4d79c 45%, transparent) 22% 38%, transparent 38% 62%, color-mix(in oklab, #f6e2b8 50%, transparent) 62% 74%, transparent 74%),
+    repeating-linear-gradient(32deg, transparent 0 5px, color-mix(in oklab, #e59a5c 22%, transparent) 5px 6px);
+}
+.dark .passport-paper {
+  background-image:
+    repeating-linear-gradient(32deg, transparent 0 5px, color-mix(in oklab, #e59a5c 10%, transparent) 5px 6px);
 }
