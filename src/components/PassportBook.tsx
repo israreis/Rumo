@@ -179,9 +179,13 @@ function PageArrow({ dir, hidden, onClick }: { dir: 1 | -1; hidden: boolean; onC
       onClick={onClick}
       tabIndex={hidden ? -1 : 0}
       className={cn(
-        "absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-papel/90 text-couro shadow-lift backdrop-blur transition-opacity duration-200 hover:bg-papel active:scale-95 sm:size-11",
+        "absolute top-1/2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-tinta/15 bg-papel/90 text-couro shadow-lift backdrop-blur transition-[opacity,transform] duration-200 hover:bg-papel active:scale-95 sm:size-11",
         dir === 1 ? "right-1 sm:-right-5" : "left-1 sm:-left-5",
-        hidden && "pointer-events-none opacity-0",
+        // Discreta em repouso e sólida ao passar o mouse, focar ou tocar. Em tela de toque (sem hover)
+        // fica um pouco mais visível, para não sumir.
+        hidden
+          ? "pointer-events-none opacity-0"
+          : "opacity-60 [@media(hover:hover)]:opacity-35 hover:!opacity-100 focus-visible:!opacity-100 active:!opacity-100",
       )}
     >
       <Icon className="size-5" />
