@@ -4,7 +4,7 @@
 
 Este documento é a referência da marca Rumo Trip. Os valores daqui são os mesmos de `src/styles.css`, que é a fonte usada pelo app. Se um valor mudar, mude nos dois lugares.
 
-> O nome do app é escrito **Rumo Trip**, com R maiúsculo. Ainda é provisório: Se o nome mudar, o símbolo continua valendo: troca-se só o wordmark.
+> O nome do app é escrito **Rumo Trip**, com R e T maiúsculos.
 
 ---
 
