@@ -10,9 +10,9 @@ import { Logo } from "@/components/Logo";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Nova senha — Rota" },
+      { title: "Nova senha — Rumo" },
       { name: "description", content: "Defina uma nova senha para sua conta." },
-      { property: "og:title", content: "Nova senha — Rota" },
+      { property: "og:title", content: "Nova senha — Rumo" },
       { property: "og:description", content: "Defina uma nova senha para sua conta." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

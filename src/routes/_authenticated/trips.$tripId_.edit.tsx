@@ -6,9 +6,9 @@ import { getTrip, saveTrip } from "@/lib/trips-api";
 export const Route = createFileRoute("/_authenticated/trips/$tripId_/edit")({
   head: () => ({
     meta: [
-      { title: "Editar viagem — Rota" },
+      { title: "Editar viagem — Rumo" },
       { name: "description", content: "Atualize destinos, datas, viajantes e orçamento." },
-      { property: "og:title", content: "Editar viagem — Rota" },
+      { property: "og:title", content: "Editar viagem — Rumo" },
       { property: "og:description", content: "Atualize destinos, datas, viajantes e orçamento." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -24,7 +24,7 @@ function EditTrip() {
   const qc = useQueryClient();
   if (isLoading) return null;
   if (!trip) return <p className="text-muted-foreground">Viagem não encontrada.</p>;
-  const { id: _id, owner_id: _o, trip_destinations, trip_travelers, ...rest } = trip;
+  const { id: _id, owner_id: _o, public_token: _p, trip_destinations, trip_travelers, ...rest } = trip;
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="mb-6 text-3xl font-semibold">Editar viagem</h1>

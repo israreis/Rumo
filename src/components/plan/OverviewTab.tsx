@@ -16,7 +16,7 @@ import type { ChecklistItem } from "./ChecklistTab";
 import type { TravelerDoc } from "./DocumentsTab";
 import { sum, useBudget } from "./useBudget";
 
-const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--primary)", "var(--accent)"];
+const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--caramelo)", "var(--tinta-suave)"];
 type Alert = { tone: "destructive" | "warning"; icon: typeof AlertTriangle; text: string };
 
 export function OverviewTab({ trip }: { trip: Trip }) {

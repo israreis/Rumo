@@ -1,6 +1,6 @@
 import { differenceInCalendarDays, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { AlertTriangle, ArrowRight, Receipt, Wallet } from "lucide-react";
+import { AlertTriangle, ArrowRight, CloudOff, Receipt, Wallet } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/EmptyState";
 import { BUDGET_CATEGORIES, PAYMENT_METHODS, balances, dailyAllowance, settle } from "@/lib/budget";
@@ -11,10 +11,12 @@ import { cn } from "@/lib/utils";
 import { Money, Pill, useEditor } from "./common";
 import { ExpenseDialog } from "./ExpenseDialog";
 import { sum, useBudget, type Expense } from "./useBudget";
+import { usePendingExpenses } from "@/components/OfflineSync";
 
 export function ExpensesTab({ trip }: { trip: Trip }) {
   const { lines, expenses } = useBudget(trip);
   const ed = useEditor();
+  const pending = usePendingExpenses(trip.id);
   const cur = trip.currency;
   const today = format(new Date(), "yyyy-MM-dd");
   const spent = (e: Expense[]) => sum(e.map((x) => Number(x.converted_amount)));
@@ -45,8 +47,22 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
   return (
     <div className="space-y-6 pb-20">
       <h2 className="text-2xl font-semibold">Gastos</h2>
+      {pending.length > 0 && (
+        <div className="rounded-xl border border-dashed border-warning/50 bg-warning/5 p-4">
+          <p className="flex items-center gap-2 text-sm font-semibold text-warning"><CloudOff className="size-4" /> {pending.length === 1 ? "1 gasto aguardando internet" : `${pending.length} gastos aguardando internet`}</p>
+          <ul className="mt-2 space-y-1 text-sm">
+            {pending.map((p) => (
+              <li key={p.id} className="flex justify-between gap-3">
+                <span className="truncate text-muted-foreground">{String(p.row["description"] || BUDGET_CATEGORIES[String(p.row["category"])] || "Gasto")}</span>
+                <span className="font-num">{formatMoney(Number(p.row["amount"]), String(p.row["currency"] ?? cur))}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted-foreground">Ficam salvos neste aparelho e entram na conta assim que a conexão voltar.</p>
+        </div>
+      )}
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl bg-hero p-5 text-primary-foreground shadow-lift sm:col-span-2">
+        <div className="rounded-2xl bg-hero p-5 text-on-photo shadow-lift sm:col-span-2">
           <p className="flex items-center gap-2 text-sm opacity-90"><Wallet className="size-4" /> Saldo de hoje</p>
           {daysLeft > 0 ? <>
             <p className="mt-2 font-display text-3xl font-semibold">{allowance >= 0 ? `Você ainda pode gastar ${formatMoney(allowance, cur)} hoje` : `Você passou ${formatMoney(-allowance, cur)} do limite de hoje`}</p>
@@ -55,7 +71,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
         </div>
         <div className="rounded-2xl border bg-card p-5 shadow-card">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Total gasto</p>
-          <p className="mt-1 font-display text-2xl font-semibold">{formatMoney(spent(expenses), cur)}</p>
+          <p className="mt-1 font-num text-2xl font-medium">{formatMoney(spent(expenses), cur)}</p>
           <p className="text-sm text-muted-foreground">Hoje: {formatMoney(todaySpent, cur)}</p>
         </div>
       </div>

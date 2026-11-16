@@ -11,7 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { CURRENCIES } from "@/lib/trip-utils";
 import { deleteRow, saveRow, type PlanTable } from "@/lib/plan-api";
 import { uploadImage } from "@/lib/trips-api";
+import { isNetworkError } from "@/lib/offline-queue";
 import { cn } from "@/lib/utils";
+import { useCanEdit } from "./access";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Form = any;
@@ -75,18 +77,28 @@ export function AttachmentLink({ url }: { url: string | null }) {
 }
 
 /** Dialog that edits one row of a plan table; `prepare` can enrich the row (e.g. geocode) before saving. */
-export function EditDialog({ table, tripId, open, onOpenChange, title, initial, children, prepare }: {
+export function EditDialog({ table, tripId, open, onOpenChange, title, initial, children, prepare, onOfflineSave }: {
   table: PlanTable; tripId: string; open: boolean; onOpenChange: (o: boolean) => void; title: string; initial: Form;
   children: (f: Form, set: Setter) => ReactNode; prepare?: (f: Form) => Promise<Form> | Form;
+  /** When given, a save without connection is handed here (e.g. queued) instead of failing. */
+  onOfflineSave?: (f: Form) => void;
 }) {
   const [f, setF] = useState<Form>(initial);
   const [saving, setSaving] = useState(false);
+  const canEdit = useCanEdit();
   const qc = useQueryClient();
   const set: Setter = (k, v) => setF((p: Form) => ({ ...p, [k]: v }));
   const done = () => { qc.invalidateQueries({ queryKey: ["plan", table, tripId] }); onOpenChange(false); };
+  const saveOffline = () => {
+    try { onOfflineSave?.(f); } catch (err: any) { toast.error(`Não foi possível salvar: ${err?.message ?? err}`); return; }
+    toast.success("Sem conexão: salvo no aparelho. Enviamos quando a internet voltar.");
+    onOpenChange(false);
+  };
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
+    if (!canEdit) return;
+    if (onOfflineSave && !f.id && typeof navigator !== "undefined" && !navigator.onLine) { saveOffline(); return; }
     setSaving(true);
     try {
       const row = prepare ? await prepare(f) : f;
@@ -95,25 +107,34 @@ export function EditDialog({ table, tripId, open, onOpenChange, title, initial, 
       toast.success("Salvo");
       done();
     } catch (err: any) {
+      if (onOfflineSave && !f.id && isNetworkError(err)) { saveOffline(); return; }
       toast.error(err?.message ? `Não foi possível salvar: ${err.message}` : "Não foi possível salvar.");
     } finally { setSaving(false); }
   }
   async function remove() {
     if (!confirm("Excluir este item?")) return;
-    await deleteRow(table, f.id);
-    toast.success("Excluído");
-    done();
+    try {
+      await deleteRow(table, f.id);
+      toast.success("Excluído");
+      done();
+    } catch (err: any) {
+      toast.error(err?.message ? `Não foi possível excluir: ${err.message}` : "Não foi possível excluir.");
+    }
   }
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="max-h-[92dvh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader><DialogTitle className="font-display text-2xl">{title}</DialogTitle></DialogHeader>
         <form onSubmit={save} className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-2">{children(f, set)}</div>
-          <DialogFooter className="gap-2 sm:justify-between">
-            {f.id ? <Button type="button" variant="ghost" className="text-destructive" onClick={remove}><Trash2 /> Excluir</Button> : <span />}
-            <Button type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
-          </DialogFooter>
+          <fieldset disabled={!canEdit} className="grid min-w-0 gap-4 sm:grid-cols-2">{children(f, set)}</fieldset>
+          {canEdit ? (
+            <DialogFooter className="gap-2 sm:justify-between">
+              {f.id ? <Button type="button" variant="ghost" className="text-destructive" onClick={remove}><Trash2 /> Excluir</Button> : <span />}
+              <Button type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
+            </DialogFooter>
+          ) : (
+            <p className="rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground">Você tem acesso somente leitura a esta viagem.</p>
+          )}
         </form>
       </DialogContent>
     </Dialog>
@@ -128,7 +149,7 @@ export function useEditor() {
 
 export function Pill({ children, tone = "muted" }: { children: ReactNode; tone?: "muted" | "primary" | "accent" | "success" | "warning" | "destructive" }) {
   const tones = {
-    muted: "bg-muted text-muted-foreground", primary: "bg-primary/10 text-primary", accent: "bg-accent/15 text-accent",
+    muted: "bg-muted text-muted-foreground", primary: "bg-primary/10 text-primary", accent: "bg-oliva/15 text-oliva",
     success: "bg-success/15 text-success", warning: "bg-warning/20 text-foreground", destructive: "bg-destructive/15 text-destructive",
   };
   return <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium", tones[tone])}>{children}</span>;
@@ -144,7 +165,7 @@ import { RefreshCw } from "lucide-react";
 export function Money({ amount, currency, converted, trip, className }: { amount: number | null | undefined; currency: string; converted?: number | null | undefined; trip: string; className?: string | undefined }) {
   if (amount == null) return null;
   return (
-    <span className={className}>
+    <span className={cn("font-num", className)}>
       {_fm(amount, currency)}
       {currency !== trip && <span className="ml-1 font-normal text-muted-foreground">{converted != null ? `(≈ ${_fm(converted, trip)})` : "(sem cotação)"}</span>}
     </span>

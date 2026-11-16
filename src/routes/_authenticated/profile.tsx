@@ -16,9 +16,9 @@ import { uploadImage } from "@/lib/trips-api";
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
-      { title: "Meu perfil — Rota" },
+      { title: "Meu perfil — Rumo" },
       { name: "description", content: "Seu nome, foto e moeda padrão." },
-      { property: "og:title", content: "Meu perfil — Rota" },
+      { property: "og:title", content: "Meu perfil — Rumo" },
       { property: "og:description", content: "Seu nome, foto e moeda padrão." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -9,6 +9,7 @@ import { convert, feesFor } from "@/lib/fx";
 import { destinationForDay } from "@/lib/itinerary";
 import { formatMoney } from "@/lib/trip-utils";
 import { uploadImage, type Trip } from "@/lib/trips-api";
+import { enqueueExpense } from "@/lib/offline-queue";
 import { CurrencyF, EditDialog, Field, FxF, SelectF, TextF, withFx, type Form } from "./common";
 
 const SPLIT = { equal: "Igual", amount: "Por valor", percent: "Por percentual" };
@@ -26,6 +27,10 @@ export function ExpenseDialog({ trip, row, onClose }: { trip: Trip; row: Form; o
   const fees = (f: Form) => feesFor(f.currency, trip.currency, f.payment_method, Number(trip.iof_pct), Number(trip.card_spread_pct));
   return (
     <EditDialog table="expenses" tripId={trip.id} open onOpenChange={(o) => !o && onClose()} title={row.id ? "Editar gasto" : "Novo gasto"} initial={row}
+      onOfflineSave={(f) => {
+        if (!f.amount) throw new Error("informe o valor");
+        enqueueExpense({ tripId: trip.id, tripCurrency: trip.currency, iofPct: Number(trip.iof_pct), spreadPct: Number(trip.card_spread_pct), row: f });
+      }}
       prepare={async (f) => {
         if (!f.amount) throw new Error("informe o valor");
         const fp = fees(f);
@@ -50,7 +55,7 @@ function ExpenseFields({ trip, f, set, fees }: { trip: Trip; f: Form; set: (k: s
   return (
     <>
       <Field label="Valor" className="sm:col-span-1">
-        <Input autoFocus inputMode="decimal" type="number" step="0.01" className="h-12 text-2xl font-semibold" value={f.amount ?? ""} onChange={(e) => set("amount", e.target.value === "" ? null : Number(e.target.value))} />
+        <Input autoFocus inputMode="decimal" type="number" step="0.01" className="font-num h-12 text-2xl font-semibold" value={f.amount ?? ""} onChange={(e) => set("amount", e.target.value === "" ? null : Number(e.target.value))} />
       </Field>
       <CurrencyF f={f} set={set} />
       <FxF f={f} set={set} trip={trip.currency} />

@@ -718,6 +718,50 @@ export type Database = {
           },
         ]
       }
+      trip_invites: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          created_at: string
+          email: string
+          id: string
+          invited_by: string
+          role: Database["public"]["Enums"]["trip_role"]
+          token: string
+          trip_id: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          invited_by?: string
+          role?: Database["public"]["Enums"]["trip_role"]
+          token?: string
+          trip_id: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string
+          role?: Database["public"]["Enums"]["trip_role"]
+          token?: string
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trip_invites_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trip_members: {
         Row: {
           created_at: string
@@ -832,6 +876,7 @@ export type Database = {
           iof_pct: number
           name: string
           owner_id: string
+          public_token: string | null
           start_date: string | null
           status_override: Database["public"]["Enums"]["trip_status"] | null
           travelers_count: number
@@ -848,6 +893,7 @@ export type Database = {
           iof_pct?: number
           name: string
           owner_id?: string
+          public_token?: string | null
           start_date?: string | null
           status_override?: Database["public"]["Enums"]["trip_status"] | null
           travelers_count?: number
@@ -864,6 +910,7 @@ export type Database = {
           iof_pct?: number
           name?: string
           owner_id?: string
+          public_token?: string | null
           start_date?: string | null
           status_override?: Database["public"]["Enums"]["trip_status"] | null
           travelers_count?: number
@@ -876,6 +923,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_pending_invites: { Args: never; Returns: number }
+      accept_trip_invite: { Args: { _token: string }; Returns: string }
+      get_public_trip: { Args: { _token: string }; Returns: Json }
+      get_trip_members: {
+        Args: { _trip: string }
+        Returns: {
+          avatar_url: string | null
+          email: string | null
+          full_name: string | null
+          role: Database["public"]["Enums"]["trip_role"]
+          user_id: string
+        }[]
+      }
+      is_trip_owner: {
+        Args: { _trip: string; _user: string }
+        Returns: boolean
+      }
       can_edit_trip: {
         Args: { _trip: string; _user: string }
         Returns: boolean

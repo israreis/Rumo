@@ -24,10 +24,11 @@ export type Trip = {
   status_override: TripStatus | null;
   iof_pct: number;
   card_spread_pct: number;
+  public_token?: string | null;
   trip_destinations: Destination[];
   trip_travelers: Traveler[];
 };
-export type TripInput = Omit<Trip, "id" | "owner_id" | "trip_destinations" | "trip_travelers"> & {
+export type TripInput = Omit<Trip, "id" | "owner_id" | "public_token" | "trip_destinations" | "trip_travelers"> & {
   destinations: Destination[];
   travelers: Traveler[];
 };

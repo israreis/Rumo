@@ -216,7 +216,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
             </div>
           </div>
           <div className="rounded-2xl bg-secondary/60 p-4">
-            <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground"><Heart className="size-4 text-accent" /> Lista de desejos</h3>
+            <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground"><Heart className="size-4 text-caramelo" /> Lista de desejos</h3>
             <p className="mb-3 text-xs text-muted-foreground">Arraste para um dia do roteiro.</p>
             <DayList id={WISH}>
               <SortableContext items={items[WISH] ?? []} strategy={verticalListSortingStrategy}>
@@ -260,7 +260,7 @@ function Row({ icon: Icon, time, endTime, title, sub, cost, badge, conflict, ton
   return (
     <div className="flex items-start gap-3">
       <span className="w-12 shrink-0 pt-1 text-right font-mono text-xs text-muted-foreground">{time ?? "—"}{endTime && <><br />{endTime}</>}</span>
-      <span className={cn("grid size-8 shrink-0 place-items-center rounded-full", tone === "primary" ? "bg-primary/10 text-primary" : tone === "success" ? "bg-success/15 text-success" : "bg-accent/15 text-accent")}>
+      <span className={cn("grid size-8 shrink-0 place-items-center rounded-full", tone === "primary" ? "bg-primary/10 text-primary" : tone === "success" ? "bg-success/15 text-success" : "bg-oliva/15 text-oliva")}>
         {Icon && <Icon className="size-4" />}
       </span>
       <div className="min-w-0 flex-1">
