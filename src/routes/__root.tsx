@@ -37,9 +37,25 @@ function NotFoundComponent() {
   );
 }
 
+const CHUNK_ERROR = /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module|ChunkLoadError/i;
+
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
+  const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+
+  // Depois de um deploy novo, uma aba antiga pode pedir um pedaço do app que já não existe:
+  // recarrega uma vez sozinha em vez de mostrar o erro.
+  useEffect(() => {
+    if (!CHUNK_ERROR.test(message)) return;
+    try {
+      if (sessionStorage.getItem("rumo:chunk-reload")) return;
+      sessionStorage.setItem("rumo:chunk-reload", "1");
+    } catch {
+      return;
+    }
+    window.location.reload();
+  }, [message]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
@@ -47,6 +63,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <LogoMark className="mx-auto size-16" />
         <h1 className="mt-6 text-3xl">Esta página não carregou</h1>
         <p className="mt-2 text-sm text-muted-foreground">Algo deu errado. Tente de novo ou volte ao início.</p>
+        <details className="mx-auto mt-4 max-w-sm text-left text-xs text-muted-foreground">
+          <summary className="cursor-pointer text-center">Detalhes técnicos</summary>
+          <pre className="mt-2 whitespace-pre-wrap break-words rounded-md border bg-card p-2 font-num">{message}</pre>
+        </details>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -138,6 +158,14 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useServiceWorker();
+
+  // App carregou bem: libera a recarga automática para um próximo erro de deploy.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      try { sessionStorage.removeItem("rumo:chunk-reload"); } catch { /* sem storage */ }
+    }, 10_000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
