@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_authenticated")({
     }
     return { user: data.user };
   },
-  pendingComponent: () => <Splash />,
+  pendingComponent: () => <Splash full label="Entrando…" />,
   component: AppLayout,
 });
 
@@ -62,7 +62,7 @@ function AppLayout() {
   return (
     <div className="min-h-dvh">
       <PageBackdrop />
-      <header className="no-print pt-safe sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
+      <header className="no-print pt-safe sticky top-0 z-30 border-b bg-background/85 backdrop-blur [view-transition-name:app-header]">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Logo to="/trips" />
           <div className="flex items-center gap-1">
@@ -97,7 +97,7 @@ function AppLayout() {
       {/* Phone: app-style tab bar at the thumb. */}
       <nav
         aria-label="Navegação principal"
-        className="no-print pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-papel/95 backdrop-blur md:hidden"
+        className="no-print pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-papel/95 backdrop-blur md:hidden [view-transition-name:app-tabbar]"
       >
         <ul className="mx-auto grid h-16 max-w-md grid-cols-4">
           {NAV.map((n) => {

@@ -5,15 +5,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo, LogoMark } from "@/components/Logo";
+import { Logo, LogoMark, Splash } from "@/components/Logo";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import hero from "@/assets/auth-escocia.webp";
 
-type AuthSearch = { redirect?: string };
+type AuthSearch = { redirect?: string; oauth?: 1 };
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>): AuthSearch =>
-    typeof s["redirect"] === "string" && s["redirect"].startsWith("/") ? { redirect: s["redirect"] } : {},
+  validateSearch: (s: Record<string, unknown>): AuthSearch => ({
+    ...(typeof s["redirect"] === "string" && s["redirect"].startsWith("/") ? { redirect: s["redirect"] } : {}),
+    // Volta do Google: a tela mostra "Entrando…" desde o servidor, sem piscar o formulário.
+    ...(s["oauth"] === 1 || s["oauth"] === "1" ? { oauth: 1 as const } : {}),
+  }),
   head: () => ({
     meta: [
       { title: "Entrar — Rumo Trip" },
@@ -31,7 +34,8 @@ type Mode = "login" | "signup" | "forgot";
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { redirect } = Route.useSearch();
+  const { redirect, oauth } = Route.useSearch();
+  const [returning, setReturning] = useState(!!oauth);
   const target = redirect && !redirect.startsWith("//") ? redirect : "/trips";
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
@@ -44,12 +48,18 @@ function AuthPage() {
   useEffect(() => {
     const go = () => navigate({ href: target, replace: true });
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) go();
+      if (data.user) return go();
+      // Voltou do Google sem sessão (cancelou ou deu erro): mostra o formulário de novo.
+      const url = new URL(window.location.href);
+      const failed = url.searchParams.get("error_description") ?? new URLSearchParams(url.hash.slice(1)).get("error_description");
+      if (failed) toast.error("Não foi possível entrar com o Google.");
+      setReturning(false);
     });
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN") go();
     });
-    return () => data.subscription.unsubscribe();
+
+  return () => data.subscription.unsubscribe();
   }, [navigate, target]);
 
   async function submit(e: React.FormEvent): Promise<void> {
@@ -86,12 +96,14 @@ function AuthPage() {
   async function google(): Promise<void> {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth${redirect ? `?redirect=${encodeURIComponent(target)}` : ""}` },
+      options: { redirectTo: `${window.location.origin}/auth?oauth=1${redirect ? `&redirect=${encodeURIComponent(target)}` : ""}` },
     });
     if (error) toast.error("Não foi possível entrar com o Google.");
   }
 
   const title = { login: "Bem-vindo de volta", signup: "Crie sua conta", forgot: "Recuperar senha" }[mode];
+
+  if (returning) return <Splash full label="Entrando…" />;
 
   return (
     <div className="grid min-h-dvh md:grid-cols-2">

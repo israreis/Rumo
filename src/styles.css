@@ -362,3 +362,26 @@
   --sidebar-ring: var(--couro);
   color: var(--tinta);
 }
+
+/* Troca de telas: a página antiga some levemente para cima e a nova entra de baixo.
+   Cabeçalho e barra de abas ficam parados (têm view-transition-name próprio). */
+::view-transition-old(root) {
+  animation: 160ms cubic-bezier(0.4, 0, 1, 1) both rumo-vt-out;
+}
+::view-transition-new(root) {
+  animation: 280ms cubic-bezier(0.2, 0, 0, 1) 40ms both rumo-vt-in;
+}
+::view-transition-group(app-header),
+::view-transition-group(app-tabbar) {
+  animation: none;
+}
+@keyframes rumo-vt-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes rumo-vt-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}
