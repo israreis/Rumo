@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { DateInput } from "@/components/ui/date-input";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Stamp } from "@/components/Stamp";
@@ -100,7 +101,7 @@ export function ManualStampsDialog({ open, onOpenChange, userId, stamps }: {
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="ms-date">Data da entrada</Label>
-            <Input id="ms-date" type="date" max={today} value={date} onChange={(e) => setDate(e.target.value)} />
+            <DateInput id="ms-date" max={today} value={date} onValueChange={setDate} clearable={false} />
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="ms-note">Viagem <span className="font-normal text-muted-foreground">(opcional)</span></Label>

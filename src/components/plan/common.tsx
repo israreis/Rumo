@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Paperclip, Trash2, Upload } from "lucide-react";
+import { DateInput } from "@/components/ui/date-input";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -26,8 +27,10 @@ export function Field({ label, children, className }: { label: string; children:
 export function TextF({ f, set, k, label, type = "text", className, placeholder, list }: { f: Form; set: Setter; k: string; label: string; type?: string; className?: string | undefined; placeholder?: string; list?: string }) {
   return (
     <Field label={label} className={className}>
+      {type === "date" ? <DateInput value={f[k]} onValueChange={(d) => set(k, d || null)} aria-label={label} /> : (
       <Input type={type} list={list} placeholder={placeholder} value={f[k] ?? ""} step={type === "number" ? "0.01" : undefined}
         onChange={(e) => set(k, type === "number" ? (e.target.value === "" ? null : Number(e.target.value)) : e.target.value)} />
+      )}
     </Field>
   );
 }

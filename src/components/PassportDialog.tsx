@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { DateInput } from "@/components/ui/date-input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -56,7 +57,7 @@ export function PassportDialog({ open, onOpenChange, userId, last4, expiry }: {
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="pp-expiry">Válido até</Label>
-            <Input id="pp-expiry" type="date" value={e} onChange={(ev) => setE(ev.target.value)} />
+            <DateInput id="pp-expiry" value={e} onValueChange={setE} />
           </div>
           <DialogFooter className="gap-2 sm:justify-between">
             {(last4 || expiry) ? (

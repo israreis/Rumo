@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LayoutTemplate, Plus, Trash2 } from "lucide-react";
+import { DateInput } from "@/components/ui/date-input";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,7 @@ function ListCard({ trip, list, label, items, onUpdate, onChange }: {
             <Checkbox checked={i.done} onCheckedChange={(v) => onUpdate(i.id, { done: !!v })} aria-label={i.title} />
             <span className={cn("min-w-0 flex-1", i.done && "text-muted-foreground line-through")}>{i.title}</span>
             <label className={cn("flex items-center gap-1 text-xs", !i.done && i.due_date && i.due_date < today ? "text-destructive" : "text-muted-foreground")}>
-              <input type="date" value={i.due_date ?? ""} onChange={(e) => onUpdate(i.id, { due_date: e.target.value || null })} className="w-[7.5rem] bg-transparent" aria-label="Prazo" />
+              <DateInput compact aria-label="Prazo" value={i.due_date} onValueChange={(d) => onUpdate(i.id, { due_date: d || null })} />
             </label>
             {trip.trip_travelers.length > 0 && (
               <Select value={i.assignee ?? "none"} onValueChange={(v) => onUpdate(i.id, { assignee: v === "none" ? null : v })}>

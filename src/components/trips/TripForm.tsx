@@ -1,5 +1,6 @@
 import { ImagePlus, Link2, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { DateInput } from "@/components/ui/date-input";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,11 +66,11 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="start">Data de ida</Label>
-            <Input id="start" type="date" value={v.start_date ?? ""} onChange={(e) => set("start_date", e.target.value)} />
+            <DateInput id="start" value={v.start_date} onValueChange={(d) => set("start_date", d || null)} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="end">Data de volta</Label>
-            <Input id="end" type="date" value={v.end_date ?? ""} onChange={(e) => set("end_date", e.target.value)} />
+            <DateInput id="end" value={v.end_date} min={v.start_date ?? undefined} defaultMonth={v.start_date} onValueChange={(d) => set("end_date", d || null)} />
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -130,9 +131,9 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
             <Button type="button" variant="ghost" size="icon" aria-label="Remover destino" className="hidden sm:inline-flex" onClick={() => set("destinations", v.destinations.filter((_, j) => j !== i))}><Trash2 /></Button>
             <div className="grid grid-cols-2 gap-3 sm:col-span-2 lg:grid-cols-4">
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Chegada</Label>
-                <Input type="date" value={d.arrival_date ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, arrival_date: e.target.value } : x)))} /></div>
+                <DateInput aria-label="Chegada" value={d.arrival_date} defaultMonth={v.destinations[i - 1]?.departure_date ?? v.start_date} onValueChange={(dt) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, arrival_date: dt || null } : x)))} /></div>
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Saída</Label>
-                <Input type="date" value={d.departure_date ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, departure_date: e.target.value } : x)))} /></div>
+                <DateInput aria-label="Saída" value={d.departure_date} min={d.arrival_date ?? undefined} defaultMonth={d.arrival_date ?? v.start_date} onValueChange={(dt) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, departure_date: dt || null } : x)))} /></div>
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Moeda local</Label>
                 <Select value={d.currency ?? "none"} onValueChange={(c) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, currency: c === "none" ? null : c } : x)))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
