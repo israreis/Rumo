@@ -4,7 +4,7 @@ Todas em domínio público, obtidas no Wikimedia Commons e convertidas para a ti
 
 | Arquivo | Assunto | Origem | Fonte |
 |---|---|---|---|
-| `azul.webp` | Arara-azul | Edward Lear / A. F. Lydon, litografia do séc. XIX | [Psittacus hyacinthinus Lydon.jpg](https://commons.wikimedia.org/wiki/File:Psittacus_hyacinthinus_Lydon.jpg) |
+| `azul.webp` | Arara-azul | A. F. Lydon, litografia do séc. XIX | [Psittacus hyacinthinus Lydon.jpg](https://commons.wikimedia.org/wiki/File:Psittacus_hyacinthinus_Lydon.jpg) |
 | `harpia.webp` | Harpia | gravura do séc. XIX | [Great harpy of America.JPG](https://commons.wikimedia.org/wiki/File:Great_harpy_of_America.JPG) |
 | `onca.webp` | Onça-pintada | Pearson Scott Foresman, desenho doado ao domínio público | [Jaguar (PSF).png](https://commons.wikimedia.org/wiki/File:Jaguar_%28PSF%29.png) |
 | `caninde.webp` | Arara-canindé | gravura do séc. XIX | [Natural History, Birds - Macaw.jpg](https://commons.wikimedia.org/wiki/File:Natural_History%2C_Birds_-_Macaw.jpg) |
