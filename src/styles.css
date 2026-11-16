@@ -283,3 +283,10 @@
   .print-break { break-before: page; }
   .print-avoid { break-inside: avoid; }
 }
+
+/* Faixas roláveis sem barra visível (abas da viagem) */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
