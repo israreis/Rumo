@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 
 /*
  * Rumo Trip symbol: a camera lens (knurled barrel, brass focus ring, iris) holding a compass.
- * Fixed brand colours — the mark reads the same on light and dark grounds.
+ * Fixed brand colours; on dark grounds the barrel gets a lighter metal tone and a brass rim
+ * (via `dark:` classes, which beat the SVG presentation attributes) so its edge doesn't sink.
  * Same geometry as the SVG files in public/brand/.
  */
 const C = 100;
@@ -64,8 +65,9 @@ export function LogoMark({ className, animated = true, title }: { className?: st
   return (
     <svg viewBox="0 0 200 200" className={cn("shrink-0", className)} role={title ? "img" : undefined} aria-hidden={title ? undefined : true}>
       {title && <title>{title}</title>}
-      <circle cx="100" cy="100" r="97" fill="#2a211a" />
-      <path d={KNURL} stroke="#4a3b2f" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="100" cy="100" r="97" fill="#2a211a" className="dark:fill-[#3d3026]" />
+      <path d={KNURL} stroke="#4a3b2f" strokeWidth="2.2" strokeLinecap="round" className="dark:stroke-[#7d6753]" />
+      <circle cx="100" cy="100" r="96" fill="none" stroke="#c9a66b" strokeWidth="3" className="hidden dark:inline" />
       <circle cx="100" cy="7.5" r="3.2" fill="#b9783f" />
       <circle cx="100" cy="100" r="80" fill="none" stroke="#a88449" strokeWidth="3.5" />
       <circle cx="100" cy="100" r="74" fill="#f3eee4" />
