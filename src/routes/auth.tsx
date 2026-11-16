@@ -162,7 +162,7 @@ function AuthPage() {
         </div>
       </div>
       <div className="relative hidden md:block">
-        <img src={hero} alt="Ilustração de um litoral visto de cima, com uma estrada sinuosa" width={1024} height={1408} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={hero} alt="Litoral visto de cima com estrada sinuosa" width={1024} height={1408} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-cover-fade" />
         <div className="absolute right-8 top-8 rounded-full bg-papel/90 p-1.5 shadow-lift backdrop-blur">
           <LogoMark animated className="size-16" />

@@ -54,7 +54,7 @@ function Index() {
 
           <div className="relative">
             <div className="relative overflow-hidden rounded-[22px] shadow-lift">
-              <img src="/images/lisboa.jpg" alt="Ilustração de Lisboa: casario nas colinas e um bonde ao pôr do sol" width={1600} height={912} className="aspect-[4/3] w-full object-cover" />
+              <img src="/images/lisboa.jpg" alt="Bonde amarelo em rua de Lisboa ao pôr do sol" width={1600} height={912} className="aspect-[4/3] w-full object-cover" />
               <div className="absolute inset-0 bg-cover-fade" />
               <div className="absolute bottom-4 left-5 text-on-photo">
                 <p className="text-xs font-semibold uppercase tracking-[0.08em] opacity-90">Lisboa e Porto</p>
