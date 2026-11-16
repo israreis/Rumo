@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rumo — Identidade visual</title>
+<meta name="description" content="Design system da marca Rumo: logo, cores, tipografia, espaçamento e componentes.">
+<link rel="icon" href="brand/rumo-simbolo-lente.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--linho:#f3eee4;--papel:#fbf8f2;--areia:#e6dccb;--borda:#d8cdb9;--tinta:#2a211a;--tinta-suave:#6b5d4f;--couro:#8a4f2a;--couro-hover:#6e3d1f;--sobre-couro:#fbf8f2;--oliva:#5f6446;--salvia:#d9dbc6;--latao:#a88449;--caramelo:#b9783f;--mar:#3f6d66;--marinho:#23324a;--sucesso:#4a6b35;--alerta:#94600f;--erro:#9e3426;--borda-forte:#a39380;--sombra:0 1px 2px rgba(42,33,26,.06),0 4px 12px rgba(42,33,26,.06);--sombra-alta:0 8px 24px rgba(42,33,26,.16)}
+[data-theme="dark"]{--linho:#1c1814;--papel:#26211b;--areia:#332c24;--borda:#3d352c;--tinta:#f1eadf;--tinta-suave:#b8ac9c;--couro:#d39468;--couro-hover:#e3ab83;--sobre-couro:#1c1814;--oliva:#aeb28c;--salvia:#3a3d2c;--latao:#c9a66b;--caramelo:#d69a62;--mar:#8fbab2;--marinho:#9fb2cc;--sucesso:#9cc483;--alerta:#e0b25a;--erro:#e88b7c;--borda-forte:#6e6254;--sombra:0 1px 2px rgba(0,0,0,.4),0 4px 12px rgba(0,0,0,.3);--sombra-alta:0 8px 24px rgba(0,0,0,.5)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--linho);color:var(--tinta);font:16px/1.6 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:500;letter-spacing:-.015em;line-height:1.15;margin:0}
+h2{font-size:clamp(28px,4vw,40px)} h3{font-size:20px;font-weight:600}
+a{color:var(--couro)} code{font-family:"IBM Plex Mono",monospace;font-size:.85em}
+.wrap{display:grid;grid-template-columns:220px 1fr;max-width:1180px;margin:0 auto;gap:48px;padding:0 24px}
+nav.side{position:sticky;top:0;align-self:start;height:100vh;padding:28px 0;display:flex;flex-direction:column;gap:4px}
+nav.side .brand{display:flex;align-items:center;gap:10px;margin-bottom:24px;text-decoration:none;color:var(--tinta)}
+nav.side .brand img{width:34px;height:34px} nav.side .brand span{font:600 26px/1 Fraunces,Georgia,serif;letter-spacing:-.02em}
+nav.side a.lk{color:var(--tinta-suave);text-decoration:none;font-size:14px;font-weight:500;padding:6px 10px;border-radius:8px}
+nav.side a.lk:hover{background:var(--areia);color:var(--tinta)}
+.theme{margin-top:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--borda-forte);background:transparent;color:var(--tinta);border-radius:999px;padding:8px 14px;font:600 13px "DM Sans",system-ui,sans-serif;cursor:pointer}
+main{padding:28px 0 96px;min-width:0}
+section{padding:56px 0;border-top:1px solid var(--borda)} section:first-child{border-top:0;padding-top:0}
+.eyebrow{font:600 12px/16px "DM Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
+.lead{color:var(--tinta-suave);max-width:640px;margin:12px 0 0}
+.hand{font-family:Caveat,cursive;font-size:28px;color:var(--couro);margin:0}
+.card{background:var(--papel);border-radius:14px;box-shadow:var(--sombra);padding:24px}
+.grid{display:grid;gap:16px}
+/* cover */
+.cover{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:340px;border-radius:22px;overflow:hidden;background:var(--papel);box-shadow:var(--sombra)}
+.cover .txt{padding:40px;display:flex;flex-direction:column;justify-content:flex-end}
+.cover h1{font-size:clamp(64px,9vw,120px);font-weight:600;letter-spacing:-.03em;line-height:.92}
+.cover svg.blocks{width:100%;height:100%}
+/* logo */
+.logo-hero{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.logo-hero .card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:260px}
+.mark-anim{width:170px;height:170px}
+.agulha{transform-box:view-box;transform-origin:100px 100px;animation:agulha 5s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes agulha{0%{transform:rotate(0)}12%{transform:rotate(34deg)}26%{transform:rotate(-22deg)}40%{transform:rotate(14deg)}52%{transform:rotate(-7deg)}62%{transform:rotate(3deg)}72%,100%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){.agulha{animation:none}}
+.lockup{display:flex;align-items:center;gap:16px} .lockup img{width:64px;height:64px}
+.wm{font:600 56px/1 Fraunces,Georgia,serif;letter-spacing:-.02em}
+.dark-panel{background:#1c1814;color:#f1eadf}
+.logos{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));margin-top:16px}
+.logo-card{margin:0;background:var(--papel);border-radius:14px;box-shadow:var(--sombra);padding:20px;display:flex;gap:16px;align-items:center}
+.logo-card.on-dark{background:#8a4f2a;color:#fbf8f2} .logo-card.on-dark a{color:#fbf8f2}
+.logo-card img{width:72px;height:72px;flex:none}
+.logo-card figcaption{display:flex;flex-direction:column;font-size:13px} .logo-card b{font-size:15px}
+.logo-card span{opacity:.8} .logo-card a{font-weight:600;margin-top:4px}
+ul.rules{margin:16px 0 0;padding-left:20px;color:var(--tinta-suave)} ul.rules li{margin:4px 0}
+/* colors */
+.sws{grid-template-columns:repeat(auto-fill,minmax(250px,1fr));margin-top:24px}
+.sw{margin:0;background:var(--papel);border-radius:14px;overflow:hidden;box-shadow:var(--sombra)}
+.sw .chip{height:84px;border-bottom:1px solid var(--borda)}
+.sw figcaption{padding:12px 14px;display:flex;flex-direction:column;gap:2px;font-size:13px}
+.sw b{font-size:14px} .sw code{color:var(--tinta-suave)} .sw span{color:var(--tinta-suave)}
+.ratio{display:flex;height:40px;border-radius:8px;overflow:hidden;margin-top:24px}
+.ratio div{display:grid;place-items:center;font:600 12px "DM Sans",system-ui,sans-serif;color:var(--sobre-couro)}
+/* type */
+.type-row{display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:baseline;padding:16px 0;border-bottom:1px dashed var(--borda)}
+.type-meta{display:flex;flex-direction:column;font-size:13px} .type-meta span{color:var(--tinta-suave);font-family:"IBM Plex Mono",monospace;font-size:12px} .type-meta small{color:var(--tinta-suave)}
+.fams{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin:24px 0}
+.fam .big{font-size:56px;line-height:1}
+/* space */
+.sp{display:grid;grid-template-columns:72px 160px 1fr;gap:16px;align-items:center;padding:8px 0;font-size:13px}
+.sp span{display:block;height:16px;background:var(--couro);border-radius:2px} .sp small,.rd small{color:var(--tinta-suave)}
+.rds{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-top:24px}
+.rd{display:flex;flex-direction:column;gap:6px;font-size:13px} .rd div{height:84px;background:var(--salvia);border:1.5px solid var(--oliva)}
+.shadows{grid-template-columns:1fr 1fr;margin-top:24px}
+/* components */
+.btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.b{font:600 14px/20px "DM Sans",system-ui,sans-serif;padding:12px 20px;border-radius:8px;border:1px solid transparent;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.b.p{background:var(--couro);color:var(--sobre-couro)} .b.p:hover{background:var(--couro-hover)}
+.b.s{background:var(--oliva);color:var(--sobre-couro)}
+.b.o{background:transparent;color:var(--tinta);border-color:var(--tinta-suave)} .b.o:hover{background:var(--areia)}
+.b.g{background:transparent;color:var(--couro);padding-inline:8px}
+.b.f{background:var(--couro);color:var(--sobre-couro);border-radius:999px;box-shadow:var(--sombra-alta);padding:14px 22px}
+.b:focus-visible{outline:2px solid var(--couro);outline-offset:2px}
+.ticket{display:grid;grid-template-columns:1fr 170px;background:var(--papel);border-radius:14px;box-shadow:var(--sombra);max-width:680px;overflow:hidden}
+.ticket .main{padding:22px 24px} .ticket .stub{position:relative;padding:22px 20px;border-left:1.5px dashed var(--borda);display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.ticket .stub:before,.ticket .stub:after{content:"";position:absolute;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--linho)}
+.ticket .stub:before{top:-10px} .ticket .stub:after{bottom:-10px}
+.lbl{font:600 12px/16px "DM Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-suave)}
+.rota{display:flex;align-items:center;gap:16px;margin:10px 0 14px} .cid{font:500 30px/1 Fraunces,Georgia,serif}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.linha{flex:1;border-top:1.5px dashed var(--latao)}
+.meta{display:flex;gap:24px;flex-wrap:wrap}
+.chip-s{display:inline-block;font:600 12px/16px "DM Sans",system-ui,sans-serif;padding:4px 10px;border-radius:999px;background:var(--salvia);color:var(--tinta)}
+.stamps{display:flex;gap:32px;flex-wrap:wrap;align-items:center} .stamps svg{width:150px;height:150px}
+.st-couro{stroke:var(--couro);fill:var(--couro)} .st-marinho{stroke:var(--marinho);fill:var(--marinho)} .st-oliva{stroke:var(--oliva);fill:var(--oliva)}
+.ring{fill:none} .t{stroke:none;font-family:"DM Sans",system-ui,sans-serif;font-weight:600;letter-spacing:.14em} .c{stroke:none;font-family:Fraunces,Georgia,serif;font-weight:600}
+.two{grid-template-columns:1fr 1fr}
+table{width:100%;border-collapse:collapse;font-size:14px} td,th{text-align:left;padding:10px 8px;border-bottom:1px solid var(--borda);vertical-align:top} th{font:600 12px "DM Sans",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta-suave)}
+blockquote{margin:0;padding:14px 18px;border-radius:14px;background:var(--salvia);color:var(--tinta)}
+footer{color:var(--tinta-suave);font-size:13px;padding-top:32px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:0} nav.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:20px 0} nav.side .brand{margin:0 auto 0 0} nav.side a.lk{display:none} .theme{margin:0}
+.cover,.logo-hero,.two,.shadows{grid-template-columns:1fr} .cover svg.blocks{height:180px} .type-row{grid-template-columns:1fr;gap:6px} .ticket{grid-template-columns:1fr} .ticket .stub{border-left:0;border-top:1.5px dashed var(--borda)} .ticket .stub:before,.ticket .stub:after{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="side" aria-label="Seções">
+  <a class="brand" href="#inicio"><img src="brand/rumo-simbolo-lente.svg" alt=""><span>rumo</span></a>
+  <a class="lk" href="#conceito">Conceito</a><a class="lk" href="#logo">Logo</a><a class="lk" href="#cores">Cores</a>
+  <a class="lk" href="#tipografia">Tipografia</a><a class="lk" href="#espaco">Espaço e forma</a><a class="lk" href="#componentes">Componentes</a>
+  <a class="lk" href="#icones">Ícones e fotografia</a><a class="lk" href="#voz">Voz e tom</a>
+  <button class="theme" id="theme" type="button" aria-pressed="false">◐ Tema escuro</button>
+</nav>
+<main>
+
+<section id="inicio">
+  <div class="cover">
+    <div class="txt">
+      <h1>Rumo</h1>
+      <p class="lead" style="margin-top:16px">Seu diário de bordo para planejar, viver e lembrar cada viagem.</p>
+    </div>
+    <svg class="blocks" viewBox="0 0 480 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect x="48" y="48" width="96" height="310" rx="14" fill="var(--tinta)"/>
+      <rect x="160" y="-20" width="340" height="196" rx="14" fill="var(--couro)"/>
+      <rect x="160" y="192" width="192" height="160" rx="14" fill="var(--oliva)"/>
+      <rect x="368" y="192" width="132" height="160" rx="14" fill="var(--latao)"/>
+      <rect x="0" y="-20" width="32" height="132" rx="14" fill="var(--salvia)"/>
+      <g fill="none" stroke="var(--linho)" stroke-width="2"><circle cx="480" cy="0" r="48"/><circle cx="480" cy="0" r="80"/><circle cx="480" cy="0" r="112"/><circle cx="480" cy="0" r="144"/></g>
+    </svg>
+  </div>
+</section>
+
+<section id="conceito">
+  <p class="eyebrow">01 · Conceito</p>
+  <h2>Enquadrar o caminho</h2>
+  <p class="lead">A identidade nasce de uma mesa de viajante fotografada de cima: câmera analógica em capa de couro, mapa antigo, passaporte, caderno de linho com anotações à mão, ferragens de latão e luz natural.</p>
+  <div class="grid two" style="margin-top:24px">
+    <div class="card"><h3>Fotografia</h3><p class="lead" style="margin-top:6px">Uma lente de câmera, com anel serrilhado, anel de foco em latão, íris de diafragma e reflexo no vidro.</p></div>
+    <div class="card"><h3>Viagem</h3><p class="lead" style="margin-top:6px">Dentro da lente, uma bússola com mostrador graduado e ponteiro norte em couro.</p></div>
+  </div>
+  <p class="lead">O app deve parecer um objeto de viagem bem cuidado, não um painel corporativo. <em>Rumo</em> ainda é nome provisório; se mudar, só o wordmark é trocado.</p>
+</section>
+
+<section id="logo">
+  <p class="eyebrow">02 · Logo</p>
+  <h2>Lente + bússola</h2>
+  <div class="logo-hero" style="margin-top:24px">
+    <div class="card"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="mark-anim" role="img" aria-label="Rumo — símbolo lente e bússola, animado"><title>Símbolo Rumo animado</title><circle cx="100" cy="100" r="97" fill="#2a211a"/><g stroke="#4a3b2f" stroke-width="2.2" stroke-linecap="round"><line x1="100.00" y1="7.00" x2="100.00" y2="15.00"/><line x1="106.08" y1="7.20" x2="105.56" y2="15.18"/><line x1="112.14" y1="7.80" x2="111.09" y2="15.73"/><line x1="118.14" y1="8.79" x2="116.58" y2="16.63"/><line x1="124.07" y1="10.17" x2="122.00" y2="17.90"/><line x1="129.89" y1="11.94" x2="127.32" y2="19.51"/><line x1="135.59" y1="14.08" x2="132.53" y2="21.47"/><line x1="141.13" y1="16.59" x2="137.59" y2="23.77"/><line x1="146.50" y1="19.46" x2="142.50" y2="26.39"/><line x1="151.67" y1="22.67" x2="147.22" y2="29.33"/><line x1="156.61" y1="26.22" x2="151.74" y2="32.56"/><line x1="161.32" y1="30.08" x2="156.04" y2="36.09"/><line x1="165.76" y1="34.24" x2="160.10" y2="39.90"/><line x1="169.92" y1="38.68" x2="163.91" y2="43.96"/><line x1="173.78" y1="43.39" x2="167.44" y2="48.26"/><line x1="177.33" y1="48.33" x2="170.67" y2="52.78"/><line x1="180.54" y1="53.50" x2="173.61" y2="57.50"/><line x1="183.41" y1="58.87" x2="176.23" y2="62.41"/><line x1="185.92" y1="64.41" x2="178.53" y2="67.47"/><line x1="188.06" y1="70.11" x2="180.49" y2="72.68"/><line x1="189.83" y1="75.93" x2="182.10" y2="78.00"/><line x1="191.21" y1="81.86" x2="183.37" y2="83.42"/><line x1="192.20" y1="87.86" x2="184.27" y2="88.91"/><line x1="192.80" y1="93.92" x2="184.82" y2="94.44"/><line x1="193.00" y1="100.00" x2="185.00" y2="100.00"/><line x1="192.80" y1="106.08" x2="184.82" y2="105.56"/><line x1="192.20" y1="112.14" x2="184.27" y2="111.09"/><line x1="191.21" y1="118.14" x2="183.37" y2="116.58"/><line x1="189.83" y1="124.07" x2="182.10" y2="122.00"/><line x1="188.06" y1="129.89" x2="180.49" y2="127.32"/><line x1="185.92" y1="135.59" x2="178.53" y2="132.53"/><line x1="183.41" y1="141.13" x2="176.23" y2="137.59"/><line x1="180.54" y1="146.50" x2="173.61" y2="142.50"/><line x1="177.33" y1="151.67" x2="170.67" y2="147.22"/><line x1="173.78" y1="156.61" x2="167.44" y2="151.74"/><line x1="169.92" y1="161.32" x2="163.91" y2="156.04"/><line x1="165.76" y1="165.76" x2="160.10" y2="160.10"/><line x1="161.32" y1="169.92" x2="156.04" y2="163.91"/><line x1="156.61" y1="173.78" x2="151.74" y2="167.44"/><line x1="151.67" y1="177.33" x2="147.22" y2="170.67"/><line x1="146.50" y1="180.54" x2="142.50" y2="173.61"/><line x1="141.13" y1="183.41" x2="137.59" y2="176.23"/><line x1="135.59" y1="185.92" x2="132.53" y2="178.53"/><line x1="129.89" y1="188.06" x2="127.32" y2="180.49"/><line x1="124.07" y1="189.83" x2="122.00" y2="182.10"/><line x1="118.14" y1="191.21" x2="116.58" y2="183.37"/><line x1="112.14" y1="192.20" x2="111.09" y2="184.27"/><line x1="106.08" y1="192.80" x2="105.56" y2="184.82"/><line x1="100.00" y1="193.00" x2="100.00" y2="185.00"/><line x1="93.92" y1="192.80" x2="94.44" y2="184.82"/><line x1="87.86" y1="192.20" x2="88.91" y2="184.27"/><line x1="81.86" y1="191.21" x2="83.42" y2="183.37"/><line x1="75.93" y1="189.83" x2="78.00" y2="182.10"/><line x1="70.11" y1="188.06" x2="72.68" y2="180.49"/><line x1="64.41" y1="185.92" x2="67.47" y2="178.53"/><line x1="58.87" y1="183.41" x2="62.41" y2="176.23"/><line x1="53.50" y1="180.54" x2="57.50" y2="173.61"/><line x1="48.33" y1="177.33" x2="52.78" y2="170.67"/><line x1="43.39" y1="173.78" x2="48.26" y2="167.44"/><line x1="38.68" y1="169.92" x2="43.96" y2="163.91"/><line x1="34.24" y1="165.76" x2="39.90" y2="160.10"/><line x1="30.08" y1="161.32" x2="36.09" y2="156.04"/><line x1="26.22" y1="156.61" x2="32.56" y2="151.74"/><line x1="22.67" y1="151.67" x2="29.33" y2="147.22"/><line x1="19.46" y1="146.50" x2="26.39" y2="142.50"/><line x1="16.59" y1="141.13" x2="23.77" y2="137.59"/><line x1="14.08" y1="135.59" x2="21.47" y2="132.53"/><line x1="11.94" y1="129.89" x2="19.51" y2="127.32"/><line x1="10.17" y1="124.07" x2="17.90" y2="122.00"/><line x1="8.79" y1="118.14" x2="16.63" y2="116.58"/><line x1="7.80" y1="112.14" x2="15.73" y2="111.09"/><line x1="7.20" y1="106.08" x2="15.18" y2="105.56"/><line x1="7.00" y1="100.00" x2="15.00" y2="100.00"/><line x1="7.20" y1="93.92" x2="15.18" y2="94.44"/><line x1="7.80" y1="87.86" x2="15.73" y2="88.91"/><line x1="8.79" y1="81.86" x2="16.63" y2="83.42"/><line x1="10.17" y1="75.93" x2="17.90" y2="78.00"/><line x1="11.94" y1="70.11" x2="19.51" y2="72.68"/><line x1="14.08" y1="64.41" x2="21.47" y2="67.47"/><line x1="16.59" y1="58.87" x2="23.77" y2="62.41"/><line x1="19.46" y1="53.50" x2="26.39" y2="57.50"/><line x1="22.67" y1="48.33" x2="29.33" y2="52.78"/><line x1="26.22" y1="43.39" x2="32.56" y2="48.26"/><line x1="30.08" y1="38.68" x2="36.09" y2="43.96"/><line x1="34.24" y1="34.24" x2="39.90" y2="39.90"/><line x1="38.68" y1="30.08" x2="43.96" y2="36.09"/><line x1="43.39" y1="26.22" x2="48.26" y2="32.56"/><line x1="48.33" y1="22.67" x2="52.78" y2="29.33"/><line x1="53.50" y1="19.46" x2="57.50" y2="26.39"/><line x1="58.87" y1="16.59" x2="62.41" y2="23.77"/><line x1="64.41" y1="14.08" x2="67.47" y2="21.47"/><line x1="70.11" y1="11.94" x2="72.68" y2="19.51"/><line x1="75.93" y1="10.17" x2="78.00" y2="17.90"/><line x1="81.86" y1="8.79" x2="83.42" y2="16.63"/><line x1="87.86" y1="7.80" x2="88.91" y2="15.73"/><line x1="93.92" y1="7.20" x2="94.44" y2="15.18"/></g><circle cx="100" cy="7.5" r="3.2" fill="#b9783f"/><circle cx="100" cy="100" r="80" fill="none" stroke="#a88449" stroke-width="3.5"/><circle cx="100" cy="100" r="74" fill="#f3eee4"/><circle cx="100" cy="100" r="74" fill="none" stroke="#d9cdb6" stroke-width="1"/><g stroke="#2a211a" stroke-width="1.1" stroke-linecap="round"><line x1="106.10" y1="30.27" x2="105.75" y2="34.25"/><line x1="112.16" y1="31.06" x2="111.46" y2="35.00"/><line x1="118.12" y1="32.39" x2="117.08" y2="36.25"/><line x1="123.94" y1="34.22" x2="122.57" y2="37.98"/><line x1="129.58" y1="36.56" x2="127.89" y2="40.18"/><line x1="135.00" y1="39.38" x2="133.00" y2="42.84"/><line x1="140.15" y1="42.66" x2="137.86" y2="45.94"/><line x1="145.00" y1="46.38" x2="142.42" y2="49.44"/><line x1="149.50" y1="50.50" x2="145.25" y2="54.75"/><line x1="153.62" y1="55.00" x2="150.56" y2="57.58"/><line x1="157.34" y1="59.85" x2="154.06" y2="62.14"/><line x1="160.62" y1="65.00" x2="157.16" y2="67.00"/><line x1="163.44" y1="70.42" x2="159.82" y2="72.11"/><line x1="165.78" y1="76.06" x2="162.02" y2="77.43"/><line x1="167.61" y1="81.88" x2="163.75" y2="82.92"/><line x1="168.94" y1="87.84" x2="165.00" y2="88.54"/><line x1="169.73" y1="93.90" x2="165.75" y2="94.25"/><line x1="169.73" y1="106.10" x2="165.75" y2="105.75"/><line x1="168.94" y1="112.16" x2="165.00" y2="111.46"/><line x1="167.61" y1="118.12" x2="163.75" y2="117.08"/><line x1="165.78" y1="123.94" x2="162.02" y2="122.57"/><line x1="163.44" y1="129.58" x2="159.82" y2="127.89"/><line x1="160.62" y1="135.00" x2="157.16" y2="133.00"/><line x1="157.34" y1="140.15" x2="154.06" y2="137.86"/><line x1="153.62" y1="145.00" x2="150.56" y2="142.42"/><line x1="149.50" y1="149.50" x2="145.25" y2="145.25"/><line x1="145.00" y1="153.62" x2="142.42" y2="150.56"/><line x1="140.15" y1="157.34" x2="137.86" y2="154.06"/><line x1="135.00" y1="160.62" x2="133.00" y2="157.16"/><line x1="129.58" y1="163.44" x2="127.89" y2="159.82"/><line x1="123.94" y1="165.78" x2="122.57" y2="162.02"/><line x1="118.12" y1="167.61" x2="117.08" y2="163.75"/><line x1="112.16" y1="168.94" x2="111.46" y2="165.00"/><line x1="106.10" y1="169.73" x2="105.75" y2="165.75"/><line x1="93.90" y1="169.73" x2="94.25" y2="165.75"/><line x1="87.84" y1="168.94" x2="88.54" y2="165.00"/><line x1="81.88" y1="167.61" x2="82.92" y2="163.75"/><line x1="76.06" y1="165.78" x2="77.43" y2="162.02"/><line x1="70.42" y1="163.44" x2="72.11" y2="159.82"/><line x1="65.00" y1="160.62" x2="67.00" y2="157.16"/><line x1="59.85" y1="157.34" x2="62.14" y2="154.06"/><line x1="55.00" y1="153.62" x2="57.58" y2="150.56"/><line x1="50.50" y1="149.50" x2="54.75" y2="145.25"/><line x1="46.38" y1="145.00" x2="49.44" y2="142.42"/><line x1="42.66" y1="140.15" x2="45.94" y2="137.86"/><line x1="39.38" y1="135.00" x2="42.84" y2="133.00"/><line x1="36.56" y1="129.58" x2="40.18" y2="127.89"/><line x1="34.22" y1="123.94" x2="37.98" y2="122.57"/><line x1="32.39" y1="118.12" x2="36.25" y2="117.08"/><line x1="31.06" y1="112.16" x2="35.00" y2="111.46"/><line x1="30.27" y1="106.10" x2="34.25" y2="105.75"/><line x1="30.27" y1="93.90" x2="34.25" y2="94.25"/><line x1="31.06" y1="87.84" x2="35.00" y2="88.54"/><line x1="32.39" y1="81.88" x2="36.25" y2="82.92"/><line x1="34.22" y1="76.06" x2="37.98" y2="77.43"/><line x1="36.56" y1="70.42" x2="40.18" y2="72.11"/><line x1="39.38" y1="65.00" x2="42.84" y2="67.00"/><line x1="42.66" y1="59.85" x2="45.94" y2="62.14"/><line x1="46.38" y1="55.00" x2="49.44" y2="57.58"/><line x1="50.50" y1="50.50" x2="54.75" y2="54.75"/><line x1="55.00" y1="46.38" x2="57.58" y2="49.44"/><line x1="59.85" y1="42.66" x2="62.14" y2="45.94"/><line x1="65.00" y1="39.38" x2="67.00" y2="42.84"/><line x1="70.42" y1="36.56" x2="72.11" y2="40.18"/><line x1="76.06" y1="34.22" x2="77.43" y2="37.98"/><line x1="81.88" y1="32.39" x2="82.92" y2="36.25"/><line x1="87.84" y1="31.06" x2="88.54" y2="35.00"/><line x1="93.90" y1="30.27" x2="94.25" y2="34.25"/></g><line x1="100.00" y1="30.00" x2="100.00" y2="42.00" stroke="#8a4f2a" stroke-width="2.6" stroke-linecap="round"/><line x1="170.00" y1="100.00" x2="158.00" y2="100.00" stroke="#2a211a" stroke-width="2.6" stroke-linecap="round"/><line x1="100.00" y1="170.00" x2="100.00" y2="158.00" stroke="#2a211a" stroke-width="2.6" stroke-linecap="round"/><line x1="30.00" y1="100.00" x2="42.00" y2="100.00" stroke="#2a211a" stroke-width="2.6" stroke-linecap="round"/><g fill="none" stroke="#a88449" stroke-width="1" opacity="0.55"><path d="M112.94,51.70 Q128.12,49.27 145.28,60.64"/><path d="M148.30,87.06 Q157.99,98.99 156.73,119.53"/><path d="M135.36,135.36 Q129.87,149.72 111.45,158.90"/><path d="M87.06,148.30 Q71.88,150.73 54.72,139.36"/><path d="M51.70,112.94 Q42.01,101.01 43.27,80.47"/><path d="M64.64,64.64 Q70.13,50.28 88.55,41.10"/></g><polygon points="112.94,51.70 148.30,87.06 135.36,135.36 87.06,148.30 51.70,112.94 64.64,64.64" fill="none" stroke="#a88449" stroke-width="1.2" opacity="0.8"/><polygon points="100.00,56.00 112.32,87.68 144.00,100.00 112.32,112.32 100.00,144.00 87.68,112.32 56.00,100.00 87.68,87.68" fill="#e2d6c1"/><g class="agulha"><polygon points="100,48 108.5,100 91.5,100" fill="#8a4f2a"/><polygon points="100,152 108.5,100 91.5,100" fill="#2a211a"/></g><circle cx="100" cy="100" r="7" fill="#a88449"/><circle cx="100" cy="100" r="2.6" fill="#2a211a"/><path d="M40.80,78.45 A63,63 0 0 1 70.42,44.37" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.7"/></svg>
+<span class="lbl">Animado · splash e carregamento</span></div>
+    <div class="grid">
+      <div class="card"><div class="lockup"><img src="brand/rumo-simbolo-lente.svg" alt=""><span class="wm">rumo</span></div></div>
+      <div class="card dark-panel"><div class="lockup"><img src="brand/rumo-simbolo-lente.svg" alt=""><span class="wm">rumo</span></div></div>
+    </div>
+  </div>
+  <div class="grid logos"><figure class="logo-card "><img src="brand/rumo-simbolo-lente.svg" alt="Lente + bússola" width="120" height="120"><figcaption><b>Lente + bússola</b><span>Principal. Cabeçalho, login, materiais.</span><a href="brand/rumo-simbolo-lente.svg" download>Baixar SVG</a></figcaption></figure><figure class="logo-card "><img src="brand/rumo-simbolo-passaporte.svg" alt="Passaporte" width="120" height="120"><figcaption><b>Passaporte</b><span>Versão afetiva: documentos, convites, redes.</span><a href="brand/rumo-simbolo-passaporte.svg" download>Baixar SVG</a></figcaption></figure><figure class="logo-card "><img src="brand/rumo-icone-app.svg" alt="Ícone do app" width="120" height="120"><figcaption><b>Ícone do app</b><span>PWA, tela inicial, favicon ≥ 48 px.</span><a href="brand/rumo-icone-app.svg" download>Baixar SVG</a></figcaption></figure><figure class="logo-card "><img src="brand/rumo-simbolo-lente-mono.svg" alt="Mono escura" width="120" height="120"><figcaption><b>Mono escura</b><span>Carimbos, PDF, favicon pequeno.</span><a href="brand/rumo-simbolo-lente-mono.svg" download>Baixar SVG</a></figcaption></figure><figure class="logo-card on-dark"><img src="brand/rumo-simbolo-lente-mono-claro.svg" alt="Mono clara" width="120" height="120"><figcaption><b>Mono clara</b><span>Sobre fundos escuros ou couro.</span><a href="brand/rumo-simbolo-lente-mono-claro.svg" download>Baixar SVG</a></figcaption></figure><figure class="logo-card "><img src="brand/rumo-simbolo-lente-animado.svg" alt="Animada (SVG)" width="120" height="120"><figcaption><b>Animada (SVG)</b><span>Splash e carregamento. Abra o arquivo para ver a animação.</span><a href="brand/rumo-simbolo-lente-animado.svg" download>Baixar SVG</a></figcaption></figure></div>
+  <ul class="rules">
+    <li><b>Wordmark:</b> "rumo" em minúsculas, Fraunces 600, cor tinta (ou linho sobre fundo escuro), tracking −0,02em.</li>
+    <li><b>Animação:</b> só o ponteiro gira (0 → 34° → −22° → 14° → −7° → 3° → 0) e para no norte no último terço do ciclo de 5 s. Com <code>prefers-reduced-motion</code>, ela fica desligada.</li>
+    <li><b>Respiro mínimo:</b> ¼ do diâmetro do símbolo em todos os lados. O tamanho mínimo da versão colorida é 24 px; abaixo disso, use a mono, que lê bem até 16 px.</li>
+    <li>Não gire o símbolo, não troque as cores dos anéis e não aplique sombra nem contorno. Sobre fotos, coloque-o numa área lisa de linho ou tinta.</li>
+  </ul>
+</section>
+
+<section id="cores">
+  <p class="eyebrow">03 · Cores</p>
+  <h2>A mesa do viajante</h2>
+  <p class="lead">Couro da capa da câmera, linho do caderno, latão das ferragens, oliva da mochila, azul do passaporte e o verde-água dos mapas. Use o botão de tema para ver os valores do modo escuro.</p>
+  <div class="ratio" aria-label="Proporção 60/30/10">
+    <div style="flex:60;background:var(--linho);color:var(--tinta);border:1px solid var(--borda)">60% linho / papel</div>
+    <div style="flex:30;background:var(--tinta);color:var(--linho)">30% tinta</div>
+    <div style="flex:10;background:var(--couro)">10%</div>
+  </div>
+  <div class="grid sws"><figure class="sw"><div class="chip" style="background:var(--linho)"></div>
+<figcaption><b>linho</b><code class="hex" data-light="#f3eee4" data-dark="#1c1814">#f3eee4</code><span>Fundo da página. O linho das referências; no escuro, um café quase preto.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--papel)"></div>
+<figcaption><b>papel</b><code class="hex" data-light="#fbf8f2" data-dark="#26211b">#fbf8f2</code><span>Cartões, painéis, modais e campos — a página do diário sobre o linho.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--areia)"></div>
+<figcaption><b>areia</b><code class="hex" data-light="#e6dccb" data-dark="#332c24">#e6dccb</code><span>Superfícies rebaixadas: trilhas de barra de progresso, chips neutros, linhas zebradas.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--borda)"></div>
+<figcaption><b>borda</b><code class="hex" data-light="#d8cdb9" data-dark="#3d352c">#d8cdb9</code><span>Bordas e divisórias de 1px. Decorativa: não use como única borda de um campo de formulário (use tinta-suave).</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--tinta)"></div>
+<figcaption><b>tinta</b><code class="hex" data-light="#2a211a" data-dark="#f1eadf">#2a211a</code><span>Texto principal e títulos sobre linho, papel e areia (13:1+).</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--tinta-suave)"></div>
+<figcaption><b>tinta-suave</b><code class="hex" data-light="#6b5d4f" data-dark="#b8ac9c">#6b5d4f</code><span>Texto secundário, legendas, placeholders e borda de campos (5.5:1 sobre linho).</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--couro)"></div>
+<figcaption><b>couro</b><code class="hex" data-light="#8a4f2a" data-dark="#d39468">#8a4f2a</code><span>Cor da marca: botão primário, links, item ativo da navegação, ponteiro norte da bússola.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--couro-hover)"></div>
+<figcaption><b>couro-hover</b><code class="hex" data-light="#6e3d1f" data-dark="#e3ab83">#6e3d1f</code><span>Hover/pressionado do couro; também a capa do passaporte.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--sobre-couro)"></div>
+<figcaption><b>sobre-couro</b><code class="hex" data-light="#fbf8f2" data-dark="#1c1814">#fbf8f2</code><span>Texto e ícones sobre couro, couro-hover e oliva (6:1+).</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--oliva)"></div>
+<figcaption><b>oliva</b><code class="hex" data-light="#5f6446" data-dark="#aeb28c">#5f6446</code><span>Cor secundária: botões secundários preenchidos, etiquetas de categoria &#x27;natureza/passeio&#x27;, gráficos.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--salvia)"></div>
+<figcaption><b>salvia</b><code class="hex" data-light="#d9dbc6" data-dark="#3a3d2c">#d9dbc6</code><span>Fundo suave de oliva: chips selecionados, destaque de dia atual no roteiro.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--latao)"></div>
+<figcaption><b>latao</b><code class="hex" data-light="#a88449" data-dark="#c9a66b">#a88449</code><span>Detalhes metálicos: anéis, ícones, carimbos, linhas de rota tracejadas. No claro só 3:1 — ícones e texto ≥24px, nunca texto corrido.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--caramelo)"></div>
+<figcaption><b>caramelo</b><code class="hex" data-light="#b9783f" data-dark="#d69a62">#b9783f</code><span>Acento quente: marcador de índice, elástico do passaporte, destaques de gráfico. No claro só 3:1 — não use em texto pequeno.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--mar)"></div>
+<figcaption><b>mar</b><code class="hex" data-light="#3f6d66" data-dark="#8fbab2">#3f6d66</code><span>Tom do mar dos mapas: transporte, mapas, informação neutra.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--marinho)"></div>
+<figcaption><b>marinho</b><code class="hex" data-light="#23324a" data-dark="#9fb2cc">#23324a</code><span>Azul de passaporte: documentos, voos, contraste frio pontual.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--sucesso)"></div>
+<figcaption><b>sucesso</b><code class="hex" data-light="#4a6b35" data-dark="#9cc483">#4a6b35</code><span>Pago, confirmado, dentro do orçamento.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--alerta)"></div>
+<figcaption><b>alerta</b><code class="hex" data-light="#94600f" data-dark="#e0b25a">#94600f</code><span>Pendente, prazo chegando, orçamento perto do limite.</span></figcaption></figure><figure class="sw"><div class="chip" style="background:var(--erro)"></div>
+<figcaption><b>erro</b><code class="hex" data-light="#9e3426" data-dark="#e88b7c">#9e3426</code><span>Erro, orçamento estourado, conflito de horário, passaporte vencendo.</span></figcaption></figure></div>
+  <ul class="rules">
+    <li>Todo texto atinge pelo menos <b>4,5:1</b> nos dois temas.</li>
+    <li><b>Latão</b> e <b>caramelo</b> no tema claro ficam em cerca de 3:1: use só em ícones, linhas, carimbos e texto de 24 px ou mais.</li>
+    <li>Série dos gráficos: couro → oliva → mar → latão → marinho → caramelo → tinta-suave. Status vem sempre com ícone e texto, nunca só com a cor.</li>
+  </ul>
+</section>
+
+<section id="tipografia">
+  <p class="eyebrow">04 · Tipografia</p>
+  <h2>Impresso, à mão e no bilhete</h2>
+  <div class="grid fams">
+    <div class="card fam"><div class="big" style="font-family:Fraunces;font-weight:500">Aa</div><b>Fraunces</b><p class="lead" style="margin:4px 0 0">Títulos, nomes de viagem e wordmark.</p></div>
+    <div class="card fam"><div class="big" style="font-family:'DM Sans'">Aa</div><b>DM Sans</b><p class="lead" style="margin:4px 0 0">Interface e texto.</p></div>
+    <div class="card fam"><div class="big" style="font-family:Caveat;color:var(--couro)">Aa</div><b>Caveat</b><p class="lead" style="margin:4px 0 0">Notas de diário, no máximo uma linha por tela.</p></div>
+    <div class="card fam"><div class="big mono">0123</div><b>IBM Plex Mono</b><p class="lead" style="margin:4px 0 0">Localizadores, horários e valores.</p></div>
+  </div>
+  <div class="type-row"><div class="type-meta"><b>display-xl</b><span>Display · 56px/60px · 500</span><small>Capa da viagem, telas de boas-vindas.</small></div>
+<div style="font-family:&quot;Fraunces&quot;, Georgia, &quot;Times New Roman&quot;, serif;font-size:56px;line-height:60px;font-weight:500;letter-spacing:-0.02em;">Lisboa e Porto</div></div><div class="type-row"><div class="type-meta"><b>display-lg</b><span>Display · 40px/46px · 500</span><small>Título de página.</small></div>
+<div style="font-family:&quot;Fraunces&quot;, Georgia, &quot;Times New Roman&quot;, serif;font-size:40px;line-height:46px;font-weight:500;letter-spacing:-0.015em;">Seu próximo rumo</div></div><div class="type-row"><div class="type-meta"><b>titulo</b><span>Display · 28px/34px · 500</span><small>Título de seção e de dia do roteiro.</small></div>
+<div style="font-family:&quot;Fraunces&quot;, Georgia, &quot;Times New Roman&quot;, serif;font-size:28px;line-height:34px;font-weight:500;letter-spacing:normal;">Dia 3 · Sintra</div></div><div class="type-row"><div class="type-meta"><b>subtitulo</b><span>Display · 20px/28px · 600</span><small>Título de cartão e de modal.</small></div>
+<div style="font-family:&quot;Fraunces&quot;, Georgia, &quot;Times New Roman&quot;, serif;font-size:20px;line-height:28px;font-weight:600;letter-spacing:normal;">Hospedagem</div></div><div class="type-row"><div class="type-meta"><b>corpo</b><span>Texto · 16px/24px · 400</span><small>Texto padrão.</small></div>
+<div style="font-family:&quot;DM Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;font-size:16px;line-height:24px;font-weight:400;letter-spacing:normal;">Check-in a partir das 15h, recepção 24h.</div></div><div class="type-row"><div class="type-meta"><b>corpo-sm</b><span>Texto · 14px/20px · 400</span><small>Texto de apoio em cartões e listas.</small></div>
+<div style="font-family:&quot;DM Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;font-size:14px;line-height:20px;font-weight:400;letter-spacing:normal;">Cancelamento grátis até 12/12</div></div><div class="type-row"><div class="type-meta"><b>rotulo</b><span>Texto · 14px/20px · 600</span><small>Botões, abas, rótulos de campo.</small></div>
+<div style="font-family:&quot;DM Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;font-size:14px;line-height:20px;font-weight:600;letter-spacing:normal;">Salvar viagem</div></div><div class="type-row"><div class="type-meta"><b>legenda</b><span>Texto · 12px/16px · 600</span><small>Sobretítulos em caixa-alta, cabeçalhos de ticket.</small></div>
+<div style="font-family:&quot;DM Sans&quot;, system-ui, -apple-system, &quot;Segoe UI&quot;, sans-serif;font-size:12px;line-height:16px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">EMBARQUE</div></div><div class="type-row"><div class="type-meta"><b>manuscrito</b><span>Acento · 24px/28px · 500</span><small>Notas do diário, estados vazios, toques pessoais. No máximo uma linha por tela.</small></div>
+<div style="font-family:&quot;Caveat&quot;, &quot;Segoe Print&quot;, cursive;font-size:24px;line-height:28px;font-weight:500;letter-spacing:normal;">Dia 1: chegamos!</div></div><div class="type-row"><div class="type-meta"><b>codigo</b><span>Dados · 14px/20px · 500</span><small>Localizadores, nº de voo, horários em tickets.</small></div>
+<div style="font-family:&quot;IBM Plex Mono&quot;, ui-monospace, Menlo, Consolas, monospace;font-size:14px;line-height:20px;font-weight:500;letter-spacing:0.04em;font-variant-numeric:tabular-nums;">LOC X7K2PQ · TP 1024</div></div><div class="type-row"><div class="type-meta"><b>valor</b><span>Dados · 24px/30px · 500</span><small>Totais e valores em destaque (algarismos tabulares).</small></div>
+<div style="font-family:&quot;IBM Plex Mono&quot;, ui-monospace, Menlo, Consolas, monospace;font-size:24px;line-height:30px;font-weight:500;letter-spacing:normal;font-variant-numeric:tabular-nums;">€ 1.284,50</div></div>
+</section>
+
+<section id="espaco">
+  <p class="eyebrow">05 · Espaço e forma</p>
+  <h2>Grade de 4 px, papel sobre a mesa</h2>
+  <div style="margin-top:24px"><div class="sp"><span style="width:4px"></span><code>space-1 · 4px</code><small>Ícone + texto, ajustes finos.</small></div><div class="sp"><span style="width:8px"></span><code>space-2 · 8px</code><small>Espaço entre elementos de um grupo (chips, botões lado a lado).</small></div><div class="sp"><span style="width:12px"></span><code>space-3 · 12px</code><small>Padding vertical de botões e campos.</small></div><div class="sp"><span style="width:16px"></span><code>space-4 · 16px</code><small>Padding de cartão no celular; margem lateral da tela.</small></div><div class="sp"><span style="width:24px"></span><code>space-6 · 24px</code><small>Padding de cartão no desktop; espaço entre cartões.</small></div><div class="sp"><span style="width:32px"></span><code>space-8 · 32px</code><small>Espaço entre seções.</small></div><div class="sp"><span style="width:48px"></span><code>space-12 · 48px</code><small>Respiro de topo de página, blocos de capa.</small></div><div class="sp"><span style="width:64px"></span><code>space-16 · 64px</code><small>Separação de grandes blocos no desktop.</small></div></div>
+  <div class="grid rds"><div class="rd"><div style="border-radius:4px"></div><code>radius-sm · 4px</code><small>Chips de código, campos pequenos, tags.</small></div><div class="rd"><div style="border-radius:8px"></div><code>radius-md · 8px</code><small>Botões e campos.</small></div><div class="rd"><div style="border-radius:14px"></div><code>radius-lg · 14px</code><small>Cartões, modais, tickets.</small></div><div class="rd"><div style="border-radius:999px"></div><code>radius-pill · 999px</code><small>Chips de filtro, avatares, botão flutuante.</small></div></div>
+  <div class="grid shadows">
+    <div class="card"><b>sombra-papel</b><p class="lead" style="margin:4px 0 0">Cartões sobre o linho: apoiados, sem flutuar.</p></div>
+    <div class="card" style="box-shadow:var(--sombra-alta)"><b>sombra-flutuante</b><p class="lead" style="margin:4px 0 0">Botão "+ Gasto", menus e modais.</p></div>
+  </div>
+</section>
+
+<section id="componentes">
+  <p class="eyebrow">06 · Componentes</p>
+  <h2>Elementos da marca</h2>
+  <h3 style="margin-top:28px">Botões</h3>
+  <div class="card" style="margin-top:12px"><div class="btns">
+    <button class="b p">Salvar viagem</button><button class="b s">Adicionar ao roteiro</button><button class="b o">Cancelar</button><button class="b g">Ver detalhes</button><button class="b f">+ Gasto</button>
+  </div></div>
+  <h3 style="margin-top:28px">Ticket</h3>
+  <div class="ticket" style="margin-top:12px">
+    <div class="main"><div class="lbl">Voo · TAP Air Portugal</div>
+      <div class="rota"><div><div class="cid">GRU</div><div class="mono" style="font-size:13px;color:var(--tinta-suave)">20:45</div></div><div class="linha"></div><div style="text-align:right"><div class="cid">LIS</div><div class="mono" style="font-size:13px;color:var(--tinta-suave)">10:35 +1</div></div></div>
+      <div class="meta"><div><div class="lbl">Data</div><div class="mono">15/10/2027</div></div><div><div class="lbl">Voo</div><div class="mono">TP 88</div></div><div><div class="lbl">Assento</div><div class="mono">23A</div></div></div>
+    </div>
+    <div class="stub"><div><div class="lbl">Localizador</div><div class="mono" style="font-size:18px;letter-spacing:.06em">XK7P2Q</div></div><span class="chip-s">Pendente</span><div><div class="mono" style="font-size:20px">R$ 7.500,00</div></div></div>
+  </div>
+  <h3 style="margin-top:28px">Carimbos</h3>
+  <div class="card stamps" style="margin-top:12px">
+    <svg class="st-couro" viewBox="0 0 160 160" style="transform:rotate(-6deg)"><defs><path id="arc" d="M80,80 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs><circle class="ring" cx="80" cy="80" r="74" stroke-width="3"/><circle class="ring" cx="80" cy="80" r="66" stroke-width="1.2"/><text class="t" font-size="11"><textPath href="#arc">ESCÓCIA · DIA 7 · 21 OUT 2027 ·</textPath></text><text class="c" x="80" y="88" text-anchor="middle" font-size="20">Edimburgo</text></svg>
+    <svg class="st-marinho" viewBox="0 0 160 160" style="transform:rotate(5deg)"><rect class="ring" x="10" y="30" width="140" height="100" rx="10" stroke-width="3"/><rect class="ring" x="18" y="38" width="124" height="84" rx="6" stroke-width="1.2" stroke-dasharray="3 3"/><text class="t" x="80" y="62" text-anchor="middle" font-size="10">CHEGADA</text><text class="c" x="80" y="92" text-anchor="middle" font-size="22">Reykjavík</text><text class="t" x="80" y="112" text-anchor="middle" font-size="10">28 · 10 · 2027</text></svg>
+    <svg class="st-oliva" viewBox="0 0 160 160" style="transform:rotate(-3deg)"><circle class="ring" cx="80" cy="80" r="70" stroke-width="3" stroke-dasharray="6 4"/><text class="t" x="80" y="70" text-anchor="middle" font-size="11">VIAGEM</text><text class="c" x="80" y="98" text-anchor="middle" font-size="26">Concluída</text></svg>
+  </div>
+  <ul class="rules">
+    <li><b>Rota tracejada:</b> linha latão de 1,5 px (traço 4, espaço 4) ligando pontos e trechos.</li>
+    <li><b>Carimbo:</b> uma cor só (couro, marinho ou oliva), girado entre −8° e 8°, no máximo três por tela.</li>
+  </ul>
+</section>
+
+<section id="icones">
+  <p class="eyebrow">07 · Ícones e fotografia</p>
+  <h2>Traço fino, luz natural</h2>
+  <p class="lead">Ícones <a href="https://lucide.dev" rel="noopener">Lucide</a> com traço de 1,5 px, em 16, 20 ou 24 px. A cor padrão é tinta-suave; o ícone ativo usa couro, e o decorativo grande, latão.</p>
+  <table style="margin-top:16px"><thead><tr><th>Módulo</th><th>Ícone</th></tr></thead><tbody>
+    <tr><td>Visão geral</td><td><code>Compass</code></td></tr><tr><td>Roteiro</td><td><code>Route</code> / <code>Map</code></td></tr>
+    <tr><td>Transporte</td><td><code>Plane</code>, <code>TrainFront</code>, <code>Bus</code></td></tr><tr><td>Hospedagem</td><td><code>BedDouble</code></td></tr>
+    <tr><td>Atividades</td><td><code>Ticket</code></td></tr><tr><td>Orçamento / Gastos</td><td><code>PiggyBank</code> / <code>Receipt</code></td></tr>
+    <tr><td>Documentos</td><td><code>FileText</code></td></tr><tr><td>Checklist / Notas</td><td><code>CheckSquare</code> / <code>StickyNote</code></td></tr>
+  </tbody></table>
+  <p class="lead">Fotografia: flat lays e lugares com luz natural, tons quentes e dessaturados e grão leve. Nas capas, use um véu de tinta na base para o título em linho ficar legível.</p>
+</section>
+
+<section id="voz">
+  <p class="eyebrow">08 · Voz e tom</p>
+  <h2>Companheiro de viagem organizado</h2>
+  <p class="lead">O app fala em português do Brasil, tratando o usuário por "você", de forma clara, calorosa e sem exagero.</p>
+  <div class="grid two" style="margin-top:20px">
+    <blockquote><p class="hand" style="font-size:24px">Nenhum voo por aqui ainda.</p>Que tal começar pela ida?</blockquote>
+    <blockquote>Seu passaporte vence em 4 meses. Renove antes de 10/03.</blockquote>
+  </div>
+  <ul class="rules"><li>Botões curtos e no infinitivo: "Salvar viagem", "Adicionar gasto".</li><li>Valores sempre com a moeda. Quando estrangeira, com o equivalente em BRL ao lado: <span class="mono">€ 120,00 · R$ 742,80</span>.</li></ul>
+  <footer>Rumo · Identidade visual. A referência em texto está em <a href="identidade-visual.md">identidade-visual.md</a>, e os tokens do app em <code>src/styles.css</code>.</footer>
+</section>
+
+</main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme');
+  function apply(t) {
+    root.setAttribute('data-theme', t);
+    btn.setAttribute('aria-pressed', String(t === 'dark'));
+    btn.textContent = t === 'dark' ? '◑ Tema claro' : '◐ Tema escuro';
+    document.querySelectorAll('.hex').forEach(function (el) { el.textContent = el.getAttribute('data-' + t); });
+  }
+  var saved = null; try { saved = localStorage.getItem('rumo-ds-theme'); } catch (e) {}
+  apply(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  btn.addEventListener('click', function () {
+    var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    apply(t); try { localStorage.setItem('rumo-ds-theme', t); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

@@ -15,7 +15,7 @@ Seu diário de bordo para planejar, viver e lembrar cada viagem. É um app web i
 
 **Stack:** TanStack Start (React 19, SSR), Tailwind CSS v4, shadcn/ui e Supabase (Postgres, Auth e Storage).
 
-**Identidade visual:** veja [`docs/identidade-visual.md`](docs/identidade-visual.md).
+**Identidade visual:** guia interativo em <https://israreis.github.io/Rumo/> (GitHub Pages, pasta `docs/`), e versão em texto em [`docs/identidade-visual.md`](docs/identidade-visual.md).
 
 ---
 
@@ -119,8 +119,10 @@ src/
 supabase/
   migrations/        schema versionado (fonte da verdade)
   setup.sql          todas as migrações juntas, para colar no SQL Editor
-docs/
-  identidade-visual.md   guia da marca
+docs/                GitHub Pages: guia interativo da marca
+  index.html           página do design system
+  identidade-visual.md guia da marca em texto
+  brand/               logos em SVG
 public/
   sw.js              service worker (offline)
   manifest.webmanifest, icons/, brand/   PWA e identidade visual
@@ -130,7 +132,7 @@ As regras de negócio e as convenções do projeto estão em [`AGENTS.md`](AGENT
 
 ### Identidade visual
 
-O guia completo está em [`docs/identidade-visual.md`](docs/identidade-visual.md): conceito, logo e regras de uso, paleta clara e escura com contraste, tipografia, espaçamento, elementos gráficos, ícones, fotografia e voz. Os tokens ficam em `src/styles.css`, e os arquivos de logo em `public/brand/`.
+O guia completo está em <https://israreis.github.io/Rumo/> (página `docs/index.html`, publicada pelo GitHub Pages a partir da pasta `docs/` da `main`) e em [`docs/identidade-visual.md`](docs/identidade-visual.md): conceito, logo e regras de uso, paleta clara e escura com contraste, tipografia, espaçamento, elementos gráficos, ícones, fotografia e voz. Os tokens ficam em `src/styles.css`, e os arquivos de logo em `public/brand/`.
 
 ### Moedas
 

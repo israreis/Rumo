@@ -183,4 +183,4 @@ O manifest fica em [`public/manifest.webmanifest`](../public/manifest.webmanifes
 
 ### Referência visual interativa
 
-A versão navegável deste guia, com tokens, prévias dos componentes (logo animado, botões, ticket e carimbo) e os arquivos do logo, está no design system **"Rumo — Identidade visual"**: <https://claude.ai/artifact/J7RZyPMKHJkq5c6DRgwoda>.
+A versão navegável deste guia, com tokens nos dois temas, prévias dos componentes (logo animado, botões, ticket e carimbos) e os logos para baixar, está em <https://israreis.github.io/Rumo/> (arquivo [`index.html`](index.html), nesta mesma pasta).
