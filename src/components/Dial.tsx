@@ -29,7 +29,7 @@ export function Dial({ value, label, sub, className }: { value: number; label: s
         ))}
       </svg>
       <div className="text-center leading-tight">
-        <div className="font-num text-xl font-medium">{Math.round(pct)}%</div>
+        <div className="font-display text-xl font-semibold">{Math.round(pct)}%</div>
         {sub && <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sub}</div>}
       </div>
     </div>

@@ -57,7 +57,7 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
             )}
           >
             <CalendarDays className={cn("shrink-0 text-muted-foreground", compact ? "size-3.5" : "size-4")} />
-            <span className={cn("truncate font-num", !selected && "text-muted-foreground")}>
+            <span className={cn("truncate tabular-nums", !selected && "text-muted-foreground")}>
               {selected ? format(selected, compact ? "dd/MM/yy" : "dd/MM/yyyy") : compact ? "Prazo" : placeholder}
             </span>
           </button>

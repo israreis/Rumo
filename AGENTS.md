@@ -25,7 +25,7 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 
 ## Identidade visual
 - Guia completo: `docs/identidade-visual.md` (mantenha em sincronia com `src/styles.css`).
-- Tokens em `src/styles.css` seguem o design system "Rumo Trip — Identidade visual": linho/papel/areia, tinta, couro (primária), oliva, latão, caramelo, mar, marinho. Fontes: Fraunces (títulos), DM Sans (UI), Caveat (manuscrito, com moderação), IBM Plex Mono (códigos e valores).
+- Tokens em `src/styles.css` seguem o design system "Rumo Trip — Identidade visual": linho/papel/areia, tinta, couro (primária), oliva, latão, caramelo, mar, marinho. Fontes: Fraunces (títulos), DM Sans (UI), Caveat (manuscrito, com moderação), IBM Plex Mono (códigos, localizadores e horários; valores em dinheiro ficam em Fraunces nos destaques e DM Sans com `tabular-nums` no resto).
 - Latão e caramelo no tema claro só em ícones, linhas e texto ≥24px (contraste 3:1).
 - Nome do app: **Rumo Trip** (R e T maiúsculos); use `<Wordmark />`.
 - Logo: `src/components/Logo.tsx`. `LogoMark` é animado por padrão em todo o app (cabeçalho, login, carregamentos via `<Splash />`); só o PDF usa `animated={false}`. `PassportMark` em Passaporte, Documentos e convites.

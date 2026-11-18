@@ -176,7 +176,7 @@ import { RefreshCw } from "lucide-react";
 export function Money({ amount, currency, converted, trip, className }: { amount: number | null | undefined; currency: string; converted?: number | null | undefined; trip: string; className?: string | undefined }) {
   if (amount == null) return null;
   return (
-    <span className={cn("font-num", className)}>
+    <span className={cn("tabular-nums", className)}>
       {_fm(amount, currency)}
       {currency !== trip && <span className="ml-1 font-normal text-muted-foreground">{converted != null ? `(≈ ${_fm(converted, trip)})` : "(sem cotação)"}</span>}
     </span>

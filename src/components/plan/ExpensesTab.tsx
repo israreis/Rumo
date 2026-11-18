@@ -55,7 +55,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
             {pending.map((p) => (
               <li key={p.id} className="flex justify-between gap-3">
                 <span className="truncate text-muted-foreground">{String(p.row["description"] || BUDGET_CATEGORIES[String(p.row["category"])] || "Gasto")}</span>
-                <span className="font-num">{formatMoney(Number(p.row["amount"]), String(p.row["currency"] ?? cur))}</span>
+                <span className="font-medium tabular-nums">{formatMoney(Number(p.row["amount"]), String(p.row["currency"] ?? cur))}</span>
               </li>
             ))}
           </ul>
@@ -75,7 +75,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
         </div>
         <div className="rounded-2xl border bg-card p-5 shadow-card">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">Total gasto</p>
-          <p className="mt-1 font-num text-2xl font-medium">{formatMoney(spent(expenses), cur)}</p>
+          <p className="mt-1 font-display text-2xl font-semibold">{formatMoney(spent(expenses), cur)}</p>
           <p className="text-sm text-muted-foreground">Hoje: {formatMoney(todaySpent, cur)}</p>
         </div>
       </div>

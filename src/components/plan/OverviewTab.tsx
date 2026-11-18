@@ -117,7 +117,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
           <Dial value={goal ? (spent / goal) * 100 : 0} label="Orçamento usado" sub="usado" className="size-20" />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Saldo</p>
-            <p className={cn("mt-1 whitespace-nowrap font-num text-lg font-medium leading-tight xl:text-xl", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>
+            <p className={cn("mt-1 whitespace-nowrap font-display text-lg font-semibold leading-tight xl:text-xl", balance < 0 ? "text-destructive" : "text-success")}>{formatMoney(balance, cur)}</p>
           </div>
         </div>
       </div>

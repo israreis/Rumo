@@ -109,7 +109,7 @@ Todas as fontes são Google Fonts e carregam em `src/routes/__root.tsx`.
 | **Fraunces** (serifada) | `font-display`, `h1`–`h3` | Títulos, nomes de viagem e wordmark. Tem o calor de impresso antigo, de guia de viagem. |
 | **DM Sans** | `font-sans` (padrão) | Interface e texto: limpa e legível no celular. |
 | **Caveat** (manuscrita) | `font-hand` | Notas de diário e estados vazios ("Dia 1: chegamos!"). No máximo uma linha por tela. |
-| **IBM Plex Mono** | `font-num` | Localizadores, nº de voo, horários e valores, com algarismos tabulares. Lembra bilhete impresso. |
+| **IBM Plex Mono** | `font-num` | Localizadores, nº de voo e horários, com algarismos tabulares. Lembra bilhete impresso. Valores em dinheiro não usam mono: destaques em Fraunces, o resto em DM Sans com `tabular-nums`. |
 
 ### Escala
 
@@ -125,7 +125,7 @@ Todas as fontes são Google Fonts e carregam em `src/routes/__root.tsx`.
 | legenda | 12 / 16, caixa-alta, +0,08em | 600 | EMBARQUE |
 | manuscrito | 24 / 28 (Caveat) | 500 | Dia 1: chegamos! |
 | código | 14 / 20 (mono), +0,04em | 500 | LOC X7K2PQ · TP 1024 |
-| valor | 24 / 30 (mono) | 500 | € 1.284,50 |
+| valor | 24 / 30 (Fraunces) | 600 | € 1.284,50 |
 
 No celular, os campos de formulário ficam em 16 px para o iOS não dar zoom.
 
