@@ -18,17 +18,17 @@ const iso = (d: Date) => format(d, "yyyy-MM-dd");
 type Props = {
   value: string | null | undefined;
   onValueChange: (v: string) => void;
-  id?: string;
-  min?: string;
-  max?: string;
+  id?: string | undefined;
+  min?: string | undefined;
+  max?: string | undefined;
   /** Mês exibido quando o campo está vazio (ex.: a data de ida, para a de volta). */
-  defaultMonth?: string | null;
-  placeholder?: string;
-  className?: string;
-  compact?: boolean;
-  clearable?: boolean;
-  disabled?: boolean;
-  "aria-label"?: string;
+  defaultMonth?: string | null | undefined;
+  placeholder?: string | undefined;
+  className?: string | undefined;
+  compact?: boolean | undefined;
+  clearable?: boolean | undefined;
+  disabled?: boolean | undefined;
+  "aria-label"?: string | undefined;
 };
 
 /** Seletor de data: um toque no dia já grava e fecha, sem botão de confirmar. */
@@ -37,6 +37,7 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
   const selected = parse(value);
   const lo = parse(min), hi = parse(max);
   const year = new Date().getFullYear();
+  const month = selected ?? parse(defaultMonth) ?? hi;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -75,8 +76,8 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
           captionLayout="dropdown"
           startMonth={lo ?? new Date(year - 80, 0)}
           endMonth={hi ?? new Date(year + 15, 11)}
-          selected={selected}
-          defaultMonth={selected ?? parse(defaultMonth) ?? hi ?? undefined}
+          {...(selected ? { selected } : {})}
+          {...(month ? { defaultMonth: month } : {})}
           disabled={[...(lo ? [{ before: lo }] : []), ...(hi ? [{ after: hi }] : [])]}
           onSelect={(d) => {
             if (d) onValueChange(iso(d));

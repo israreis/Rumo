@@ -18,7 +18,7 @@ export function currencySymbol(currency?: string | null): string {
 type Props = Omit<React.ComponentProps<"input">, "value" | "onChange" | "type" | "defaultValue"> & {
   value: number | string | null | undefined;
   onValueChange: (v: number | null) => void;
-  currency?: string | null;
+  currency?: string | null | undefined;
 };
 
 /**
