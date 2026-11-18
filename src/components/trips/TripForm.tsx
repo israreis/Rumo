@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { MoneyInput } from "@/components/ui/money-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { COUNTRY_NAMES, countryInfo, currencyLabel } from "@/lib/countries";
 import { CURRENCIES, STATUS_LABEL, type TripStatus } from "@/lib/trip-utils";
 import { uploadImage, type TripInput } from "@/lib/trips-api";
 import { TripCover } from "./TripCover";
@@ -57,6 +58,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
 
   return (
     <form onSubmit={submit} className="space-y-5">
+      <datalist id="country-options">{COUNTRY_NAMES.map((c) => <option key={c} value={c} />)}</datalist>
       <datalist id="tz-options">{allTimezones().map((z) => <option key={z} value={z} />)}</datalist>
       <Section title="Informações básicas">
         <div className="space-y-1.5">
@@ -127,20 +129,29 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
         {v.destinations.map((d, i) => (
           <div key={i} className="grid gap-3 rounded-xl border bg-background p-3 sm:grid-cols-[1fr_1fr_auto]">
             <Input aria-label="Cidade" placeholder="Cidade" value={d.city} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, city: e.target.value } : x)))} />
-            <Input aria-label="País" placeholder="País" value={d.country ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, country: e.target.value } : x)))} />
+            <Input aria-label="País" placeholder="País" list="country-options" value={d.country ?? ""} onChange={(e) => {
+              const country = e.target.value;
+              const info = countryInfo(country);
+              set("destinations", v.destinations.map((x, j) => (j === i ? {
+                ...x, country,
+                // País conhecido: sugere moeda e fuso se ainda estiverem vazios
+                currency: x.currency || (info && (CURRENCIES as readonly string[]).includes(info.currency) ? info.currency : x.currency),
+                timezone: x.timezone || info?.tz || x.timezone,
+              } : x)));
+            }} />
             <Button type="button" variant="ghost" size="icon" aria-label="Remover destino" className="hidden sm:inline-flex" onClick={() => set("destinations", v.destinations.filter((_, j) => j !== i))}><Trash2 /></Button>
             <div className="grid grid-cols-2 gap-3 sm:col-span-2 lg:grid-cols-4">
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Chegada</Label>
                 <DateInput aria-label="Chegada" value={d.arrival_date} defaultMonth={v.destinations[i - 1]?.departure_date ?? v.start_date} onValueChange={(dt) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, arrival_date: dt || null } : x)))} /></div>
               <div className="space-y-1"><Label className="text-xs text-muted-foreground">Saída</Label>
                 <DateInput aria-label="Saída" value={d.departure_date} min={d.arrival_date ?? undefined} defaultMonth={d.arrival_date ?? v.start_date} onValueChange={(dt) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, departure_date: dt || null } : x)))} /></div>
-              <div className="space-y-1"><Label className="text-xs text-muted-foreground">Moeda local</Label>
+              <div className="col-span-2 space-y-1 lg:col-span-1"><Label className="text-xs text-muted-foreground">Moeda local</Label>
                 <Select value={d.currency ?? "none"} onValueChange={(c) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, currency: c === "none" ? null : c } : x)))}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent><SelectItem value="none">—</SelectItem>{CURRENCIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                  <SelectTrigger aria-label="Moeda local"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectItem value="none">—</SelectItem>{CURRENCIES.map((c) => <SelectItem key={c} value={c}>{currencyLabel(c)}</SelectItem>)}</SelectContent>
                 </Select></div>
-              <div className="space-y-1"><Label className="text-xs text-muted-foreground">Fuso horário</Label>
-                <Input list="tz-options" placeholder="Ex.: Europe/Lisbon" value={d.timezone ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, timezone: e.target.value } : x)))} /></div>
+              <div className="col-span-2 space-y-1 lg:col-span-1"><Label className="text-xs text-muted-foreground">Fuso horário</Label>
+                <Input list="tz-options" aria-label="Fuso horário" placeholder="Ex.: Europe/Lisbon" value={d.timezone ?? ""} onChange={(e) => set("destinations", v.destinations.map((x, j) => (j === i ? { ...x, timezone: e.target.value } : x)))} /></div>
             </div>
             <Button type="button" variant="ghost" size="sm" className="sm:hidden" onClick={() => set("destinations", v.destinations.filter((_, j) => j !== i))}><Trash2 /> Remover</Button>
           </div>
@@ -152,9 +163,9 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
 
       <Section title="Viajantes" hint="Quem vai com você. Usaremos depois em documentos e divisão de gastos.">
         {v.travelers.map((t, i) => (
-          <div key={i} className="flex gap-2">
-            <Input aria-label="Nome" placeholder="Nome" value={t.name} onChange={(e) => set("travelers", v.travelers.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
-            <Input aria-label="E-mail" type="email" placeholder="E-mail (opcional)" value={t.email ?? ""} onChange={(e) => set("travelers", v.travelers.map((x, j) => (j === i ? { ...x, email: e.target.value } : x)))} />
+          <div key={i} className="flex flex-wrap gap-2 sm:flex-nowrap">
+            <Input aria-label="Nome" placeholder="Nome" className="basis-full sm:basis-0 sm:flex-1" value={t.name} onChange={(e) => set("travelers", v.travelers.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
+            <Input aria-label="E-mail" type="email" placeholder="E-mail (opcional)" className="min-w-0 flex-1" value={t.email ?? ""} onChange={(e) => set("travelers", v.travelers.map((x, j) => (j === i ? { ...x, email: e.target.value } : x)))} />
             <Button type="button" variant="ghost" size="icon" aria-label="Remover viajante" onClick={() => set("travelers", v.travelers.filter((_, j) => j !== i))}><Trash2 /></Button>
           </div>
         ))}

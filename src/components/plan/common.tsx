@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { MoneyInput } from "@/components/ui/money-input";
+import { currencyLabel } from "@/lib/countries";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,7 +56,7 @@ export function SelectF({ f, set, k, label, options, className }: { f: Form; set
   );
 }
 export function CurrencyF({ f, set, className }: { f: Form; set: Setter; className?: string | undefined }) {
-  return <SelectF f={f} set={set} k="currency" label="Moeda" className={className} options={Object.fromEntries(CURRENCIES.map((c) => [c, c]))} />;
+  return <SelectF f={f} set={set} k="currency" label="Moeda" className={className} options={Object.fromEntries(CURRENCIES.map((c) => [c, currencyLabel(c)]))} />;
 }
 
 export function AttachmentF({ f, set, k = "attachment_url", label = "Anexo" }: { f: Form; set: Setter; k?: string; label?: string }) {

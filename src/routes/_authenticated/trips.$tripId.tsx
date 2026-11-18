@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouteContext } from "@tanstack/react-router";
+import { DateDefaultMonth } from "@/components/ui/date-input";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft, BedDouble, Plus, CalendarDays, CheckSquare, FileText, MapPin, Pencil, PiggyBank, Plane, Receipt, Route as RouteIcon,
@@ -64,8 +65,12 @@ function TripPage() {
   const { data: trip, isLoading } = useQuery({ queryKey: ["trips", tripId], queryFn: () => getTrip(tripId) });
   const [newExp, setNewExp] = useState<any>(null);
   const [sharing, setSharing] = useState(false);
-  const { data: role = "viewer" } = useQuery({ ...myRoleQuery(tripId, trip?.owner_id), enabled: !!trip });
-  const canEdit = role !== "viewer";
+  const { user } = useRouteContext({ from: "/_authenticated" });
+  const isOwner = !!trip && trip.owner_id === user.id;
+  // Dono é resolvido na hora; só convidados esperam a consulta. Assim não pisca "somente leitura".
+  const { data: fetchedRole } = useQuery({ ...myRoleQuery(tripId, trip?.owner_id), enabled: !!trip && !isOwner });
+  const role = isOwner ? "owner" : fetchedRole;
+  const canEdit = role != null && role !== "viewer";
 
   if (isLoading) return <Splash label="Abrindo a viagem…" />;
   if (!trip)
@@ -75,7 +80,8 @@ function TripPage() {
   const days = daysUntil(trip.start_date);
 
   return (
-    <TripAccessProvider role={role}>
+    <TripAccessProvider role={role ?? "viewer"}>
+    <DateDefaultMonth.Provider value={trip.start_date}>
     <div>
       <Link to="/trips" className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Minhas viagens</Link>
       <div className="relative overflow-hidden rounded-3xl shadow-lift">
@@ -97,7 +103,7 @@ function TripPage() {
         </div>
       </div>
 
-      {!canEdit && (
+      {role === "viewer" && (
         <p className="mt-4 flex items-center gap-2 rounded-xl border bg-card px-4 py-3 text-sm text-muted-foreground shadow-card">
           <Eye className="size-4 text-mar" /> Você foi convidado para acompanhar esta viagem. Seu acesso é somente leitura.
         </p>
@@ -135,6 +141,7 @@ function TripPage() {
       {newExp && <ExpenseDialog trip={trip} row={newExp} onClose={() => setNewExp(null)} />}
       <ShareDialog trip={trip} role={role} open={sharing} onOpenChange={setSharing} />
     </div>
+    </DateDefaultMonth.Provider>
     </TripAccessProvider>
   );
 }

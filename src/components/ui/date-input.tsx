@@ -7,6 +7,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
+/** Mês em que os calendários abrem quando o campo está vazio (ex.: o início da viagem). */
+export const DateDefaultMonth = React.createContext<string | null | undefined>(undefined);
+
 /** "YYYY-MM-DD" → Date local (sem fuso). */
 function parse(s?: string | null): Date | undefined {
   if (!s) return undefined;
@@ -37,11 +40,12 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
   const selected = parse(value);
   const lo = parse(min), hi = parse(max);
   const year = new Date().getFullYear();
-  const month = selected ?? parse(defaultMonth) ?? hi;
+  const ctxMonth = React.useContext(DateDefaultMonth);
+  const month = selected ?? parse(defaultMonth) ?? parse(ctxMonth) ?? hi;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <div className={cn("relative min-w-0", compact ? "inline-flex" : "w-full", className)}>
+      <div className={cn("relative min-w-0", compact ? "inline-flex" : "@container w-full", className)}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -49,14 +53,14 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
             disabled={disabled}
             aria-label={rest["aria-label"]}
             className={cn(
-              "flex w-full min-w-0 items-center gap-2 text-left transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+              "flex w-full min-w-0 items-center gap-1.5 text-left transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
               compact
                 ? "h-7 rounded-md px-1.5 text-xs hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring"
-                : "h-9 rounded-md border border-input bg-transparent px-3 text-base shadow-sm focus-visible:ring-1 focus-visible:ring-ring md:text-sm",
-              clearable && selected && !compact && "pr-9",
+                  : "h-9 rounded-md border border-input bg-transparent px-2.5 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-ring @[11rem]:text-base md:!text-sm",
+              clearable && selected && !compact && "pr-8",
             )}
           >
-            <CalendarDays className={cn("shrink-0 text-muted-foreground", compact ? "size-3.5" : "size-4")} />
+            <CalendarDays className={cn("shrink-0 text-muted-foreground", compact ? "size-3.5" : "hidden size-4 @[9.5rem]:block")} />
             <span className={cn("truncate tabular-nums", !selected && "text-muted-foreground")}>
               {selected ? format(selected, compact ? "dd/MM/yy" : "dd/MM/yyyy") : compact ? "Prazo" : placeholder}
             </span>
@@ -64,7 +68,7 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
         </PopoverTrigger>
         {clearable && selected && !compact && !disabled && (
           <button type="button" aria-label="Limpar data" onClick={() => onValueChange("")}
-            className="absolute inset-y-0 right-1 my-auto grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground">
+            className="absolute inset-y-0 right-0.5 my-auto grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground">
             <X className="size-3.5" />
           </button>
         )}
@@ -87,5 +91,29 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
         />
       </PopoverContent>
     </Popover>
+  );
+}
+
+/**
+ * Data + hora ("YYYY-MM-DDTHH:mm"). A data usa o mesmo calendário (um toque grava);
+ * a hora é um campo à parte. Ao escolher só a data, a hora começa em 00:00 e pode ser ajustada.
+ */
+export function DateTimeInput({ value, onValueChange, label, defaultMonth, min }: {
+  value: string | null | undefined;
+  onValueChange: (v: string | null) => void;
+  label?: string | undefined;
+  defaultMonth?: string | null | undefined;
+  min?: string | undefined;
+}) {
+  const date = value?.slice(0, 10) ?? "";
+  const time = value?.slice(11, 16) ?? "";
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)_6.5rem] gap-2">
+      <DateInput value={date} min={min} defaultMonth={defaultMonth} aria-label={label ? `${label}: data` : undefined}
+        onValueChange={(d) => onValueChange(d ? `${d}T${time || "00:00"}` : null)} />
+      <input type="time" aria-label={label ? `${label}: hora` : undefined} value={time} disabled={!date}
+        onChange={(e) => onValueChange(date ? `${date}T${e.target.value || "00:00"}` : null)}
+        className="flex h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 text-base shadow-sm tabular-nums focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
+    </div>
   );
 }

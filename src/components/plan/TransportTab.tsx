@@ -5,9 +5,9 @@ import { EmptyState } from "@/components/EmptyState";
 import { planQuery, PAYMENT_STATUS, TRANSPORT_TYPES, type Transport } from "@/lib/plan-api";
 import { allTimezones, BROWSER_TZ, durationLabel, formatZoned, utcToZoned, zonedToUtc } from "@/lib/tz";
 import type { Trip } from "@/lib/trips-api";
+import { DateTimeInput } from "@/components/ui/date-input";
 import { AttachmentF, AttachmentLink, CurrencyF, EditDialog, MoneyF, Field, FxF, Money, PaymentFields, Pill, SelectF, TextF, useEditor, withFx, type Form } from "./common";
 import { TRANSPORT_ICON } from "./icons";
-import { Input } from "@/components/ui/input";
 
 const PAY_TONE = { pending: "warning", deposit: "primary", paid: "success" } as const;
 
@@ -47,12 +47,12 @@ export function TransportTab({ trip }: { trip: Trip }) {
                     <span className="ml-auto sm:hidden"><Pill tone={PAY_TONE[t.payment_status as keyof typeof PAY_TONE] ?? "muted"}>{PAYMENT_STATUS[t.payment_status]}</Pill></span>
                   </div>
                   <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                    <div className="min-w-0"><p className="truncate font-display text-xl">{t.origin || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.departure_at, t.departure_tz)}</p></div>
+                    <div className="min-w-0"><p className="line-clamp-2 break-words font-display text-lg leading-tight sm:text-xl">{t.origin || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.departure_at, t.departure_tz)}</p></div>
                     <div className="flex w-16 flex-col items-center text-xs text-muted-foreground sm:w-28">
                       <div className="relative w-full border-t-[1.5px] border-dashed border-latao"><ArrowRight className="absolute -top-2 left-1/2 size-4 -translate-x-1/2 bg-card px-0.5 text-latao" /></div>
                       {dur && <span className="mt-2 flex items-center gap-1 font-num"><Clock className="size-3" />{dur}</span>}
                     </div>
-                    <div className="min-w-0 text-right"><p className="truncate font-display text-xl">{t.destination || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.arrival_at, t.arrival_tz)}</p></div>
+                    <div className="min-w-0 text-right"><p className="line-clamp-2 break-words font-display text-lg leading-tight sm:text-xl">{t.destination || "—"}</p><p className="font-num text-xs text-muted-foreground">{formatZoned(t.arrival_at, t.arrival_tz)}</p></div>
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                     {t.code && <span>Voo/trecho <strong className="font-num text-foreground">{t.code}</strong></span>}
@@ -98,9 +98,9 @@ export function TransportTab({ trip }: { trip: Trip }) {
               <TextF f={f} set={set} k="company" label="Companhia" />
               <TextF f={f} set={set} k="origin" label="Origem" />
               <TextF f={f} set={set} k="destination" label="Destino" />
-              <Field label="Partida (hora local)"><Input type="datetime-local" value={f.dep_local ?? ""} onChange={(e) => set("dep_local", e.target.value)} /></Field>
+              <Field label="Partida (hora local)"><DateTimeInput label="Partida" value={f.dep_local} onValueChange={(v) => set("dep_local", v)} /></Field>
               <TextF f={f} set={set} k="departure_tz" label="Fuso da partida" list="tz-list" />
-              <Field label="Chegada (hora local)"><Input type="datetime-local" value={f.arr_local ?? ""} onChange={(e) => set("arr_local", e.target.value)} /></Field>
+              <Field label="Chegada (hora local)"><DateTimeInput label="Chegada" value={f.arr_local} defaultMonth={f.dep_local?.slice(0, 10)} onValueChange={(v) => set("arr_local", v)} /></Field>
               <TextF f={f} set={set} k="arrival_tz" label="Fuso da chegada" list="tz-list" />
               {f.dep_local && f.arr_local && (
                 <p className="text-sm text-muted-foreground sm:col-span-2">
