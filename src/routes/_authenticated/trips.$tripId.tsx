@@ -110,7 +110,7 @@ function TripPage() {
       )}
       <Tabs
         defaultValue="overview"
-        className="mt-6 pb-24 md:pb-20"
+        className="mt-6 pb-40 md:pb-28"
         onValueChange={() => requestAnimationFrame(() => document.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }))}
       >
         <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_calc(100%-2rem),transparent)] sm:mx-0 sm:px-0 lg:[mask-image:none]">

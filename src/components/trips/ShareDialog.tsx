@@ -89,7 +89,7 @@ export function ShareDialog({ trip, open, onOpenChange, role }: { trip: Trip; op
             <div className="flex flex-col gap-2 sm:flex-row">
               <Input id="invite-email" type="email" required placeholder="nome@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1" />
               <Select value={grant} onValueChange={(v) => setGrant(v as Grant)}>
-                <SelectTrigger className="sm:w-40"><SelectValue /></SelectTrigger>
+                <SelectTrigger aria-label="Permissão" className="sm:w-40"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="editor">{ROLE_LABEL.editor}</SelectItem>
                   <SelectItem value="viewer">{ROLE_LABEL.viewer}</SelectItem>
@@ -124,7 +124,7 @@ export function ShareDialog({ trip, open, onOpenChange, role }: { trip: Trip; op
                           try { await setMemberRole(trip.id, m.user_id, v as Grant); refresh(); } catch (e) { toast.error((e as Error).message); }
                         }}
                       >
-                        <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                        <SelectTrigger aria-label="Permissão" className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="editor">{ROLE_LABEL.editor}</SelectItem>
                           <SelectItem value="viewer">{ROLE_LABEL.viewer}</SelectItem>

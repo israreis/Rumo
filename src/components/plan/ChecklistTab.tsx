@@ -87,7 +87,7 @@ function ListCard({ trip, list, label, items, onUpdate, onChange }: {
             </label>
             {trip.trip_travelers.length > 0 && (
               <Select value={i.assignee ?? "none"} onValueChange={(v) => onUpdate(i.id, { assignee: v === "none" ? null : v })}>
-                <SelectTrigger className="h-7 w-28 text-xs"><SelectValue /></SelectTrigger>
+                <SelectTrigger aria-label="Responsável" className="h-7 w-28 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Ninguém</SelectItem>
                   {trip.trip_travelers.map((t) => <SelectItem key={t.id} value={t.id!}>{t.name}</SelectItem>)}

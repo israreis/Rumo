@@ -74,7 +74,7 @@ function ExpenseFields({ trip, f, set, fees }: { trip: Trip; f: Form; set: (k: s
         <div className="flex items-center gap-3">
           <Button type="button" variant="outline" size="sm" asChild>
             <label className="cursor-pointer"><Camera /> {up ? "Enviando…" : f.receipt_url ? "Trocar foto" : "Foto do recibo"}
-              <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={async (e) => {
+              <input type="file" accept="image/*" capture="environment" aria-label="Foto do recibo" className="sr-only" onChange={async (e) => {
                 const file = e.target.files?.[0]; if (!file) return;
                 setUp(true);
                 try { set("receipt_url", await uploadImage(file, "receipts")); } catch { toast.error("Falha ao enviar."); } finally { setUp(false); }

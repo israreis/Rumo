@@ -49,7 +49,7 @@ export function SelectF({ f, set, k, label, options, className }: { f: Form; set
   return (
     <Field label={label} className={className}>
       <Select value={f[k] ?? ""} onValueChange={(v) => set(k, v)}>
-        <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+        <SelectTrigger aria-label={label}><SelectValue placeholder="Selecione" /></SelectTrigger>
         <SelectContent>{Object.entries(options).map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent>
       </Select>
     </Field>
@@ -71,7 +71,7 @@ export function AttachmentF({ f, set, k = "attachment_url", label = "Anexo" }: {
       <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="outline" size="sm" asChild>
           <label className="cursor-pointer"><Upload /> {busy ? "Enviando…" : f[k] ? "Trocar arquivo" : "Enviar arquivo"}
-            <input type="file" accept="image/*,application/pdf" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+            <input type="file" accept="image/*,application/pdf" aria-label={`${label}: enviar arquivo`} className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
           </label>
         </Button>
         {f[k] && <>

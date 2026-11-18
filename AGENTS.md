@@ -21,6 +21,7 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Todo valor guarda moeda original, `fx_rate` (Frankfurter, buscada uma vez e congelada) e `converted_amount` na moeda da viagem via `withFx`; taxas do cartão (IOF+spread) congeladas em `expenses.fees_pct`.
 - Linhas de orçamento vêm de `useBudget`; regras puras de dinheiro em `src/lib/budget.ts`. Alertas e regras de documentos/checklist em `src/lib/trip-extras.ts`.
 - Passaporte real do usuário: só os 4 últimos dígitos (`profiles.passport_last4`, nunca o número completo) e a validade (`passport_expiry`); situação (vencido, vencendo em < 6 meses, curto para a próxima viagem) em `src/lib/passport.ts`; exibidos mascarados com `maskPassport`.
+- Campos de data usam `DateInput` (`src/components/ui/date-input.tsx`): digitar dd/mm/aaaa ou escolher no calendário pelo ícone (um toque grava, sem confirmar); o mês padrão vem de `DateDefaultMonth` (início da viagem). Data+hora: `DateTimeInput`. Valores em dinheiro: `MoneyInput`.
 - Gastos lançados sem internet vão para a fila local `src/lib/offline-queue.ts` e sincronizam ao voltar a conexão.
 
 ## Identidade visual

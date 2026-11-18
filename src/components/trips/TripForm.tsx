@@ -26,6 +26,9 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInput; onSubmit: (v: TripInput) => Promise<void>; submitLabel: string }) {
   const [v, setV] = useState<TripInput>(initial);
   const [saving, setSaving] = useState(false);
+  // Texto livre para IOF e spread: dá para apagar o campo (vazio conta como 0)
+  const [iofText, setIofText] = useState(String(initial.iof_pct ?? ""));
+  const [spreadText, setSpreadText] = useState(String(initial.card_spread_pct ?? ""));
   const [uploading, setUploading] = useState(false);
   const [urlMode, setUrlMode] = useState(false);
   const set = <K extends keyof TripInput>(k: K, val: TripInput[K]) => setV((p) => ({ ...p, [k]: val }));
@@ -89,17 +92,17 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="iof">IOF (%) em gastos no cartão em moeda estrangeira</Label>
-            <Input id="iof" type="number" min={0} step="0.01" value={v.iof_pct ?? 0} onChange={(e) => set("iof_pct", Number(e.target.value) || 0)} />
+            <Input id="iof" type="number" inputMode="decimal" min={0} step="0.01" placeholder="0" value={iofText} onChange={(e) => { setIofText(e.target.value); set("iof_pct", Number(e.target.value) || 0); }} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="spread">Spread do cartão (%)</Label>
-            <Input id="spread" type="number" min={0} step="0.01" value={v.card_spread_pct ?? 0} onChange={(e) => set("card_spread_pct", Number(e.target.value) || 0)} />
+            <Input id="spread" type="number" inputMode="decimal" min={0} step="0.01" placeholder="0" value={spreadText} onChange={(e) => { setSpreadText(e.target.value); set("card_spread_pct", Number(e.target.value) || 0); }} />
           </div>
         </div>
         <div className="space-y-1.5">
           <Label>Status</Label>
           <Select value={v.status_override ?? "auto"} onValueChange={(s) => set("status_override", s === "auto" ? null : (s as TripStatus))}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="auto">Automático (pelas datas)</SelectItem>
               {(Object.keys(STATUS_LABEL) as TripStatus[]).map((s) => <SelectItem key={s} value={s}>{STATUS_LABEL[s]}</SelectItem>)}
@@ -114,7 +117,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
           <Button type="button" variant="outline" asChild disabled={uploading}>
             <label className="cursor-pointer">
               <ImagePlus /> {uploading ? "Enviando…" : "Enviar imagem"}
-              <input type="file" accept="image/*" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+              <input type="file" accept="image/*" aria-label="Enviar imagem de capa" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
             </label>
           </Button>
           <Button type="button" variant="outline" onClick={() => setUrlMode((m) => !m)}><Link2 /> Usar URL</Button>

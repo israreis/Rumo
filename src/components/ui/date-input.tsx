@@ -1,10 +1,10 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarDays, X } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 /** Mês em que os calendários abrem quando o campo está vazio (ex.: o início da viagem). */
@@ -34,46 +34,92 @@ type Props = {
   "aria-label"?: string | undefined;
 };
 
-/** Seletor de data: um toque no dia já grava e fecha, sem botão de confirmar. */
-export function DateInput({ value, onValueChange, id, min, max, defaultMonth, placeholder = "dd/mm/aaaa", className, compact, clearable = true, disabled, ...rest }: Props) {
+/** Dígitos digitados → "dd/mm/aaaa" progressivo. */
+function mask(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+/** "dd/mm/aaaa" → "YYYY-MM-DD", ou null se a data não existir. */
+function fromText(t: string): string | null {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(t);
+  if (!m) return null;
+  const dt = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  if (dt.getFullYear() !== Number(m[3]) || dt.getMonth() !== Number(m[2]) - 1 || dt.getDate() !== Number(m[1])) return null;
+  return iso(dt);
+}
+const show = (v?: string | null) => { const d = parse(v); return d ? format(d, "dd/MM/yyyy") : ""; };
+
+/**
+ * Campo de data: dá para digitar (dd/mm/aaaa, só números) ou tocar no ícone e escolher no
+ * calendário, que grava e fecha num toque, sem botão de confirmar.
+ */
+export function DateInput({ value, onValueChange, id, min, max, defaultMonth, placeholder = "dd/mm/aaaa", className, compact, disabled, ...rest }: Props) {
   const [open, setOpen] = React.useState(false);
+  const [text, setText] = React.useState(() => show(value));
+  const focused = React.useRef(false);
   const selected = parse(value);
   const lo = parse(min), hi = parse(max);
   const year = new Date().getFullYear();
   const ctxMonth = React.useContext(DateDefaultMonth);
   const month = selected ?? parse(defaultMonth) ?? parse(ctxMonth) ?? hi;
+  const label = rest["aria-label"];
+
+  // Valor mudou por fora (calendário, outro campo): atualiza o texto se não estiver digitando
+  React.useEffect(() => { if (!focused.current) setText(show(value)); }, [value]);
+
+  const inRange = (v: string) => (!min || v >= min) && (!max || v <= max);
+
+  function type(raw: string) {
+    const t = mask(raw);
+    setText(t);
+    if (t === "") return onValueChange("");
+    const v = fromText(t);
+    if (v && inRange(v) && v !== value) onValueChange(v);
+  }
+
+  function blur() {
+    focused.current = false;
+    if (text === "") return;
+    const v = fromText(text);
+    // Data incompleta, inexistente ou fora do intervalo: volta para a última válida
+    if (!v || !inRange(v)) setText(show(value));
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <div className={cn("relative min-w-0", compact ? "inline-flex" : "@container w-full", className)}>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
+      <PopoverAnchor asChild>
+        <div className={cn("relative min-w-0", compact ? "inline-flex w-[6.75rem]" : "w-full", className)}>
+          <PopoverTrigger asChild>
+            <button type="button" disabled={disabled} aria-label={label ? `${label}: abrir calendário` : "Abrir calendário"}
+              className={cn("absolute inset-y-0 left-0 my-auto grid place-items-center rounded-md text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none",
+                compact ? "w-6" : "w-9")}>
+              <CalendarDays className={compact ? "size-3.5" : "size-4"} />
+            </button>
+          </PopoverTrigger>
+          <input
             id={id}
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            aria-label={label}
             disabled={disabled}
-            aria-label={rest["aria-label"]}
+            placeholder={compact ? "Prazo" : placeholder}
+            value={text}
+            onFocus={() => { focused.current = true; }}
+            onBlur={blur}
+            onChange={(e) => type(e.target.value)}
             className={cn(
-              "flex w-full min-w-0 items-center gap-1.5 text-left transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+              "flex w-full min-w-0 bg-transparent tabular-nums transition-colors placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
               compact
-                ? "h-7 rounded-md px-1.5 text-xs hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring"
-                  : "h-9 rounded-md border border-input bg-transparent px-2.5 text-sm shadow-sm focus-visible:ring-1 focus-visible:ring-ring @[11rem]:text-base md:!text-sm",
-              clearable && selected && !compact && "pr-8",
+                ? "h-7 rounded-md pl-6 pr-1 text-xs hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring"
+                : "h-9 rounded-md border border-input pl-9 pr-2 text-base shadow-sm focus-visible:ring-1 focus-visible:ring-ring md:text-sm",
             )}
-          >
-            <CalendarDays className={cn("shrink-0 text-muted-foreground", compact ? "size-3.5" : "hidden size-4 @[9.5rem]:block")} />
-            <span className={cn("truncate tabular-nums", !selected && "text-muted-foreground")}>
-              {selected ? format(selected, compact ? "dd/MM/yy" : "dd/MM/yyyy") : compact ? "Prazo" : placeholder}
-            </span>
-          </button>
-        </PopoverTrigger>
-        {clearable && selected && !compact && !disabled && (
-          <button type="button" aria-label="Limpar data" onClick={() => onValueChange("")}
-            className="absolute inset-y-0 right-0.5 my-auto grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground">
-            <X className="size-3.5" />
-          </button>
-        )}
-      </div>
-      <PopoverContent className="w-auto p-0" align="start">
+          />
+        </div>
+      </PopoverAnchor>
+      <PopoverContent className="w-auto p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
         <Calendar
           mode="single"
           locale={ptBR}
@@ -84,10 +130,9 @@ export function DateInput({ value, onValueChange, id, min, max, defaultMonth, pl
           {...(month ? { defaultMonth: month } : {})}
           disabled={[...(lo ? [{ before: lo }] : []), ...(hi ? [{ after: hi }] : [])]}
           onSelect={(d) => {
-            if (d) onValueChange(iso(d));
+            if (d) { onValueChange(iso(d)); setText(format(d, "dd/MM/yyyy")); }
             setOpen(false);
           }}
-          autoFocus
         />
       </PopoverContent>
     </Popover>

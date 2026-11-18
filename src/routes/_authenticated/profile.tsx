@@ -67,7 +67,7 @@ function Profile() {
           </Avatar>
           <Button type="button" variant="outline" asChild>
             <label className="cursor-pointer"><Camera /> Trocar foto
-              <input type="file" accept="image/*" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+              <input type="file" accept="image/*" aria-label="Trocar foto do perfil" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
             </label>
           </Button>
         </div>
