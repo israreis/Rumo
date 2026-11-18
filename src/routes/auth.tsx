@@ -48,7 +48,7 @@ function AuthPage() {
   useEffect(() => {
     const go = () => navigate({ href: target, replace: true });
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) return go();
+      if (data.user) { void go(); return; }
       // Voltou do Google sem sessão (cancelou ou deu erro): mostra o formulário de novo.
       const url = new URL(window.location.href);
       const failed = url.searchParams.get("error_description") ?? new URLSearchParams(url.hash.slice(1)).get("error_description");

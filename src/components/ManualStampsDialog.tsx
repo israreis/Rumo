@@ -62,7 +62,7 @@ export function ManualStampsDialog({ open, onOpenChange, userId, stamps }: {
       note: note.trim() || null,
     });
     setBusy(false);
-    if (error) return fail(error.message);
+    if (error) { fail(error.message); return; }
     toast.success(`Carimbo de ${country.trim()} incluído no passaporte`);
     setCountry(""); setCity(""); setDate(""); setNote("");
     refresh();
@@ -70,7 +70,7 @@ export function ManualStampsDialog({ open, onOpenChange, userId, stamps }: {
 
   const remove = async (s: ManualStamp) => {
     const { error } = await supabase.from("manual_stamps").delete().eq("id", s.id);
-    if (error) return fail(error.message);
+    if (error) { fail(error.message); return; }
     toast.success(`Carimbo de ${s.country} removido`);
     refresh();
   };
