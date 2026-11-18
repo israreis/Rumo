@@ -33,5 +33,3 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Fundo das telas do app: `PageBackdrop` (hachuras de papel-moeda bem suaves + rosa dos ventos apagada no canto), no layout logado, no link público e no convite; nunca dentro dos cartões.
 - Mostrador (`src/components/Dial.tsx`) para progresso circular; botão secundário é a variante `oliva`.
 
-## Commits
-- Commits saem em nome do autor do repositório, sem co-autoria ou atribuição a ferramentas.
