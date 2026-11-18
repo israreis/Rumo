@@ -163,7 +163,7 @@ function Overview({ trip }: { trip: Trip }) {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat icon={CalendarDays} label="Duração" value={nights != null ? `${nights + 1} dias` : "—"} />
-        <Stat icon={MapPin} label="Destinos" value={String(trip.trip_destinations.length)} />
+        <Stat icon={MapPin} label="Destinos" value={String(new Set(trip.trip_destinations.map((d) => d.city.trim().toLowerCase()).filter(Boolean)).size)} />
         <Stat icon={Users} label="Viajantes" value={String(trip.travelers_count)} />
         <Stat icon={Wallet} label="Orçamento" value={formatMoney(trip.budget, trip.currency)} />
       </div>

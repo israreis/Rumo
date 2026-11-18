@@ -60,7 +60,7 @@ export function LodgingTab({ trip }: { trip: Trip }) {
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                   {l.nightly_rate != null && <span>{formatMoney(l.nightly_rate, l.currency)}/noite</span>}
-                  <span className="font-semibold text-foreground">Total <Money amount={lodgingTotal(l)} currency={l.currency} converted={l.converted_amount} trip={trip.currency} /></span><span>{PAY_STATUS[l.payment_status]}</span>
+                  <span className="font-semibold text-foreground">{lodgingTotal(l) > 0 ? <>Total <Money amount={lodgingTotal(l)} currency={l.currency} converted={l.converted_amount} trip={trip.currency} /></> : <span className="font-normal text-muted-foreground">Valor a definir</span>}</span><span>{PAY_STATUS[l.payment_status]}</span>
                   {l.booking_code && <span>Reserva <strong className="text-foreground">{l.booking_code}</strong></span>}
                   {l.contact && <span className="inline-flex items-center gap-1"><Phone className="size-3" />{l.contact}</span>}
                   <AttachmentLink url={l.attachment_url} />

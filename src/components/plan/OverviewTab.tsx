@@ -75,7 +75,7 @@ export function OverviewTab({ trip }: { trip: Trip }) {
   freeCancelSoon(lodgings, now).forEach((l) =>
     alerts.push({ tone: "warning", icon: BedDouble, text: `Cancelamento grátis de ${l.name} termina ${l.daysLeft === 0 ? "hoje" : `em ${l.daysLeft} dia(s)`} (${formatDate(l.free_cancel_until)}).` }));
   const gaps = nightsWithoutLodging(trip.start_date, trip.end_date, lodgings, transports);
-  if (gaps.length) alerts.push({ tone: "warning", icon: BedDouble, text: `${gaps.length} noite(s) sem hospedagem: ${gaps.slice(0, 4).map(formatDate).join(", ")}${gaps.length > 4 ? "…" : ""}` });
+  if (gaps.length) alerts.push({ tone: "warning", icon: BedDouble, text: `${gaps.length} ${gaps.length === 1 ? "noite" : "noites"} sem hospedagem: ${gaps.slice(0, 4).map(formatDate).join(", ")}${gaps.length > 4 ? "…" : ""}` });
   const days = tripDays(trip.start_date, trip.end_date);
   days.forEach((d) => {
     const slots = [
@@ -141,8 +141,8 @@ export function OverviewTab({ trip }: { trip: Trip }) {
             <ul className="space-y-2.5">
               {upcoming.map((u) => (
                 <li key={u.k} className="flex gap-3 text-sm">
-                  <span className="w-20 shrink-0 text-muted-foreground">{format(toDate(u.d)!, "EEE dd/MM", { locale: ptBR })}{u.t && <><br />{u.t}</>}</span>
-                  <span className="font-medium">{u.title}</span>
+                  <span className="w-[4.5rem] shrink-0 whitespace-nowrap tabular-nums text-muted-foreground">{format(toDate(u.d)!, "EEE", { locale: ptBR }).slice(0, 3)} {format(toDate(u.d)!, "dd/MM")}{u.t && <><br />{u.t}</>}</span>
+                  <span className="min-w-0 font-medium">{u.title}</span>
                 </li>
               ))}
             </ul>

@@ -164,6 +164,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
       title={a ? a.name : e.title}
       sub={(a ? a.location : e.location) ?? undefined}
       cost={a ? (a.unit_price != null ? formatMoney((a.unit_price ?? 0) * a.quantity, a.currency) : null) : e.cost != null ? formatMoney(e.cost, trip.currency) : null}
+      notes={a ? undefined : e.notes ?? undefined}
       badge={a ? "Atividade" : EVENT_CATEGORIES[e.category]} tz={tz} />;
   };
 
@@ -285,7 +286,7 @@ function DayList({ id, children }: { id: string; children: React.ReactNode }) {
   return <div ref={setNodeRef} className={cn("min-h-2 space-y-2 rounded-xl transition-colors", isOver && "bg-primary/5 outline-dashed outline-1 outline-primary/40")}>{children}</div>;
 }
 
-function Row({ icon: Icon, time, endTime, title, sub, cost, badge, conflict, tone, handle }: any) {
+function Row({ icon: Icon, time, endTime, title, sub, notes, cost, badge, conflict, tone, handle }: any) {
   return (
     <div className="flex items-start gap-3">
       <span className="w-12 shrink-0 pt-1 text-right font-mono text-xs text-muted-foreground">{time ?? "—"}{endTime && <><br />{endTime}</>}</span>
@@ -293,11 +294,12 @@ function Row({ icon: Icon, time, endTime, title, sub, cost, badge, conflict, ton
         {Icon && <Icon className="size-4" />}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 font-medium leading-snug">{title}</p>
+        <p className="line-clamp-3 break-words font-medium leading-snug">{title}</p>
         <p className="flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
           {badge && <span>{badge}</span>}{sub && <span className="truncate">{sub}</span>}{cost && <span className="font-medium text-foreground">{cost}</span>}
           {conflict && <span className="font-semibold text-destructive">Conflito</span>}
         </p>
+        {notes && <p className="mt-1 line-clamp-5 whitespace-pre-line break-words text-xs text-muted-foreground">{notes}</p>}
       </div>
       {handle}
     </div>
