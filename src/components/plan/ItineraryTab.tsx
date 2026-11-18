@@ -226,7 +226,13 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
               <span className="text-muted-foreground">{mapPoints.length} {mapPoints.length === 1 ? "ponto" : "pontos"}</span>
             </div>
             <div className="h-64 lg:h-72">
-              <Suspense fallback={<div className="h-full animate-pulse bg-muted" />}><DayMap points={mapPoints} /></Suspense>
+              {mapPoints.length ? (
+                <Suspense fallback={<div className="h-full animate-pulse bg-muted" />}><DayMap points={mapPoints} /></Suspense>
+              ) : (
+                <div className="grid h-full place-items-center bg-muted/40 px-6 text-center text-sm text-muted-foreground">
+                  Nenhum lugar com endereço neste dia. Preencha o local dos eventos, atividades ou hospedagens para vê-los no mapa.
+                </div>
+              )}
             </div>
           </div>
           <div className="rounded-2xl bg-secondary/60 p-4">
