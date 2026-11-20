@@ -150,7 +150,8 @@ export function CurrencyConverter({ trip, className, bare }: { trip?: Trip | und
           value={value == null ? "" : fmt(value)}
           onChange={(e) => { setSide(which); setAmount(parseCents(e.target.value)); }}
           onFocus={(e) => { const el = e.currentTarget; requestAnimationFrame(() => el.setSelectionRange(el.value.length, el.value.length)); }}
-          className="min-w-0 flex-1 bg-transparent font-display text-3xl font-semibold tabular-nums outline-none placeholder:text-muted-foreground/40"
+          size={1}
+          className="w-0 min-w-0 flex-1 bg-transparent font-display text-3xl font-semibold tabular-nums outline-none placeholder:text-muted-foreground/40"
         />
         <CurrencyPicker label={which === "top" ? "Moeda de origem" : "Moeda de destino"} value={code}
           onChange={(c) => (which === "top" ? setTop(c) : setBottom(c))} />
@@ -159,7 +160,7 @@ export function CurrencyConverter({ trip, className, bare }: { trip?: Trip | und
   };
 
   return (
-    <section className={cn(!bare && "rounded-2xl border bg-card p-5 shadow-card", className)}>
+    <section className={cn("min-w-0", !bare && "rounded-2xl border bg-card p-5 shadow-card", className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-display text-lg font-semibold tabular-nums">
           {factor ? `1 ${top} = ${factor.toLocaleString("pt-BR", { maximumFractionDigits: 4 })} ${bottom}` : loading ? "Buscando cotação…" : `1 ${top} = — ${bottom}`}
