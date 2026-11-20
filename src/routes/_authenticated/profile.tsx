@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
+import { ImageCropDialog } from "@/components/ImageCropDialog";
 import { profileQuery } from "@/lib/profile";
 import { uploadImage } from "@/lib/trips-api";
 
@@ -35,6 +36,7 @@ function Profile() {
   const [currency, setCurrency] = useState("BRL");
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [picked, setPicked] = useState<File | null>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -43,9 +45,19 @@ function Profile() {
     setCurrency(profile.default_currency);
   }, [profile]);
 
-  async function onFile(f?: File) {
-    if (!f) return;
-    try { setAvatar(await uploadImage(f, "avatars")); } catch { toast.error("Falha ao enviar a foto."); }
+  // A foto escolhida passa pelo recorte; ao confirmar, envia e já grava no perfil.
+  async function onCropped(f: File) {
+    try {
+      const url = await uploadImage(f, "avatars");
+      const { error } = await supabase.from("profiles").upsert({ id: user.id, avatar_url: url });
+      if (error) throw error;
+      setAvatar(url);
+      setPicked(null);
+      qc.invalidateQueries({ queryKey: ["profile", user.id] });
+      toast.success("Foto atualizada");
+    } catch {
+      toast.error("Falha ao enviar a foto.");
+    }
   }
 
   async function save(e: React.FormEvent): Promise<void> {
@@ -69,7 +81,7 @@ function Profile() {
           </Avatar>
           <Button type="button" variant="outline" asChild>
             <label className="cursor-pointer"><Camera /> Trocar foto
-              <input type="file" accept="image/*" aria-label="Trocar foto do perfil" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+              <input type="file" accept="image/*" aria-label="Trocar foto do perfil" className="sr-only" onChange={(e) => { setPicked(e.target.files?.[0] ?? null); e.target.value = ""; }} />
             </label>
           </Button>
         </div>
@@ -85,6 +97,7 @@ function Profile() {
           <Trash2 /> Excluir minha conta
         </Button>
       </section>
+      <ImageCropDialog file={picked} onCancel={() => setPicked(null)} onDone={onCropped} />
       <DeleteAccountDialog open={deleting} onOpenChange={setDeleting} userId={user.id} email={user.email ?? ""} />
     </div>
   );
