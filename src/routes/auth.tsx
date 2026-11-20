@@ -122,7 +122,11 @@ function AuthPage() {
   async function google(): Promise<void> {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth?oauth=1${redirect ? `&redirect=${encodeURIComponent(target)}` : ""}` },
+      options: {
+        redirectTo: `${window.location.origin}/auth?oauth=1${redirect ? `&redirect=${encodeURIComponent(target)}` : ""}`,
+        // Sempre mostra a escolha de conta do Google (permite entrar com outra conta).
+        queryParams: { prompt: "select_account" },
+      },
     });
     if (error) toast.error("Não foi possível entrar com o Google.");
   }
