@@ -116,10 +116,10 @@ function TripPage() {
         className="mt-6 pb-40 md:pb-28"
         onValueChange={(v) => { setTab(v); requestAnimationFrame(() => document.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" })); }}
       >
-        <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_calc(100%-2rem),transparent)] sm:mx-0 sm:px-0 lg:[mask-image:none]">
+        <div className="scrollbar-none -mx-4 -my-1.5 overflow-x-auto px-4 py-1.5 [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_calc(100%-2rem),transparent)] sm:-mx-1.5 sm:px-1.5 lg:[mask-image:none]">
           <TabsList className="h-auto w-max gap-x-1.5 gap-y-2.5 bg-transparent p-0 lg:w-full lg:flex-wrap lg:justify-start">
             {TABS.map((t) => (
-              <TabsTrigger key={t.id} value={t.id} className="gap-1.5 rounded-full border px-3.5 py-1.5 bg-card data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger key={t.id} value={t.id} className="gap-1.5 rounded-full border px-3.5 py-1.5 bg-card focus-visible:ring-offset-0 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                 <t.icon className="size-4" /> {t.label}
               </TabsTrigger>
             ))}
