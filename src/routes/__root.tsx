@@ -39,6 +39,29 @@ function NotFoundComponent() {
 
 const CHUNK_ERROR = /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module|ChunkLoadError/i;
 
+/**
+ * Recarrega a página para pegar a versão nova do app. Evita laço: no máximo uma vez a cada 30s
+ * (antes era uma vez por sessão, e um segundo deploy na mesma sessão mostrava o erro).
+ */
+function reloadForNewVersion() {
+  try {
+    const last = Number(sessionStorage.getItem("rumo:chunk-reload") || 0);
+    if (Date.now() - last < 30_000) return false;
+    sessionStorage.setItem("rumo:chunk-reload", String(Date.now()));
+  } catch {
+    return false;
+  }
+  window.location.reload();
+  return true;
+}
+
+// O Vite avisa quando um pedaço do app pré-carregado não existe mais (deploy novo): recarrega antes de quebrar.
+if (typeof window !== "undefined") {
+  window.addEventListener("vite:preloadError", (e) => {
+    if (reloadForNewVersion()) e.preventDefault();
+  });
+}
+
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
@@ -48,14 +71,9 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   // recarrega uma vez sozinha em vez de mostrar o erro.
   useEffect(() => {
     if (!CHUNK_ERROR.test(message)) return;
-    try {
-      if (sessionStorage.getItem("rumo:chunk-reload")) return;
-      sessionStorage.setItem("rumo:chunk-reload", "1");
-    } catch {
-      return;
-    }
-    window.location.reload();
+    reloadForNewVersion();
   }, [message]);
+  const isChunk = CHUNK_ERROR.test(message);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
@@ -70,6 +88,8 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
+              // Versão nova publicada: só recarregar a página resolve.
+              if (isChunk) { window.location.reload(); return; }
               router.invalidate();
               reset();
             }}
