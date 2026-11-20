@@ -15,6 +15,7 @@ import { themeInitScript } from "../lib/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { LogoMark } from "@/components/Logo";
 import { supabase } from "@/integrations/supabase/client";
+import { clearPersistedQueryCache, persistQueryCache } from "@/lib/query-persist";
 
 function NotFoundComponent() {
   return (
@@ -188,12 +189,26 @@ function RootComponent() {
   }, []);
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+    const stop = persistQueryCache(queryClient);
+    // O Supabase repete SIGNED_IN ao voltar para o app; só recarrega tudo se a conta mudou.
+    let current: string | null | undefined;
+    supabase.auth.getSession().then(({ data }) => { current ??= data.session?.user.id ?? null; });
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const id = session?.user.id ?? null;
+      if (event === "SIGNED_OUT") {
+        current = null;
+        clearPersistedQueryCache();
+        router.invalidate();
+        return;
+      }
+      if (event === "USER_UPDATED") { router.invalidate(); return; }
+      if (event !== "SIGNED_IN" || id === current) return;
+      if (current) { queryClient.clear(); clearPersistedQueryCache(); }
+      current = id;
       router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      queryClient.invalidateQueries();
     });
-    return () => data.subscription.unsubscribe();
+    return () => { stop(); data.subscription.unsubscribe(); };
   }, [router, queryClient]);
 
   return (

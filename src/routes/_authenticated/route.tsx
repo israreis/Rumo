@@ -13,6 +13,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { profileQuery } from "@/lib/profile";
+import { clearPersistedQueryCache } from "@/lib/query-persist";
 import { acceptPendingInvites } from "@/lib/sharing-api";
 import { cn } from "@/lib/utils";
 
@@ -21,14 +22,16 @@ let invitesChecked = false;
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user) throw redirect({ to: "/auth", search: { redirect: location.href } });
+    // Sessão local (sem ida à rede a cada troca de tela); o servidor valida o token em toda consulta.
+    const { data: s } = await supabase.auth.getSession();
+    const user = s.session?.user;
+    if (!user) throw redirect({ to: "/auth", search: { redirect: location.href } });
     // Invites sent to this e-mail become trips in the list, once per app start.
     if (!invitesChecked) {
       invitesChecked = true;
       acceptPendingInvites().catch(() => undefined);
     }
-    return { user: data.user };
+    return { user };
   },
   pendingComponent: () => <Splash full label="Entrando…" />,
   component: AppLayout,
@@ -55,6 +58,7 @@ function AppLayout() {
     qc.clear();
     navigator.serviceWorker?.controller?.postMessage("clear-data");
     invitesChecked = false;
+    clearPersistedQueryCache();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
