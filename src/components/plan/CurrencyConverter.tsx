@@ -64,10 +64,27 @@ function tripForeign(trip: Trip): string | null {
 /** Bandeira redonda da moeda (circle-flags, domínio público via jsDelivr). */
 export function Flag({ code, className }: { code: string; className?: string }) {
   const cc = FLAGS[code];
-  if (!cc) return <span className={cn("grid size-7 shrink-0 place-items-center rounded-full bg-muted text-[9px] font-bold", className)}>{code}</span>;
+  const [broken, setBroken] = useState(false);
+  const cls = cn("size-7 shrink-0 rounded-full shadow-sm ring-1 ring-border", className);
+  // Bandeira da UE desenhada aqui: o pacote de bandeiras só tem países.
+  if (cc === "eu") return <EuFlag className={cls} />;
+  if (!cc || broken) return <span className={cn("grid size-7 shrink-0 place-items-center rounded-full bg-muted text-[9px] font-bold", className)}>{code}</span>;
   return (
     <img src={`https://cdn.jsdelivr.net/gh/HatScripts/circle-flags@gh-pages/flags/${cc}.svg`} alt="" width={28} height={28} loading="lazy"
-      className={cn("size-7 shrink-0 rounded-full shadow-sm ring-1 ring-border", className)} />
+      onError={() => setBroken(true)} className={cls} />
+  );
+}
+
+function EuFlag({ className }: { className?: string }) {
+  const star = "M0,-1L0.2245,-0.309L0.951,-0.309L0.3633,0.118L0.5878,0.809L0,0.382L-0.5878,0.809L-0.3633,0.118L-0.951,-0.309L-0.2245,-0.309Z";
+  return (
+    <svg viewBox="0 0 512 512" aria-hidden="true" className={className}>
+      <circle cx="256" cy="256" r="256" fill="#0052b4" />
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = (i * Math.PI) / 6;
+        return <path key={i} d={star} fill="#ffda44" transform={`translate(${256 + 150 * Math.sin(a)} ${256 - 150 * Math.cos(a)}) scale(30)`} />;
+      })}
+    </svg>
   );
 }
 
