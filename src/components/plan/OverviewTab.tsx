@@ -1,10 +1,18 @@
 import { useRouteContext } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { AlertTriangle, BedDouble, CalendarClock, CheckSquare, Clock, FileWarning, PiggyBank, Wallet } from "lucide-react";
+import { AlertTriangle, BedDouble, Bell, CalendarClock, CalendarPlus, Check, CheckSquare, Clock, ExternalLink, FileWarning, Globe2, PiggyBank, ThermometerSun, Umbrella, Wallet } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { entryCheckTitle, entryInfo, foreignCountries, isEntryChecked } from "@/lib/entry-requirements";
+import { buildRemindersIcs, downloadText, slug } from "@/lib/exports";
+import { buildReminders, upcomingReminders, type Reminder } from "@/lib/reminders";
+import { useTripWeather, weatherLabel } from "@/lib/weather";
 import { Dial } from "@/components/Dial";
 import { CurrencyConverter } from "./CurrencyConverter";
 import { BUDGET_CATEGORIES } from "@/lib/budget";
@@ -13,7 +21,7 @@ import { planQuery, type Activity, type ItineraryEvent, type Lodging, type Trans
 import { profileQuery } from "@/lib/profile";
 import { DOC_KINDS, freeCancelSoon, passportTooShort, progressPct, tripDayOf, upcomingDue } from "@/lib/trip-extras";
 import { daysUntil, formatDate, formatMoney, toDate } from "@/lib/trip-utils";
-import { zonedDate, zonedTime } from "@/lib/tz";
+import { BROWSER_TZ, zonedDate, zonedTime } from "@/lib/tz";
 import type { Trip } from "@/lib/trips-api";
 import { cn } from "@/lib/utils";
 import type { ChecklistItem } from "./ChecklistTab";
@@ -33,7 +41,10 @@ export function OverviewTab({ trip }: { trip: Trip }) {
   const { data: docs = [] } = useQuery(planQuery<TravelerDoc>("traveler_documents", id));
   const { user } = useRouteContext({ from: "/_authenticated" });
   const { data: profile } = useQuery(profileQuery(user.id));
-  const { data: checklist = [] } = useQuery(planQuery<ChecklistItem>("checklist_items", id));
+  const checklistKey = planQuery<ChecklistItem>("checklist_items", id);
+  const { data: checklist = [] } = useQuery(checklistKey);
+  const qc = useQueryClient();
+  const [allReminders, setAllReminders] = useState(false);
 
   const now = new Date(), today = format(now, "yyyy-MM-dd");
   const dayOf = tripDayOf(trip.start_date, trip.end_date, now);
@@ -88,6 +99,31 @@ export function OverviewTab({ trip }: { trip: Trip }) {
   if (trip.budget && planned > trip.budget) alerts.push({ tone: "destructive", icon: PiggyBank, text: `Planejado (${formatMoney(planned, cur)}) passa do orçamento em ${formatMoney(planned - trip.budget, cur)}.` });
   if (trip.budget && spent > trip.budget) alerts.push({ tone: "destructive", icon: Wallet, text: `Gasto real já ultrapassou o orçamento em ${formatMoney(spent - trip.budget, cur)}.` });
 
+  // Exigências de entrada: cada país estrangeiro até ser marcado como conferido.
+  const entries = foreignCountries(trip.trip_destinations).filter((c) => !isEntryChecked(c, checklist)).map(entryInfo);
+  async function markEntryChecked(country: string) {
+    const { error } = await supabase.from("checklist_items").insert({ trip_id: id, list: "pre", title: entryCheckTitle(country), done: true, position: checklist.length });
+    if (error) { toast.error("Não foi possível marcar."); return; }
+    toast.success(`${country}: exigências conferidas`);
+    qc.invalidateQueries({ queryKey: checklistKey.queryKey });
+  }
+
+  // Lembretes
+  const reminders = upcomingReminders(
+    buildReminders({ trip, transports, lodgings, pending, checklist, docs, passportExpiry: myPassport }, BROWSER_TZ),
+    today,
+  );
+  function exportReminders() {
+    if (!reminders.length) return;
+    downloadText(`lembretes-${slug(trip.name)}.ics`, buildRemindersIcs({ tripName: trip.name, tripId: id, reminders, tz: BROWSER_TZ }), "text/calendar");
+    toast.success("Abra o arquivo no celular para adicionar os lembretes ao calendário.");
+  }
+
+  // Previsão do tempo (até 16 dias à frente)
+  const weatherDays = tripDays(trip.start_date, trip.end_date).filter((d) => d >= today);
+  const weather = useTripWeather(trip.trip_destinations, weatherDays);
+  const forecast = weatherDays.filter((d) => weather.has(d)).slice(0, 7);
+
   const openTasks = checklist.filter((c) => !c.done).sort((a, b) => (a.due_date ?? "9").localeCompare(b.due_date ?? "9"));
 
   // Charts
@@ -127,16 +163,75 @@ export function OverviewTab({ trip }: { trip: Trip }) {
 
       <section className="rounded-2xl border bg-card p-5 shadow-card">
         <h2 className="flex items-center gap-2 text-lg font-semibold"><AlertTriangle className="size-5 text-warning" /> Central de alertas</h2>
-        {!alerts.length ? <p className="mt-2 text-sm text-muted-foreground">Tudo certo por aqui. Nenhum alerta no momento. ✈️</p> : (
+        {!alerts.length && !entries.length ? <p className="mt-2 text-sm text-muted-foreground">Tudo certo por aqui. Nenhum alerta no momento. ✈️</p> : (
           <ul className="mt-3 space-y-2">
             {alerts.map((a, i) => (
               <li key={i} className={cn("flex items-start gap-2 rounded-xl px-3 py-2 text-sm", a.tone === "destructive" ? "bg-destructive/10 text-destructive" : "bg-warning/15")}>
                 <a.icon className="mt-0.5 size-4 shrink-0" /> {a.text}
               </li>
             ))}
+            {entries.map((e) => (
+              <li key={e.country} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl bg-primary/8 px-3 py-2 text-sm">
+                <span className="flex min-w-0 flex-1 basis-60 items-start gap-2">
+                  <Globe2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span>Confira as exigências de entrada para <b>{e.country}</b> (visto, autorização eletrônica, validade do passaporte).</span>
+                </span>
+                <span className="flex flex-wrap gap-2">
+                  <Button asChild size="sm" variant="outline" className="h-8 rounded-full">
+                    <a href={e.url} target="_blank" rel="noopener noreferrer">{e.label} <ExternalLink className="size-3.5" /></a>
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-8 rounded-full" onClick={() => markEntryChecked(e.country)}>
+                    <Check className="size-3.5" /> Marcar como conferido
+                  </Button>
+                </span>
+              </li>
+            ))}
           </ul>
         )}
       </section>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card title="Lembretes" icon={Bell}>
+          {!reminders.length ? <Muted>Sem lembretes à frente. Eles aparecem com datas da viagem, voos, pagamentos e prazos do checklist.</Muted> : (
+            <>
+              <ul className="space-y-2.5">
+                {(allReminders ? reminders : reminders.slice(0, 5)).map((r) => <ReminderRow key={r.id} r={r} today={today} />)}
+              </ul>
+              {reminders.length > 5 && (
+                <button type="button" onClick={() => setAllReminders((v) => !v)} className="mt-2 text-xs font-semibold text-primary hover:underline">
+                  {allReminders ? "Mostrar menos" : `Ver todos (${reminders.length})`}
+                </button>
+              )}
+              <Button variant="outline" size="sm" className="mt-4 w-full rounded-full" onClick={exportReminders}>
+                <CalendarPlus className="size-4" /> Adicionar ao calendário do celular
+              </Button>
+              <p className="mt-2 text-center text-xs text-muted-foreground">Cada lembrete vai com alarme: o calendário avisa mesmo com o app fechado.</p>
+            </>
+          )}
+        </Card>
+        <Card title="Previsão do tempo" icon={ThermometerSun}>
+          {!forecast.length ? (
+            <Muted>{weatherDays.length ? "A previsão aparece a partir de 16 dias antes de cada dia da viagem." : "Sem dias da viagem à frente."}</Muted>
+          ) : (
+            <ul className="divide-y">
+              {forecast.map((d) => {
+                const w = weather.get(d)!;
+                const { icon: Icon, label } = weatherLabel(w.code);
+                return (
+                  <li key={d} className="flex items-center gap-3 py-2 text-sm">
+                    <span className="w-[4.5rem] shrink-0 tabular-nums text-muted-foreground">{format(toDate(d)!, "EEE", { locale: ptBR }).slice(0, 3)} {format(toDate(d)!, "dd/MM")}</span>
+                    <Icon className="size-5 shrink-0 text-primary" aria-label={label} />
+                    <span className="min-w-0 flex-1 truncate">{w.city} <span className="text-muted-foreground">· {label}</span></span>
+                    {w.rain != null && w.rain >= 30 && <span className="flex items-center gap-0.5 text-xs text-muted-foreground"><Umbrella className="size-3" />{w.rain}%</span>}
+                    <span className="shrink-0 tabular-nums"><b>{w.max}°</b> <span className="text-muted-foreground">{w.min}°</span></span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          <p className="mt-2 text-xs text-muted-foreground">Dados: Open-Meteo.</p>
+        </Card>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card title="Próximos eventos" icon={CalendarClock}>
@@ -244,3 +339,18 @@ function Card({ title, icon: Icon, children }: { title: string; icon?: typeof Al
   return <section className="rounded-2xl border bg-card p-5 shadow-card"><h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">{Icon && <Icon className="size-5 text-primary" />}{title}</h2>{children}</section>;
 }
 const Muted = ({ children }: { children: React.ReactNode }) => <p className="mt-2 text-sm text-muted-foreground">{children}</p>;
+
+function ReminderRow({ r, today }: { r: Reminder; today: string }) {
+  return (
+    <li className="flex gap-3 text-sm">
+      <span className={cn("w-[4.5rem] shrink-0 whitespace-nowrap tabular-nums", r.date === today ? "font-semibold text-primary" : "text-muted-foreground")}>
+        {r.date === today ? "Hoje" : `${format(toDate(r.date)!, "EEE", { locale: ptBR }).slice(0, 3)} ${format(toDate(r.date)!, "dd/MM")}`}
+        {r.time && <><br />{r.time}</>}
+      </span>
+      <span className="min-w-0">
+        <span className="font-medium">{r.title}</span>
+        {r.detail && <span className="block text-xs text-muted-foreground">{r.detail}</span>}
+      </span>
+    </li>
+  );
+}

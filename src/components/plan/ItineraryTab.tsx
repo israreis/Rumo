@@ -23,6 +23,7 @@ import { ActivityDialog, geocodeIfChanged } from "./ActivitiesTab";
 import { ACTIVITY_ICON, EVENT_ICON, TRANSPORT_ICON } from "./icons";
 import { Stamp } from "@/components/Stamp";
 import { tripStamps } from "@/lib/stamps";
+import { useTripWeather, weatherLabel } from "@/lib/weather";
 import type { MapPoint } from "./DayMap";
 
 const DayMap = lazy(() => import("./DayMap"));
@@ -37,6 +38,7 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
   const { data: activities = [] } = useQuery(planQuery<Activity>("activities", trip.id));
   const { data: events = [] } = useQuery(planQuery<ItineraryEvent>("itinerary_events", trip.id));
   const days: string[] = useMemo(() => tripDays(trip.start_date, trip.end_date), [trip.start_date, trip.end_date]);
+  const weather = useTripWeather(trip.trip_destinations, days);
   const dests = trip.trip_destinations;
 
   const actById: Record<string, any> = useMemo(() => Object.fromEntries(activities.map((a) => [`ac:${a.id}`, a])), [activities]);
@@ -192,6 +194,11 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
                   <span className="rounded-lg bg-primary px-2 py-1 text-xs font-bold text-primary-foreground">Dia {i + 1}</span>
                   <h3 className="text-lg font-semibold capitalize">{format(toDate(day)!, "EEE, dd/MM", { locale: ptBR })}</h3>
                   {dest && <span className="flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" />{dest.city}</span>}
+                  {weather.get(day) && (() => { const w = weather.get(day)!; const { icon: WIcon, label } = weatherLabel(w.code); return (
+                    <span title={`${label}${w.rain != null ? ` · chuva ${w.rain}%` : ""}`} className="flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
+                      <WIcon className="size-3.5 text-primary" aria-label={label} />{w.max}° <span className="text-muted-foreground">{w.min}°</span>
+                    </span>
+                  ); })()}
                   <div className="ml-auto flex items-center gap-1">
                     {stampByDay.get(day) && (() => { const s = stampByDay.get(day)!; return (
                       <Link to="/passaporte" aria-label={`Carimbo de ${s.main} no passaporte`} className="-my-4" onClick={(e) => e.stopPropagation()}>

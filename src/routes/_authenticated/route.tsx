@@ -1,6 +1,8 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Luggage, LogOut, Plus, Stamp as StampIcon, User } from "lucide-react";
+import { ArrowLeftRight, Luggage, LogOut, Plus, Stamp as StampIcon, User } from "lucide-react";
+import { useState } from "react";
+import { ConverterDialog } from "@/components/ConverterDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo, Splash } from "@/components/Logo";
 import { PageBackdrop } from "@/components/PageBackdrop";
@@ -46,6 +48,7 @@ function AppLayout() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const name = profile?.full_name || user.email || "";
+  const [converter, setConverter] = useState(false);
 
   async function signOut() {
     await qc.cancelQueries();
@@ -70,6 +73,9 @@ function AppLayout() {
             <Link to="/passaporte" className="mr-1 hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground md:inline-flex">
               <StampIcon className="size-4" /> Passaporte
             </Link>
+            <button type="button" onClick={() => setConverter(true)} className="mr-1 hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-muted-foreground hover:bg-accent hover:text-foreground md:inline-flex">
+              <ArrowLeftRight className="size-4" /> Conversor
+            </button>
             <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger aria-label="Menu da conta" className="rounded-full">
@@ -99,8 +105,25 @@ function AppLayout() {
         aria-label="Navegação principal"
         className="no-print pb-safe fixed inset-x-0 bottom-0 z-40 border-t bg-papel/95 backdrop-blur md:hidden [view-transition-name:app-tabbar]"
       >
-        <ul className="mx-auto grid h-16 max-w-md grid-cols-4">
-          {NAV.map((n) => {
+        <ul className="mx-auto grid h-16 max-w-md grid-cols-5">
+          {NAV.slice(0, 2).map((n) => tab(n))}
+          <li>
+            <button type="button" onClick={() => setConverter(true)} aria-haspopup="dialog"
+              className={cn("flex h-full w-full flex-col items-center justify-center gap-0.5 text-[11px] font-semibold", converter ? "text-primary" : "text-muted-foreground")}>
+              <span className={cn("grid h-7 w-12 place-items-center rounded-full transition-colors", converter && "bg-primary/12")}>
+                <ArrowLeftRight className="size-5" />
+              </span>
+              Conversor
+            </button>
+          </li>
+          {NAV.slice(2).map((n) => tab(n))}
+        </ul>
+      </nav>
+      <ConverterDialog open={converter} onOpenChange={setConverter} />
+    </div>
+  );
+
+  function tab(n: (typeof NAV)[number]) {
             const on = active(n.to, n.exact);
             return (
               <li key={n.to}>
@@ -119,9 +142,5 @@ function AppLayout() {
                 </Link>
               </li>
             );
-          })}
-        </ul>
-      </nav>
-    </div>
-  );
+  }
 }

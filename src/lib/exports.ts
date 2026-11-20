@@ -101,3 +101,32 @@ export function buildIcs(opts: {
   lines.push("END:VCALENDAR");
   return lines.map(fold).join("\r\n") + "\r\n";
 }
+
+/**
+ * Calendário só com os lembretes da viagem, cada um com alarme (VALARM): importado no celular,
+ * o próprio calendário avisa na hora certa, sem depender do app aberto.
+ */
+export function buildRemindersIcs(opts: {
+  tripName: string;
+  tripId: string;
+  reminders: { id: string; date: string; time: string | null; title: string; detail?: string | undefined }[];
+  tz: string;
+}): string {
+  const now = utcStamp(new Date().toISOString());
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Rumo//Lembretes//PT-BR", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", `X-WR-CALNAME:${icsEscape(`Lembretes · ${opts.tripName}`)}`];
+  for (const r of opts.reminders) {
+    lines.push("BEGIN:VEVENT", `UID:lembrete-${r.id}-${opts.tripId}@rumo`, `DTSTAMP:${now}`, `SUMMARY:${icsEscape(r.title)}`);
+    if (r.time) {
+      const start = zonedToUtc(`${r.date}T${r.time}`, opts.tz);
+      lines.push(`DTSTART:${utcStamp(start)}`, `DTEND:${utcStamp(new Date(new Date(start).getTime() + 15 * 60_000).toISOString())}`);
+    } else {
+      lines.push(`DTSTART;VALUE=DATE:${dateOnly(r.date)}`, `DTEND;VALUE=DATE:${dateOnly(nextDay(r.date))}`);
+    }
+    if (r.detail) lines.push(`DESCRIPTION:${icsEscape(r.detail)}`);
+    lines.push("TRANSP:TRANSPARENT");
+    lines.push("BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${icsEscape(r.title)}`, `TRIGGER:${r.time ? "PT0M" : "PT9H"}`, "END:VALARM");
+    lines.push("END:VEVENT");
+  }
+  lines.push("END:VCALENDAR");
+  return lines.map(fold).join("\r\n") + "\r\n";
+}
