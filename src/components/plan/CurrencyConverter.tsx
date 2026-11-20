@@ -179,7 +179,7 @@ export function CurrencyConverter({ trip, className, bare }: { trip?: Trip | und
       <div className="relative mt-4 space-y-2">
         {row("top")}
         <button type="button" onClick={swap} aria-label="Inverter moedas"
-          className="absolute left-1/2 top-1/2 z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-card bg-muted text-primary transition-transform hover:scale-105 active:scale-95">
+          className={cn("absolute left-1/2 top-1/2 z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 bg-muted text-primary transition-transform hover:scale-105 active:scale-95", bare ? "border-background" : "border-card")}>
           <ArrowDownUp className="size-4" />
         </button>
         {row("bottom")}
