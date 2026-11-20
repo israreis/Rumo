@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { COUNTRY_NAMES, countryInfo, currencyLabel } from "@/lib/countries";
 import { CURRENCIES, STATUS_LABEL, type TripStatus } from "@/lib/trip-utils";
 import { uploadImage, type TripInput } from "@/lib/trips-api";
+import { ImageCropDialog } from "@/components/ImageCropDialog";
 import { TripCover } from "./TripCover";
 import { allTimezones } from "@/lib/tz";
 
@@ -30,11 +31,14 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
   const [iofText, setIofText] = useState(String(initial.iof_pct ?? ""));
   const [spreadText, setSpreadText] = useState(String(initial.card_spread_pct ?? ""));
   const [uploading, setUploading] = useState(false);
+  const [picked, setPicked] = useState<File | null>(null);
   const [urlMode, setUrlMode] = useState(false);
   const set = <K extends keyof TripInput>(k: K, val: TripInput[K]) => setV((p) => ({ ...p, [k]: val }));
 
+  // A imagem escolhida passa pelo recorte (16:9) antes de ser enviada.
   async function onFile(f?: File) {
     if (!f) return;
+    setPicked(null);
     setUploading(true);
     try {
       set("cover_url", await uploadImage(f, "covers"));
@@ -117,7 +121,7 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
           <Button type="button" variant="outline" asChild disabled={uploading}>
             <label className="cursor-pointer">
               <ImagePlus /> {uploading ? "Enviando…" : "Enviar imagem"}
-              <input type="file" accept="image/*" aria-label="Enviar imagem de capa" className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
+              <input type="file" accept="image/*" aria-label="Enviar imagem de capa" className="sr-only" onChange={(e) => { setPicked(e.target.files?.[0] ?? null); e.target.value = ""; }} />
             </label>
           </Button>
           <Button type="button" variant="outline" onClick={() => setUrlMode((m) => !m)}><Link2 /> Usar URL</Button>
@@ -126,6 +130,8 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
         {urlMode && (
           <Input placeholder="https://…" value={v.cover_url ?? ""} onChange={(e) => set("cover_url", e.target.value || null)} />
         )}
+        <ImageCropDialog file={picked} onCancel={() => setPicked(null)} onDone={onFile}
+          aspect={16 / 9} round={false} outWidth={1600} maxBox={460} title="Ajustar capa" />
       </Section>
 
       <Section title="Destinos" hint="Adicione cada cidade com as datas de chegada e saída.">
