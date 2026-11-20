@@ -7,6 +7,7 @@ import { BUDGET_CATEGORIES, PAYMENT_METHODS, balances, dailyAllowance, settle } 
 import { tripDays } from "@/lib/itinerary";
 import { formatMoney, toDate } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
+import { CurrencyConverter } from "./CurrencyConverter";
 import { cn } from "@/lib/utils";
 import { Money, Pill, useEditor } from "./common";
 import { ExpenseDialog } from "./ExpenseDialog";
@@ -48,6 +49,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
   return (
     <div className="space-y-6 pb-20">
       <h2 className="text-xl sm:text-2xl font-semibold">Gastos</h2>
+      <CurrencyConverter trip={trip} />
       {pending.length > 0 && (
         <div className="rounded-xl border border-dashed border-warning/50 bg-warning/5 p-4">
           <p className="flex items-center gap-2 text-sm font-semibold text-warning"><CloudOff className="size-4" /> {pending.length === 1 ? "1 gasto aguardando internet" : `${pending.length} gastos aguardando internet`}</p>

@@ -6,6 +6,7 @@ import { AlertTriangle, BedDouble, CalendarClock, CheckSquare, Clock, FileWarnin
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import { Dial } from "@/components/Dial";
+import { CurrencyConverter } from "./CurrencyConverter";
 import { BUDGET_CATEGORIES } from "@/lib/budget";
 import { conflictingIds, nightsWithoutLodging, tripDays } from "@/lib/itinerary";
 import { planQuery, type Activity, type ItineraryEvent, type Lodging, type Transport } from "@/lib/plan-api";
@@ -121,6 +122,8 @@ export function OverviewTab({ trip }: { trip: Trip }) {
           </div>
         </div>
       </div>
+
+      <CurrencyConverter trip={trip} />
 
       <section className="rounded-2xl border bg-card p-5 shadow-card">
         <h2 className="flex items-center gap-2 text-lg font-semibold"><AlertTriangle className="size-5 text-warning" /> Central de alertas</h2>
