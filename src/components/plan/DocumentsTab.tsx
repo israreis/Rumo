@@ -9,6 +9,7 @@ import { useOfflineFiles } from "@/lib/offline-files";
 import { profileQuery } from "@/lib/profile";
 import { PassportMark } from "@/components/Logo";
 import { formatDate } from "@/lib/trip-utils";
+import { cn } from "@/lib/utils";
 import type { Trip } from "@/lib/trips-api";
 import type { Database } from "@/integrations/supabase/types";
 import { AreaF, AttachmentF, EditDialog, Pill, SelectF, TextF, useEditor } from "./common";
@@ -36,7 +37,8 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
       <section>
         <div className="mb-4 flex items-center justify-between gap-2">
           <h2 className="flex items-center gap-3 text-xl sm:text-2xl font-semibold"><PassportMark className="size-10" /> Documentos</h2>
-          <Button onClick={() => de.open({ kind: "passport", traveler_id: travelers[0]?.id ?? null })} disabled={!travelers.length}><Plus /> Documento</Button>
+          {/* No PC o card tracejado "Novo documento" da grade faz este papel. */}
+          <Button className={cn(!!travelers.length && "md:hidden")} onClick={() => de.open({ kind: "passport", traveler_id: travelers[0]?.id ?? null })} disabled={!travelers.length}><Plus /> Documento</Button>
         </div>
         {!travelers.length ? (
           <EmptyState icon={FileText} title="Cadastre os viajantes" text="Edite a viagem e adicione os viajantes para guardar passaportes, vistos e seguros de cada um." />
@@ -92,6 +94,14 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
                 </div>
               );
             })}
+            <button type="button" onClick={() => de.open({ kind: "passport", traveler_id: travelers[0]?.id ?? null })}
+              className="group hidden min-h-40 flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed bg-card/40 text-muted-foreground transition-colors hover:border-primary hover:bg-card/70 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:flex">
+              <span className="grid size-14 place-items-center rounded-full border-2 border-current transition-transform duration-300 group-hover:scale-110">
+                <Plus className="size-6" />
+              </span>
+              <span className="font-display text-lg font-semibold">Novo documento</span>
+              <span className="-mt-2 text-xs">Passaporte, visto, ETA, seguro, comprovantes…</span>
+            </button>
           </div>
         )}
       </section>
