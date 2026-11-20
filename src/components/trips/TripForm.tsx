@@ -104,9 +104,9 @@ export function TripForm({ initial, onSubmit, submitLabel }: { initial: TripInpu
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label>Status</Label>
+          <Label>Status da Viagem</Label>
           <Select value={v.status_override ?? "auto"} onValueChange={(s) => set("status_override", s === "auto" ? null : (s as TripStatus))}>
-            <SelectTrigger aria-label="Status"><SelectValue /></SelectTrigger>
+            <SelectTrigger aria-label="Status da Viagem"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="auto">Automático (pelas datas)</SelectItem>
               {(Object.keys(STATUS_LABEL) as TripStatus[]).map((s) => <SelectItem key={s} value={s}>{STATUS_LABEL[s]}</SelectItem>)}
