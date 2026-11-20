@@ -960,6 +960,7 @@ export type Database = {
     }
     Functions: {
       accept_pending_invites: { Args: never; Returns: number }
+      delete_my_account: { Args: never; Returns: undefined }
       accept_trip_invite: { Args: { _token: string }; Returns: string }
       get_public_trip: { Args: { _token: string }; Returns: Json }
       get_trip_members: {

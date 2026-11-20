@@ -22,6 +22,8 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Linhas de orçamento vêm de `useBudget`; regras puras de dinheiro em `src/lib/budget.ts`. Alertas e regras de documentos/checklist em `src/lib/trip-extras.ts`.
 - Passaporte real do usuário: só os 4 últimos dígitos (`profiles.passport_last4`, nunca o número completo) e a validade (`passport_expiry`); situação (vencido, vencendo em < 6 meses, curto para a próxima viagem) em `src/lib/passport.ts`; exibidos mascarados com `maskPassport`.
 - Campos de data usam `DateInput` (`src/components/ui/date-input.tsx`): digitar dd/mm/aaaa ou escolher no calendário pelo ícone (um toque grava, sem confirmar); o mês padrão vem de `DateDefaultMonth` (início da viagem). Data+hora: `DateTimeInput`. Valores em dinheiro: `MoneyInput`.
+- Conta: recuperar senha e excluir conta usam **código por e-mail** (OTP). Recuperar: `resetPasswordForEmail` + `verifyOtp({ type: "recovery" })` na tela `/auth` (o link antigo para `/reset-password` continua funcionando). Excluir: Perfil > Excluir conta (`DeleteAccountDialog`, `src/lib/account.ts`): `signInWithOtp` + `verifyOtp({ type: "email" })`, apaga os arquivos do usuário no bucket `media` pela API de Storage e chama `delete_my_account()` (apaga viagens do dono, sai das compartilhadas e remove o usuário de `auth.users`). Exige SMTP próprio no Supabase e os modelos "Reset Password" e "Magic link or OTP" com `{{ .Token }}`.
+- Páginas públicas `/privacidade` e `/termos` (`src/components/legal/LegalPage.tsx`), linkadas na tela de login; contato `israreis.dev@gmail.com`.
 - Gastos lançados sem internet vão para a fila local `src/lib/offline-queue.ts` e sincronizam ao voltar a conexão.
 
 ## Identidade visual

@@ -57,7 +57,8 @@ function Privacidade() {
       <ul>
         <li>consultar, corrigir e apagar suas viagens e dados diretamente no app;</li>
         <li>exportar uma viagem em PDF ou planilha;</li>
-        <li>pedir a <strong>exclusão da sua conta</strong> e de todos os dados escrevendo para <a href={`mailto:${CONTATO}`}>{CONTATO}</a>.</li>
+        <li><strong>excluir sua conta</strong> em Perfil &gt; Excluir conta, com confirmação por código enviado ao seu e-mail. A exclusão apaga, de forma definitiva, a conta, as viagens que você criou (com roteiro, gastos, documentos e anexos), os carimbos e os dados do passaporte. Viagens de outras pessoas compartilhadas com você continuam com os donos;</li>
+        <li>falar conosco sobre seus dados em <a href={`mailto:${CONTATO}`}>{CONTATO}</a>.</li>
       </ul>
 
       <h2>6. Retenção</h2>

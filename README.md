@@ -66,7 +66,34 @@ Depois abra <http://localhost:3000>.
 2. Guarde o *Client ID* e o *Client Secret*. O Google só mostra o segredo na criação; se perder, gere outro em **Clientes → Adicionar chave secreta**.
 3. No Supabase, em **Authentication → Sign In / Providers → Google**, ative o provedor, cole o Client ID e o Client Secret e salve. Deixe *Skip nonce checks* e *Allow users without an email* desligados.
 
+4. Para liberar o login a qualquer conta Google, em **Branding** preencha a página inicial (`https://rumo-ashy.vercel.app`), a Política de Privacidade (`/privacidade`), os Termos (`/termos`) e os domínios autorizados (`rumo-ashy.vercel.app` e o `xxxx.supabase.co`), e em **Público-alvo** clique em **Publicar app**.
+5. **Verificação de marca (opcional, para o logo aparecer na tela do Google):** verifique `https://rumo-ashy.vercel.app` no [Search Console](https://search.google.com/search-console) como *Prefixo do URL*, com uma conta **Proprietária** do projeto no Google Cloud. O arquivo de verificação é `public/googleab7c6d15e38e0d9a.html` — **não apague**. Espere 24 h e envie em **Central de verificação**.
+
 Sem isso, o login por e-mail e senha continua funcionando normalmente.
+
+### E-mails: código para recuperar a senha e excluir a conta
+
+Recuperar senha (tela de login) e excluir a conta (Perfil) pedem um **código enviado por e-mail**. Para o e-mail trazer o código, os modelos precisam mostrar `{{ .Token }}`, e o Supabase só deixa editar modelos com **SMTP próprio**:
+
+1. Numa conta Gmail do projeto, ative a verificação em duas etapas e crie uma senha de app em `myaccount.google.com/apppasswords`.
+2. Em **Authentication → Emails → SMTP Settings**, ative *Custom SMTP*: host `smtp.gmail.com`, porta `465`, usuário e remetente = o Gmail do projeto, senha = a senha de app, nome `Rumo Trip`.
+3. Em **Authentication → Emails**, troque o corpo (aba *Source*) de:
+   - **Reset Password** (assunto "Redefinir sua senha do Rumo Trip"):
+     ```html
+     <h2>Redefinir senha</h2>
+     <p>Seu código: <b style="font-size:24px;letter-spacing:4px">{{ .Token }}</b></p>
+     <p>Ou toque no link para escolher a nova senha: <a href="{{ .ConfirmationURL }}">redefinir senha</a></p>
+     <p>Se não foi você, ignore este e-mail.</p>
+     ```
+   - **Magic link or OTP** (assunto "Seu código do Rumo Trip"):
+     ```html
+     <h2>Código de confirmação</h2>
+     <p>Use este código no Rumo Trip: <b style="font-size:24px;letter-spacing:4px">{{ .Token }}</b></p>
+     <p>Ele vale por pouco tempo e só pode ser usado uma vez.</p>
+     ```
+   - **Confirm signup** pode continuar com link (`{{ .ConfirmationURL }}`), só traduzido.
+
+A exclusão usa a função `delete_my_account()` (migração `20261120000010`): rode `supabase/setup.sql` de novo, ou só essa migração, no SQL Editor.
 
 | Sintoma | Causa |
 | --- | --- |

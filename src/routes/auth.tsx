@@ -43,6 +43,9 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
+  // Recuperar senha: primeiro envia o código, depois pede código + nova senha
+  const [codeSent, setCodeSent] = useState(false);
+  const [code, setCode] = useState("");
 
   // Already signed in (or just back from Google): continue to where the user was going.
   useEffect(() => {
@@ -78,12 +81,16 @@ function AuthPage() {
         });
         if (error) throw error;
         setSent("Enviamos um link de confirmação para o seu e-mail. Confirme para entrar.");
+      } else if (!codeSent) {
+        await sendResetCode();
       } else {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) throw error;
-        setSent("Se houver uma conta com esse e-mail, você receberá um link para redefinir a senha.");
+        // O código abre uma sessão de recuperação; aí é só trocar a senha
+        const { error } = await supabase.auth.verifyOtp({ email, token: code.trim(), type: "recovery" });
+        if (error) throw new Error("Código inválido ou expirado.");
+        const { error: e2 } = await supabase.auth.updateUser({ password });
+        if (e2) throw e2;
+        toast.success("Senha alterada!");
+        navigate({ href: target, replace: true });
       }
     } catch (err: any) {
       const msg = String(err?.message ?? "");
@@ -91,6 +98,25 @@ function AuthPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function sendResetCode(): Promise<void> {
+    // O e-mail traz o código (e o link, para quem preferir); o link continua levando a /reset-password
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      const m = error.message.toLowerCase();
+      throw new Error(m.includes("rate") || m.includes("seconds") ? "Muitos envios seguidos. Espere um pouco e tente de novo." : error.message);
+    }
+    setCodeSent(true);
+    toast.success("Se houver uma conta com esse e-mail, enviamos um código.");
+  }
+
+  function switchMode(m: Mode) {
+    setMode(m);
+    setCodeSent(false);
+    setCode("");
   }
 
   async function google(): Promise<void> {
@@ -113,13 +139,13 @@ function AuthPage() {
           <p className="font-hand text-2xl text-primary">{mode === "signup" ? "Primeira página do diário" : "Bom te ver por aqui"}</p>
           <h1 className="mt-1 text-4xl">{title}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "forgot" ? "Informe seu e-mail para receber o link." : "Suas viagens, organizadas do seu jeito."}
+            {mode === "forgot" ? (codeSent ? "Digite o código que enviamos e escolha uma nova senha." : "Enviaremos um código de verificação para o seu e-mail.") : "Suas viagens, organizadas do seu jeito."}
           </p>
 
           {sent ? (
             <div className="mt-8 rounded-xl border bg-card p-5 text-sm shadow-card">
               <p>{sent}</p>
-              <Button variant="link" className="mt-2 px-0" onClick={() => { setSent(null); setMode("login"); }}>
+              <Button variant="link" className="mt-2 px-0" onClick={() => { setSent(null); switchMode("login"); }}>
                 Voltar para o login
               </Button>
             </div>
@@ -144,14 +170,32 @@ function AuthPage() {
                 )}
                 <div className="space-y-1.5">
                   <Label htmlFor="email">E-mail</Label>
-                  <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required readOnly={mode === "forgot" && codeSent} />
                 </div>
+                {mode === "forgot" && codeSent && (
+                  <>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="code">Código</Label>
+                        <button type="button" className="text-xs font-medium text-primary hover:underline disabled:opacity-50" disabled={loading}
+                          onClick={() => { setLoading(true); sendResetCode().catch((e) => toast.error(e.message)).finally(() => setLoading(false)); }}>
+                          Reenviar código
+                        </button>
+                      </div>
+                      <Input id="code" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} required />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="newpass">Nova senha</Label>
+                      <Input id="newpass" type="password" autoComplete="new-password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    </div>
+                  </>
+                )}
                 {mode !== "forgot" && (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">Senha</Label>
                       {mode === "login" && (
-                        <button type="button" className="text-xs font-medium text-primary hover:underline" onClick={() => setMode("forgot")}>
+                        <button type="button" className="text-xs font-medium text-primary hover:underline" onClick={() => switchMode("forgot")}>
                           Esqueci a senha
                         </button>
                       )}
@@ -160,12 +204,12 @@ function AuthPage() {
                   </div>
                 )}
                 <Button type="submit" className="h-11 w-full" disabled={loading}>
-                  {loading ? "Aguarde…" : mode === "login" ? "Entrar" : mode === "signup" ? "Criar conta" : "Enviar link"}
+                  {loading ? "Aguarde…" : mode === "login" ? "Entrar" : mode === "signup" ? "Criar conta" : codeSent ? "Redefinir senha" : "Enviar código"}
                 </Button>
               </form>
               <p className="mt-6 text-center text-sm text-muted-foreground">
                 {mode === "login" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
-                <button className="font-semibold text-primary hover:underline" onClick={() => setMode(mode === "login" ? "signup" : "login")}>
+                <button className="font-semibold text-primary hover:underline" onClick={() => switchMode(mode === "login" ? "signup" : "login")}>
                   {mode === "login" ? "Cadastre-se" : "Entrar"}
                 </button>
               </p>

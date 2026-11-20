@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Camera } from "lucide-react";
+import { Camera, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 import { profileQuery } from "@/lib/profile";
 import { uploadImage } from "@/lib/trips-api";
 
@@ -32,6 +33,7 @@ function Profile() {
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
   const [currency, setCurrency] = useState("BRL");
+  const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -75,6 +77,15 @@ function Profile() {
         <div className="space-y-1.5"><Label>E-mail</Label><Input value={user.email ?? ""} disabled /></div>
         <Button type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar"}</Button>
       </form>
+
+      <section className="mt-8 rounded-2xl border border-destructive/30 bg-card p-6 shadow-card">
+        <h2 className="text-lg font-semibold">Excluir conta</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Apaga a conta e todas as suas viagens. Pedimos um código enviado ao seu e-mail para confirmar.</p>
+        <Button variant="outline" className="mt-4 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => setDeleting(true)}>
+          <Trash2 /> Excluir minha conta
+        </Button>
+      </section>
+      <DeleteAccountDialog open={deleting} onOpenChange={setDeleting} userId={user.id} email={user.email ?? ""} />
     </div>
   );
 }
