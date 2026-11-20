@@ -8,13 +8,16 @@
  * - Map tiles: cache first, capped.
  * Writes are never cached; offline expenses are queued by the app (src/lib/offline-queue.ts).
  */
-const VERSION = "rumo-v4";
+const VERSION = "rumo-v5";
 const PAGES = `${VERSION}-pages`;
 const STATIC = `${VERSION}-static`;
 const DATA = `${VERSION}-data`;
 const FILES = `${VERSION}-files`;
 const TILES = `${VERSION}-tiles`;
-const KEEP = [PAGES, STATIC, DATA, FILES, TILES];
+// Documentos e anexos salvos pelo app para uso offline (src/lib/offline-files.ts):
+// sem versão nem limite, para sobreviverem às atualizações do app.
+const DOCS = "rumo-docs";
+const KEEP = [PAGES, STATIC, DATA, FILES, TILES, DOCS];
 
 const PRECACHE = ["/trips", "/manifest.webmanifest", "/favicon.svg", "/icons/icon-192.png", "/brand/rumo-simbolo-lente-animado.svg"];
 
@@ -39,7 +42,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("message", (event) => {
   // Sent on sign-out so the next person on this device never sees cached trip data.
   if (event.data === "clear-data") {
-    event.waitUntil(Promise.all([caches.delete(DATA), caches.delete(FILES)]));
+    event.waitUntil(Promise.all([caches.delete(DATA), caches.delete(FILES), caches.delete(DOCS)]));
   }
   if (event.data === "skip-waiting") self.skipWaiting();
 });
@@ -135,7 +138,9 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.includes("/storage/v1/object/sign/") || url.pathname.includes("/storage/v1/object/public/")) {
-    event.respondWith(cacheFirst(request, FILES, 400));
+    event.respondWith(
+      caches.open(DOCS).then((c) => c.match(request)).then((hit) => hit || cacheFirst(request, FILES, 400)),
+    );
     return;
   }
 

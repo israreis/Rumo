@@ -173,9 +173,10 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={onStart} onDragOver={onOver} onDragEnd={onEnd}
       onDragCancel={() => { dragging.current = false; setActiveId(null); setItems(buildItems()); }}>
+      {/* Título fora da grade: no PC o mapa começa na mesma altura do Dia 1. */}
+      <h2 className="mb-4 text-xl sm:text-2xl font-semibold">Roteiro dia a dia</h2>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-4">
-          <h2 className="text-xl sm:text-2xl font-semibold">Roteiro dia a dia</h2>
           {days.map((day, i) => {
             const dest = destinationForDay(day, dests);
             const tz = dayTimezone(day, dests);

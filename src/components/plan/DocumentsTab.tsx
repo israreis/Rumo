@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, FileText, Phone, Plus, ShieldAlert } from "lucide-react";
+import { useRouteContext } from "@tanstack/react-router";
+import { AlertTriangle, CheckCircle2, CloudOff, FileText, Paperclip, Phone, Plus, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/EmptyState";
 import { planQuery } from "@/lib/plan-api";
-import { CONTACT_KINDS, DOC_KINDS, passportTooShort } from "@/lib/trip-extras";
+import { CONTACT_KINDS, DOC_KINDS, ELECTRONIC_AUTH, passportTooShort } from "@/lib/trip-extras";
+import { useOfflineFiles } from "@/lib/offline-files";
+import { profileQuery } from "@/lib/profile";
 import { PassportMark } from "@/components/Logo";
 import { formatDate } from "@/lib/trip-utils";
 import type { Trip } from "@/lib/trips-api";
@@ -20,6 +23,13 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
   const de = useEditor(), ce = useEditor();
   const travelers = trip.trip_travelers;
   const tOpts = Object.fromEntries(travelers.map((t) => [t.id!, t.name]));
+  const { user } = useRouteContext({ from: "/_authenticated" });
+  const { data: profile } = useQuery(profileQuery(user.id));
+  // Você entre os viajantes: pelo e-mail, ou o primeiro viajante quando a viagem é sua.
+  const byEmail = travelers.find((t) => t.email && user.email && t.email.trim().toLowerCase() === user.email.toLowerCase());
+  const me = byEmail ?? (trip.owner_id === user.id ? travelers[0] : undefined);
+  const myPassport = profile && (profile.passport_expiry || profile.passport_last4) ? { last4: profile.passport_last4, expiry: profile.passport_expiry } : null;
+  const offline = useOfflineFiles(docs.map((d) => d.attachment_url));
 
   return (
     <div className="space-y-8">
@@ -34,17 +44,34 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
           <div className="grid gap-4 md:grid-cols-2">
             {travelers.map((t) => {
               const mine = docs.filter((d) => d.traveler_id === t.id);
+              // Passaporte cadastrado em "Meu passaporte" (perfil), se a viagem ainda não tem um.
+              const profilePassport = t.id === me?.id && myPassport && !mine.some((d) => d.kind === "passport") ? myPassport : null;
               return (
                 <div key={t.id} className="rounded-2xl border bg-card p-5 shadow-card">
                   <h3 className="font-semibold">{t.name}</h3>
-                  {!mine.length && <p className="mt-2 text-sm text-muted-foreground">Nenhum documento ainda. Comece pelo passaporte.</p>}
+                  {!mine.length && !profilePassport && <p className="mt-2 text-sm text-muted-foreground">Nenhum documento ainda. Comece pelo passaporte.</p>}
                   <ul className="mt-3 space-y-3">
+                    {profilePassport && (
+                      <li className="rounded-xl border border-dashed p-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-medium">Passaporte</span>
+                          {profilePassport.last4 && <span className="font-num text-sm text-muted-foreground">final {profilePassport.last4}</span>}
+                          <Pill tone="primary">do seu perfil</Pill>
+                          {passportTooShort(profilePassport.expiry, trip.end_date) && <Pill tone="destructive"><AlertTriangle className="size-3" /> Vence a menos de 6 meses da volta</Pill>}
+                        </div>
+                        {profilePassport.expiry && <p className="mt-1 text-sm text-muted-foreground">validade {formatDate(profilePassport.expiry)}</p>}
+                        <Button size="sm" variant="outline" className="mt-2"
+                          onClick={() => de.open({ kind: "passport", traveler_id: t.id ?? null, expires_at: profilePassport.expiry })}>
+                          <Paperclip /> Guardar cópia do passaporte
+                        </Button>
+                      </li>
+                    )}
                     {mine.map((d) => {
                       const warn = d.kind === "passport" && passportTooShort(d.expires_at, trip.end_date);
                       return (
                         <li key={d.id} onClick={() => de.open(d)} className="cursor-pointer rounded-xl border p-3 hover:bg-muted/50">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-medium">{DOC_KINDS[d.kind]}</span>
+                            <span className="font-medium">{DOC_KINDS[d.kind] ?? "Documento"}</span>
                             {d.number && <span className="text-sm text-muted-foreground">nº {d.number}</span>}
                             {warn && <Pill tone="destructive"><AlertTriangle className="size-3" /> Vence a menos de 6 meses da volta</Pill>}
                           </div>
@@ -53,7 +80,10 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
                           </p>
                           <div className="mt-2 flex flex-wrap gap-2">
                             {d.phone && <Button asChild size="sm" variant="secondary" onClick={(e) => e.stopPropagation()}><a href={`tel:${d.phone}`}><Phone /> Emergência {d.phone}</a></Button>}
-                            <FileViewer url={d.attachment_url} title={`${DOC_KINDS[d.kind]} · ${t.name}`} />
+                            <FileViewer url={d.attachment_url} title={`${DOC_KINDS[d.kind] ?? "Documento"} · ${t.name}`} />
+                            {d.attachment_url && (offline.has(d.attachment_url)
+                              ? <span className="inline-flex items-center gap-1 text-xs text-success"><CheckCircle2 className="size-3.5" /> Salvo no aparelho</span>
+                              : <span className="inline-flex items-center gap-1 text-xs text-muted-foreground"><CloudOff className="size-3.5" /> Ainda não salvo offline</span>)}
                           </div>
                         </li>
                       );
@@ -92,11 +122,11 @@ export function DocumentsTab({ trip }: { trip: Trip }) {
           {(f, set) => <>
             <SelectF f={f} set={set} k="traveler_id" label="Viajante" options={tOpts} />
             <SelectF f={f} set={set} k="kind" label="Tipo" options={DOC_KINDS} />
-            <TextF f={f} set={set} k="number" label={f.kind === "insurance" ? "Nº da apólice" : "Número"} />
+            <TextF f={f} set={set} k="number" label={f.kind === "insurance" ? "Nº da apólice" : ELECTRONIC_AUTH.has(f.kind) ? "Nº de referência" : f.kind === "passport" ? "Número (só os 4 últimos, se preferir)" : "Número"} />
             <TextF f={f} set={set} k="expires_at" label="Validade" type="date" />
-            {(f.kind === "insurance" || f.kind === "visa") && <TextF f={f} set={set} k="issuer" label={f.kind === "insurance" ? "Seguradora" : "País/emissor"} />}
+            {(f.kind === "insurance" || f.kind === "visa" || f.kind === "other") && <TextF f={f} set={set} k="issuer" label={f.kind === "insurance" ? "Seguradora" : f.kind === "other" ? "Descrição" : "País/emissor"} />}
             {f.kind === "insurance" && <TextF f={f} set={set} k="phone" label="Telefone de emergência" type="tel" />}
-            <AttachmentF f={f} set={set} label="Arquivo (PDF ou imagem)" />
+            <AttachmentF f={f} set={set} label="Arquivo (PDF ou imagem) — fica salvo no aparelho para abrir sem internet" />
             <AreaF f={f} set={set} k="notes" label="Observações" className="sm:col-span-2" />
           </>}
         </EditDialog>

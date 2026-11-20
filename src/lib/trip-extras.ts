@@ -1,9 +1,28 @@
 import { addDays, addMonths, differenceInCalendarDays, format } from "date-fns";
 import { toDate } from "./trip-utils";
 
+/** Tipos de documento, na ordem do seletor: o que a imigração costuma pedir vem primeiro. */
 export const DOC_KINDS: Record<string, string> = {
-  passport: "Passaporte", visa: "Visto", insurance: "Seguro viagem", vaccination: "Carteira de vacinação", idp: "CNH internacional",
+  passport: "Passaporte",
+  visa: "Visto",
+  eta: "ETA (Reino Unido)",
+  etias: "ETIAS (Europa)",
+  esta: "ESTA (EUA)",
+  eta_ca: "eTA (Canadá)",
+  insurance: "Seguro viagem",
+  lodging_proof: "Comprovante de hospedagem",
+  return_ticket: "Passagem de volta / itinerário",
+  financial_proof: "Comprovante financeiro (extrato, renda)",
+  employment: "Vínculo de trabalho ou estudo",
+  invitation: "Carta-convite",
+  vaccination: "Certificado de vacinação (CIVP)",
+  idp: "CNH internacional (PID)",
+  national_id: "RG / CNH",
+  minor_auth: "Autorização de viagem de menor",
+  other: "Outro",
 };
+/** Autorizações eletrônicas de viagem: o número é o de referência/aplicação. */
+export const ELECTRONIC_AUTH = new Set(["eta", "etias", "esta", "eta_ca"]);
 export const CONTACT_KINDS: Record<string, string> = {
   embassy: "Embaixada/consulado", insurer: "Seguradora", bank: "Banco/cartão", personal: "Contato pessoal",
 };

@@ -85,9 +85,11 @@ export function ActivitiesTab({ trip }: { trip: Trip }) {
       {!data.length ? (
         <EmptyState icon={Ticket} title="Nenhuma atividade" text="Adicione atrações, passeios, museus, shows e restaurantes. Sem data, eles vão para a lista de desejos." action={<Button onClick={() => openNew()}><Plus /> Adicionar atividade</Button>} />
       ) : (
+        <div>
+        {/* Título fora da grade: no PC a lista de desejos começa na altura do primeiro card. */}
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Agendadas</h3>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <section>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Agendadas</h3>
             {dated.length ? <div className="space-y-3">{dated.map((a) => <ActivityCard key={a.id} a={a} trip={trip.currency} onClick={() => ed.open(a)} />)}</div>
               : <p className="text-sm text-muted-foreground">Nada agendado. Dê uma data a um item da lista de desejos.</p>}
           </section>
@@ -96,6 +98,7 @@ export function ActivitiesTab({ trip }: { trip: Trip }) {
             {wish.length ? <div className="space-y-3">{wish.map((a) => <ActivityCard key={a.id} a={a} trip={trip.currency} onClick={() => ed.open(a)} />)}</div>
               : <p className="text-sm text-muted-foreground">Ideias sem data aparecem aqui.</p>}
           </section>
+        </div>
         </div>
       )}
       {ed.editing && <ActivityDialog trip={trip} row={ed.editing} onClose={ed.close} />}

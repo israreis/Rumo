@@ -60,6 +60,7 @@ function AppLayout() {
     await qc.cancelQueries();
     qc.clear();
     navigator.serviceWorker?.controller?.postMessage("clear-data");
+    if (typeof caches !== "undefined") caches.delete("rumo-docs").catch(() => undefined);
     invitesChecked = false;
     entered = false;
     clearPersistedQueryCache();

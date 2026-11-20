@@ -40,3 +40,5 @@ App pessoal de planejamento de viagens (PWA). TanStack Start + React 19 + Tailwi
 - Fundo das telas do app: `PageBackdrop` (hachuras de papel-moeda bem suaves + rosa dos ventos apagada no canto), no layout logado, no link público e no convite; nunca dentro dos cartões.
 - Mostrador (`src/components/Dial.tsx`) para progresso circular; botão secundário é a variante `oliva`.
 
+- Arquivos offline (`src/lib/offline-files.ts`): ao abrir uma viagem, `OfflineFilesKeeper` baixa os anexos de documentos, transportes, hospedagens e atividades para o cache `rumo-docs` (sem versão nem limite; o `sw.js` responde dele primeiro; apagado ao sair da conta) e pede `navigator.storage.persist()`. `FileViewer` abre o arquivo como blob local, funcionando sem internet. A aba Documentos mostra "Salvo no aparelho" por anexo e o passaporte do perfil para o viajante que é você.
+- Cache do react-query salvo no aparelho (`src/lib/query-persist.ts`, chave `rumo:query-cache`): telas abrem com os últimos dados e atualizam em segundo plano; limpo ao sair da conta.

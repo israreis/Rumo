@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate, useRouteContext } from "@tanstack/react-router";
+import { OfflineFilesKeeper } from "@/components/plan/OfflineFilesKeeper";
 import { DateDefaultMonth } from "@/components/ui/date-input";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -83,6 +84,7 @@ function TripPage() {
     <TripAccessProvider role={role ?? "viewer"}>
     <DateDefaultMonth.Provider value={trip.start_date}>
     <div>
+      <OfflineFilesKeeper tripId={tripId} />
       <Link to="/trips" className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Minhas viagens</Link>
       <div className="relative overflow-hidden rounded-3xl shadow-lift">
         <div className="aspect-[16/10] sm:aspect-[21/8]"><TripCover url={trip.cover_url} /></div>
