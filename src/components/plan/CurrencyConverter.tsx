@@ -1,4 +1,4 @@
-import { ArrowDownUp, Check, ChevronDown, CreditCard } from "lucide-react";
+import { ArrowDownUp, Check, ChevronDown, CreditCard, Banknote } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { currencyLabel } from "@/lib/countries";
@@ -113,7 +113,7 @@ export function CurrencyConverter({ trip, className, bare }: { trip?: Trip | und
   const fees = trip ? (Number(trip.iof_pct) || 0) + (Number(trip.card_spread_pct) || 0) : DEFAULT_IOF;
   const [last] = useState(() => saved<{ from?: string; to?: string; mode?: "card" | "plain" }>(PAIR_KEY, {}));
 
-  const [mode, setMode] = useState<"card" | "plain">(last.mode ?? "card");
+  const [mode, setMode] = useState<"card" | "plain">(last.mode ?? "plain");
   const [top, setTop] = useState(() => (trip && tripForeign(trip)) || (last.from && FLAGS[last.from] ? last.from : "USD"));
   const [bottom, setBottom] = useState(() => (trip ? home : last.to && FLAGS[last.to] ? last.to : "BRL"));
   // Valor digitado e em qual linha; a outra linha é calculada.
@@ -161,16 +161,16 @@ export function CurrencyConverter({ trip, className, bare }: { trip?: Trip | und
 
   return (
     <section className={cn("min-w-0", !bare && "rounded-2xl border bg-card p-5 shadow-card", className)}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="space-y-3">
         <p className="font-display text-lg font-semibold tabular-nums">
           {factor ? `1 ${top} = ${factor.toLocaleString("pt-BR", { maximumFractionDigits: 4 })} ${bottom}` : loading ? "Buscando cotação…" : `1 ${top} = — ${bottom}`}
         </p>
-        <div role="tablist" aria-label="Tipo de conversão" className="inline-flex rounded-full bg-muted p-1 text-xs font-semibold sm:text-sm">
-          {([["card", "No cartão"], ["plain", "Só cotação"]] as const).map(([k, l]) => (
+        <div role="tablist" aria-label="Tipo de conversão" className="grid w-full grid-cols-2 rounded-full bg-muted p-1 text-sm font-semibold">
+          {([["plain", "Só cotação"], ["card", "No cartão"]] as const).map(([k, l]) => (
             <button key={k} role="tab" type="button" aria-selected={mode === k} onClick={() => setMode(k)}
-              className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors",
+              className={cn("inline-flex items-center justify-center gap-1.5 rounded-full px-3 py-2 transition-colors",
                 mode === k ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>
-              {k === "card" && <CreditCard className="size-3.5" />}{l}
+              {k === "card" ? <CreditCard className="size-4" /> : <Banknote className="size-4" />}{l}
             </button>
           ))}
         </div>
