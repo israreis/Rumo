@@ -9,7 +9,10 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { AlertTriangle, BedDouble, CalendarRange, GripVertical, Heart, LogOut, MapPin, Plus } from "lucide-react";
+import { AlertTriangle, BedDouble, CalendarMinus, CalendarPlus, CalendarRange, GripVertical, Heart, LogOut, MapPin, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useCanEdit } from "./access";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/EmptyState";
 import { cn } from "@/lib/utils";
@@ -17,7 +20,7 @@ import { EVENT_CATEGORIES, planQuery, TRANSPORT_TYPES, updateMany, type Activity
 import { conflictingIds, dayTimezone, destinationForDay, nightsWithoutLodging, tripDays } from "@/lib/itinerary";
 import { formatMoney, toDate } from "@/lib/trip-utils";
 import { zonedDate, zonedTime } from "@/lib/tz";
-import type { Trip } from "@/lib/trips-api";
+import { changeTripDays, type Trip } from "@/lib/trips-api";
 import { AreaF, EditDialog, MoneyF, Pill, SelectF, TextF, withFx, type Form } from "./common";
 import { ActivityDialog, geocodeIfChanged } from "./ActivitiesTab";
 import { ACTIVITY_ICON, EVENT_ICON, TRANSPORT_ICON } from "./icons";
@@ -38,6 +41,22 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
   const { data: activities = [] } = useQuery(planQuery<Activity>("activities", trip.id));
   const { data: events = [] } = useQuery(planQuery<ItineraryEvent>("itinerary_events", trip.id));
   const days: string[] = useMemo(() => tripDays(trip.start_date, trip.end_date), [trip.start_date, trip.end_date]);
+  const canEdit = useCanEdit();
+  const [dayBusy, setDayBusy] = useState(false);
+  const [removing, setRemoving] = useState<{ day: string; edge: "start" | "end"; count: number } | null>(null);
+  // Adiciona/remove dia na ponta da viagem; reflete nas datas da viagem e dos destinos.
+  async function changeDays(edge: "start" | "end", delta: 1 | -1) {
+    setDayBusy(true);
+    try {
+      await changeTripDays(trip, edge, delta);
+      await Promise.all([qc.invalidateQueries({ queryKey: ["trips", trip.id] }), qc.invalidateQueries({ queryKey: ["trips"], exact: true })]);
+      toast.success(delta === 1 ? "Dia adicionado" : "Dia removido");
+    } catch {
+      toast.error("Não foi possível alterar os dias.");
+    } finally {
+      setDayBusy(false);
+    }
+  }
   const weather = useTripWeather(trip.trip_destinations, days);
   const dests = trip.trip_destinations;
 
@@ -177,6 +196,12 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
       <h2 className="mb-4 text-xl sm:text-2xl font-semibold">Roteiro dia a dia</h2>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-4">
+          {canEdit && (
+            <button type="button" disabled={dayBusy} onClick={() => changeDays("start", 1)}
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50">
+              <CalendarPlus className="size-4" /> Adicionar dia antes de {format(toDate(days[0]!)!, "dd/MM")}
+            </button>
+          )}
           {days.map((day, i) => {
             const dest = destinationForDay(day, dests);
             const tz = dayTimezone(day, dests);
@@ -208,6 +233,13 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
                     ); })()}
                     {conflicts.size > 0 && <Pill tone="destructive"><AlertTriangle className="size-3" /> Conflito de horário</Pill>}
                     {!isLast && gaps.has(day) && <Pill tone="warning"><BedDouble className="size-3" /> Sem hospedagem</Pill>}
+                    {canEdit && days.length > 1 && (i === 0 || isLast) && (
+                      <Button variant="ghost" size="icon" className="size-8 text-muted-foreground hover:text-destructive" disabled={dayBusy}
+                        aria-label={`Remover ${i === 0 ? "o primeiro" : "o último"} dia da viagem`} title="Remover este dia da viagem"
+                        onClick={(e) => { e.stopPropagation(); setRemoving({ day, edge: i === 0 ? "start" : "end", count: fixed.length + dragIds.length }); }}>
+                        <CalendarMinus className="size-4" />
+                      </Button>
+                    )}
                   </div>
                 </header>
                 <div className="space-y-2">
@@ -225,6 +257,12 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
               </section>
             );
           })}
+          {canEdit && (
+            <button type="button" disabled={dayBusy} onClick={() => changeDays("end", 1)}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed py-5 font-semibold text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50">
+              <CalendarPlus className="size-5" /> Adicionar dia
+            </button>
+          )}
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-20 lg:self-start">
@@ -275,6 +313,21 @@ export function ItineraryTab({ trip }: { trip: Trip }) {
           )}
         </EditDialog>
       )}
+    <AlertDialog open={!!removing} onOpenChange={(v) => !v && setRemoving(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover {removing && format(toDate(removing.day)!, "EEE, dd/MM", { locale: ptBR })}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              A viagem passa a {removing?.edge === "start" ? "começar um dia depois" : "terminar um dia antes"}.
+              {removing && removing.count > 0 && ` Os ${removing.count === 1 ? "1 item" : `${removing.count} itens`} deste dia não são apagados: ficam fora do roteiro até você mudar a data deles.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { const r = removing; setRemoving(null); if (r) changeDays(r.edge, -1); }}>Remover dia</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DndContext>
   );
 }

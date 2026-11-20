@@ -65,6 +65,7 @@ function TripPage() {
   const navigate = useNavigate();
   const { data: trip, isLoading } = useQuery({ queryKey: ["trips", tripId], queryFn: () => getTrip(tripId) });
   const [newExp, setNewExp] = useState<any>(null);
+  const [tab, setTab] = useState("overview");
   const [sharing, setSharing] = useState(false);
   const { user } = useRouteContext({ from: "/_authenticated" });
   const isOwner = !!trip && trip.owner_id === user.id;
@@ -111,9 +112,9 @@ function TripPage() {
         </p>
       )}
       <Tabs
-        defaultValue="overview"
+        value={tab}
         className="mt-6 pb-40 md:pb-28"
-        onValueChange={() => requestAnimationFrame(() => document.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }))}
+        onValueChange={(v) => { setTab(v); requestAnimationFrame(() => document.querySelector<HTMLElement>('[role="tab"][data-state="active"]')?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" })); }}
       >
         <div className="scrollbar-none -mx-4 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_1rem,#000_calc(100%-2rem),transparent)] sm:mx-0 sm:px-0 lg:[mask-image:none]">
           <TabsList className="h-auto w-max gap-x-1.5 gap-y-2.5 bg-transparent p-0 lg:w-full lg:flex-wrap lg:justify-start">
@@ -135,7 +136,8 @@ function TripPage() {
         <TabsContent value="checklist" className="mt-6"><ChecklistTab trip={trip} /></TabsContent>
         <TabsContent value="notes" className="mt-6"><NotesTab trip={trip} /></TabsContent>
       </Tabs>
-      {canEdit && (
+      {/* Atalho flutuante só na Visão geral; em Gastos há o botão "Adicionar gasto". */}
+      {canEdit && tab === "overview" && (
         <Button size="lg" onClick={() => setNewExp(newExpense(trip))} className="no-print bottom-safe-nav fixed right-4 z-40 h-14 rounded-full px-6 shadow-lift md:bottom-6 md:right-6">
           <Plus className="size-5" /> Gasto
         </Button>

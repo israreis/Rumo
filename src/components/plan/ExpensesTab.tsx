@@ -1,6 +1,8 @@
 import { differenceInCalendarDays, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { AlertTriangle, ArrowRight, CloudOff, Receipt, Wallet } from "lucide-react";
+import { AlertTriangle, ArrowRight, CloudOff, Plus, Receipt, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCanEdit } from "./access";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/EmptyState";
 import { BUDGET_CATEGORIES, PAYMENT_METHODS, balances, dailyAllowance, settle } from "@/lib/budget";
@@ -10,13 +12,14 @@ import type { Trip } from "@/lib/trips-api";
 import { CurrencyConverter } from "./CurrencyConverter";
 import { cn } from "@/lib/utils";
 import { Money, Pill, useEditor } from "./common";
-import { ExpenseDialog } from "./ExpenseDialog";
+import { ExpenseDialog, newExpense } from "./ExpenseDialog";
 import { sum, useBudget, type Expense } from "./useBudget";
 import { usePendingExpenses } from "@/components/OfflineSync";
 
 export function ExpensesTab({ trip }: { trip: Trip }) {
   const { lines, expenses } = useBudget(trip);
   const ed = useEditor();
+  const canEdit = useCanEdit();
   const pending = usePendingExpenses(trip.id);
   const cur = trip.currency;
   const today = format(new Date(), "yyyy-MM-dd");
@@ -47,8 +50,11 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
   const byDate = [...new Set(expenses.map((e) => e.date))].sort().reverse();
 
   return (
-    <div className="space-y-6 pb-20">
-      <h2 className="text-xl sm:text-2xl font-semibold">Gastos</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-xl sm:text-2xl font-semibold">Gastos</h2>
+        {canEdit && <Button onClick={() => ed.open(newExpense(trip))}><Plus /> Adicionar gasto</Button>}
+      </div>
       <CurrencyConverter trip={trip} />
       {pending.length > 0 && (
         <div className="rounded-xl border border-dashed border-warning/50 bg-warning/5 p-4">
@@ -110,7 +116,7 @@ export function ExpensesTab({ trip }: { trip: Trip }) {
         <section>
           <h3 className="mb-3 font-semibold">Lançamentos</h3>
           {!expenses.length ? (
-            <EmptyState icon={Receipt} title="Nenhum gasto lançado" text="Durante a viagem, toque em “+ Gasto” para registrar em segundos. Moeda e cotação já vêm preenchidas." />
+            <EmptyState icon={Receipt} title="Nenhum gasto lançado" text="Durante a viagem, toque em “Adicionar gasto” para registrar em segundos. Moeda e cotação já vêm preenchidas." />
           ) : byDate.map((d) => (
             <div key={d} className="mb-4">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{format(toDate(d)!, "EEE, dd/MM", { locale: ptBR })} · {formatMoney(spent(expenses.filter((e) => e.date === d)), cur)}</p>

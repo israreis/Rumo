@@ -143,3 +143,35 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
   if (e2) throw e2;
   return data.signedUrl;
 }
+
+const shiftDay = (d: string, n: number) => {
+  const [y = 1970, m = 1, day = 1] = d.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, day + n)).toISOString().slice(0, 10);
+};
+
+/**
+ * Acrescenta (+1) ou tira (-1) um dia no início ou no fim da viagem, direto do roteiro.
+ * Os destinos acompanham: o primeiro/último que tocava a borda passa a cobrir o novo dia,
+ * e nenhum destino fica com datas fora da viagem.
+ */
+export async function changeTripDays(trip: Trip, edge: "start" | "end", delta: 1 | -1) {
+  if (!trip.start_date || !trip.end_date) return;
+  const start = edge === "start" ? shiftDay(trip.start_date, -delta) : trip.start_date;
+  const end = edge === "end" ? shiftDay(trip.end_date, delta) : trip.end_date;
+  if (start > end) return;
+  const { error } = await supabase.from("trips").update({ start_date: start, end_date: end }).eq("id", trip.id);
+  if (error) throw error;
+  await Promise.all(trip.trip_destinations.map(async (d) => {
+    if (!d.id) return;
+    let a = d.arrival_date, dep = d.departure_date;
+    if (edge === "start" && delta === 1 && a === trip.start_date) a = start;
+    if (edge === "end" && delta === 1 && dep === trip.end_date) dep = end;
+    if (a && a < start) a = start;
+    if (dep && dep > end) dep = end;
+    if (a && a > end) a = end;
+    if (dep && dep < start) dep = start;
+    if (a === d.arrival_date && dep === d.departure_date) return;
+    const { error: e } = await supabase.from("trip_destinations").update({ arrival_date: a, departure_date: dep }).eq("id", d.id);
+    if (e) throw e;
+  }));
+}
