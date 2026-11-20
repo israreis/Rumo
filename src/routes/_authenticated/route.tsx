@@ -18,6 +18,8 @@ import { acceptPendingInvites } from "@/lib/sharing-api";
 import { cn } from "@/lib/utils";
 
 let invitesChecked = false;
+/** Já passou pelo login nesta abertura do app: daí em diante o carregamento diz "Carregando…". */
+let entered = false;
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -31,9 +33,10 @@ export const Route = createFileRoute("/_authenticated")({
       invitesChecked = true;
       acceptPendingInvites().catch(() => undefined);
     }
+    entered = true;
     return { user };
   },
-  pendingComponent: () => <Splash full label="Entrando…" />,
+  pendingComponent: () => (entered ? <Splash /> : <Splash full label="Entrando…" />),
   component: AppLayout,
 });
 
@@ -58,6 +61,7 @@ function AppLayout() {
     qc.clear();
     navigator.serviceWorker?.controller?.postMessage("clear-data");
     invitesChecked = false;
+    entered = false;
     clearPersistedQueryCache();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
