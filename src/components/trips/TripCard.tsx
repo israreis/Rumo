@@ -13,8 +13,8 @@ export function TripCard({ trip }: { trip: Trip }) {
   return (
     <article className="group relative overflow-hidden rounded-2xl border bg-card shadow-card transition-shadow hover:shadow-lift">
       <Link to="/trips/$tripId" params={{ tripId: trip.id }} className="block">
-        <div className="relative aspect-[16/10]">
-          <TripCover url={trip.cover_url} className="transition-transform duration-500 group-hover:scale-105" />
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <TripCover url={trip.cover_url} className="transition-transform duration-500 will-change-transform group-hover:scale-105" />
           <div className="absolute inset-0 bg-cover-fade" />
           <StatusBadge status={status} className="absolute left-3 top-3" />
           {days != null && status !== "completed" && (
